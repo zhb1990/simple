@@ -113,5 +113,14 @@ message s_service_subscribe_brd {
   repeated s_service_info services = 1;
 }
 
+// id_s_ping_req
+message s_ping_req {
+  int64 t1 = 1;                             // 时间毫秒
+}
 
+// id_s_ping_ack
+message s_ping_ack {
+  int64 t1 = 1;                             // 发送时的时间毫秒
+  int64 t2 = 2;                             // 对方当前的时间毫秒
+}
 

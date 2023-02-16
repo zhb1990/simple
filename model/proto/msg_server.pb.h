@@ -66,6 +66,12 @@ PROTO_API extern s_gate_register_brdDefaultTypeInternal _s_gate_register_brd_def
 class s_gate_register_req;
 struct s_gate_register_reqDefaultTypeInternal;
 PROTO_API extern s_gate_register_reqDefaultTypeInternal _s_gate_register_req_default_instance_;
+class s_ping_ack;
+struct s_ping_ackDefaultTypeInternal;
+PROTO_API extern s_ping_ackDefaultTypeInternal _s_ping_ack_default_instance_;
+class s_ping_req;
+struct s_ping_reqDefaultTypeInternal;
+PROTO_API extern s_ping_reqDefaultTypeInternal _s_ping_req_default_instance_;
 class s_service_info;
 struct s_service_infoDefaultTypeInternal;
 PROTO_API extern s_service_infoDefaultTypeInternal _s_service_info_default_instance_;
@@ -98,6 +104,8 @@ template<> PROTO_API ::game::s_gate_info* Arena::CreateMaybeMessage<::game::s_ga
 template<> PROTO_API ::game::s_gate_register_ack* Arena::CreateMaybeMessage<::game::s_gate_register_ack>(Arena*);
 template<> PROTO_API ::game::s_gate_register_brd* Arena::CreateMaybeMessage<::game::s_gate_register_brd>(Arena*);
 template<> PROTO_API ::game::s_gate_register_req* Arena::CreateMaybeMessage<::game::s_gate_register_req>(Arena*);
+template<> PROTO_API ::game::s_ping_ack* Arena::CreateMaybeMessage<::game::s_ping_ack>(Arena*);
+template<> PROTO_API ::game::s_ping_req* Arena::CreateMaybeMessage<::game::s_ping_req>(Arena*);
 template<> PROTO_API ::game::s_service_info* Arena::CreateMaybeMessage<::game::s_service_info>(Arena*);
 template<> PROTO_API ::game::s_service_register_ack* Arena::CreateMaybeMessage<::game::s_service_register_ack>(Arena*);
 template<> PROTO_API ::game::s_service_register_req* Arena::CreateMaybeMessage<::game::s_service_register_req>(Arena*);
@@ -2518,6 +2526,313 @@ class PROTO_API s_service_subscribe_brd final :
   union { Impl_ _impl_; };
   friend struct ::TableStruct_msg_5fserver_2eproto;
 };
+// -------------------------------------------------------------------
+
+class PROTO_API s_ping_req final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.s_ping_req) */ {
+ public:
+  inline s_ping_req() : s_ping_req(nullptr) {}
+  ~s_ping_req() override;
+  explicit PROTOBUF_CONSTEXPR s_ping_req(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  s_ping_req(const s_ping_req& from);
+  s_ping_req(s_ping_req&& from) noexcept
+    : s_ping_req() {
+    *this = ::std::move(from);
+  }
+
+  inline s_ping_req& operator=(const s_ping_req& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline s_ping_req& operator=(s_ping_req&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const s_ping_req& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const s_ping_req* internal_default_instance() {
+    return reinterpret_cast<const s_ping_req*>(
+               &_s_ping_req_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    14;
+
+  friend void swap(s_ping_req& a, s_ping_req& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(s_ping_req* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(s_ping_req* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  s_ping_req* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<s_ping_req>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const s_ping_req& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const s_ping_req& from) {
+    s_ping_req::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(s_ping_req* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "game.s_ping_req";
+  }
+  protected:
+  explicit s_ping_req(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kT1FieldNumber = 1,
+  };
+  // int64 t1 = 1;
+  void clear_t1();
+  int64_t t1() const;
+  void set_t1(int64_t value);
+  private:
+  int64_t _internal_t1() const;
+  void _internal_set_t1(int64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:game.s_ping_req)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    int64_t t1_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_msg_5fserver_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PROTO_API s_ping_ack final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.s_ping_ack) */ {
+ public:
+  inline s_ping_ack() : s_ping_ack(nullptr) {}
+  ~s_ping_ack() override;
+  explicit PROTOBUF_CONSTEXPR s_ping_ack(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  s_ping_ack(const s_ping_ack& from);
+  s_ping_ack(s_ping_ack&& from) noexcept
+    : s_ping_ack() {
+    *this = ::std::move(from);
+  }
+
+  inline s_ping_ack& operator=(const s_ping_ack& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline s_ping_ack& operator=(s_ping_ack&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const s_ping_ack& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const s_ping_ack* internal_default_instance() {
+    return reinterpret_cast<const s_ping_ack*>(
+               &_s_ping_ack_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    15;
+
+  friend void swap(s_ping_ack& a, s_ping_ack& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(s_ping_ack* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(s_ping_ack* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  s_ping_ack* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<s_ping_ack>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const s_ping_ack& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const s_ping_ack& from) {
+    s_ping_ack::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(s_ping_ack* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "game.s_ping_ack";
+  }
+  protected:
+  explicit s_ping_ack(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kT1FieldNumber = 1,
+    kT2FieldNumber = 2,
+  };
+  // int64 t1 = 1;
+  void clear_t1();
+  int64_t t1() const;
+  void set_t1(int64_t value);
+  private:
+  int64_t _internal_t1() const;
+  void _internal_set_t1(int64_t value);
+  public:
+
+  // int64 t2 = 2;
+  void clear_t2();
+  int64_t t2() const;
+  void set_t2(int64_t value);
+  private:
+  int64_t _internal_t2() const;
+  void _internal_set_t2(int64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:game.s_ping_ack)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    int64_t t1_;
+    int64_t t2_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_msg_5fserver_2eproto;
+};
 // ===================================================================
 
 
@@ -3776,9 +4091,81 @@ s_service_subscribe_brd::services() const {
   return _impl_.services_;
 }
 
+// -------------------------------------------------------------------
+
+// s_ping_req
+
+// int64 t1 = 1;
+inline void s_ping_req::clear_t1() {
+  _impl_.t1_ = int64_t{0};
+}
+inline int64_t s_ping_req::_internal_t1() const {
+  return _impl_.t1_;
+}
+inline int64_t s_ping_req::t1() const {
+  // @@protoc_insertion_point(field_get:game.s_ping_req.t1)
+  return _internal_t1();
+}
+inline void s_ping_req::_internal_set_t1(int64_t value) {
+  
+  _impl_.t1_ = value;
+}
+inline void s_ping_req::set_t1(int64_t value) {
+  _internal_set_t1(value);
+  // @@protoc_insertion_point(field_set:game.s_ping_req.t1)
+}
+
+// -------------------------------------------------------------------
+
+// s_ping_ack
+
+// int64 t1 = 1;
+inline void s_ping_ack::clear_t1() {
+  _impl_.t1_ = int64_t{0};
+}
+inline int64_t s_ping_ack::_internal_t1() const {
+  return _impl_.t1_;
+}
+inline int64_t s_ping_ack::t1() const {
+  // @@protoc_insertion_point(field_get:game.s_ping_ack.t1)
+  return _internal_t1();
+}
+inline void s_ping_ack::_internal_set_t1(int64_t value) {
+  
+  _impl_.t1_ = value;
+}
+inline void s_ping_ack::set_t1(int64_t value) {
+  _internal_set_t1(value);
+  // @@protoc_insertion_point(field_set:game.s_ping_ack.t1)
+}
+
+// int64 t2 = 2;
+inline void s_ping_ack::clear_t2() {
+  _impl_.t2_ = int64_t{0};
+}
+inline int64_t s_ping_ack::_internal_t2() const {
+  return _impl_.t2_;
+}
+inline int64_t s_ping_ack::t2() const {
+  // @@protoc_insertion_point(field_get:game.s_ping_ack.t2)
+  return _internal_t2();
+}
+inline void s_ping_ack::_internal_set_t2(int64_t value) {
+  
+  _impl_.t2_ = value;
+}
+inline void s_ping_ack::set_t2(int64_t value) {
+  _internal_set_t2(value);
+  // @@protoc_insertion_point(field_set:game.s_ping_ack.t2)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
