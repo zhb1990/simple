@@ -1,0 +1,5 @@
+// 提示文件帮助 Visual Studio IDE 解释 Visual C++ 标识符,
+// 如函数和宏的名称。
+// 有关详细信息，请参见 https://go.microsoft.com/fwlink/?linkid=865984
+#define DS_COPYABLE_DEFAULT(type) type(const type&) = default; type(type&&) noexcept = default; type& operator=(const type&) = default; type& operator=(type&&) noexcept = default;
+#define DS_NON_COPYABLE(type) type(const type&) = delete; type(type&&) = delete; type& operator=(const type&) = delete; type& operator=(type&&) = delete;

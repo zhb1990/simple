@@ -1,0 +1,27 @@
+name = "test"
+dump_path = "../dump"
+log_config = "../../config/log_test.toml"                       # 日志的配置文件路径
+thread_pool_num = 1                                        # 线程池的线程数 0表示按照cpu核心数来设置 最少为1
+service_path = ["./?.dll"]                                 # 加载服务的路径
+frame_interval = 500                                       # 游戏帧间隔时间 毫秒
+
+[[services]]
+id = 1
+name = "aa"
+type = "test1"
+order = 3
+interval = 4                                              # 服务每隔多少帧调用一次update
+[services.args]
+a = 1
+b = 2
+
+
+[[services]]
+id = 2
+name = "bb"
+type = "test2"
+order = 2
+interval = 8                                              # 0 表示不调用update
+args = [3, 4]
+
+
