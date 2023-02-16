@@ -11,11 +11,11 @@ class cancellation_token;
 
 class cancellation_registration {
   public:
-    DS_API cancellation_registration(const cancellation_token& token, std::function<void()>&& callback);
+    SIMPLE_API cancellation_registration(const cancellation_token& token, std::function<void()>&& callback);
 
-    DS_API ~cancellation_registration() noexcept;
+    SIMPLE_API ~cancellation_registration() noexcept;
 
-    DS_NON_COPYABLE(cancellation_registration)
+    SIMPLE_NON_COPYABLE(cancellation_registration)
 
   private:
     friend class cancellation_state;

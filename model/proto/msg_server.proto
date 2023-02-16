@@ -1,0 +1,117 @@
+﻿syntax = "proto3";
+
+import "msg_base.proto";
+
+package game;
+
+/*
+  服务类型
+  除了少数服务间是直接通信，其余的服务直接发送消息都是通过gate来进行转发。
+  如果是同一个机器上的服务，gate1将消息放入共享内存，
+  否则 gate1将通过tcp发给与目标在同一个机器的gate2，gate2再将消息放入共享内存
+  服务的启动顺序 st_gate_master -> st_gate -> st_logic_master
+  -> st_logic -> st_center -> st_match，其他的只要在后面启动就可以
+*/
+enum service_type {
+  st_gate_master = 0;      // gate服务管理 全局唯一 记录gate 以及gate所在机器上的其他服务
+  st_gate = 1;             // gate服务 服务间转发消息
+  st_proxy = 2;            // 代理服务 与客户端交互
+  st_login = 3;            // 注册登录服务 验证第三方账号 短信登录 等
+  st_db_proxy = 4;         // db服务
+  st_logic = 5;            // 逻辑服务
+  st_logic_master = 6;     // 逻辑服务管理 全局唯一 分配并记录玩家在哪个逻辑服务上
+  st_match = 7;            // 匹配服务 全局唯一 加载ai等
+  st_room = 8;             // 房间服务
+  st_center = 9;           // 中心服务 全局唯一 排行榜 名字唯一 等
+  st_ai_center = 10;       // ai 服务中心, 对ai请求进行负载均衡
+  st_ai = 11;              // ai 计算服务 直接连接 st_ai_center
+}
+
+
+message s_service_info {
+  uint32 id = 1;                // 服务 id
+  service_type tp = 2;          // 服务类型
+  bool online = 3;              // 是否在线
+}
+
+message s_gate_address {
+  string host = 1;
+  string port = 2;
+}
+
+message s_gate_info {
+  uint32 id = 1;                            // 服务 id
+  repeated s_service_info services = 2;     // gate所在机器上的其他服务 (st_gate_master、st_gate、st_ai 除外)
+  repeated s_gate_address addresses = 3;    // 所有可以访问的地址 如果是跨机房的一般将局域网地址放前面，广域网放后面，这样gate互联时优先使用局域网
+}
+
+// id_s_gate_register_req
+message s_gate_register_req {
+  s_gate_info info = 1;
+}
+
+// id_s_gate_register_ack
+message s_gate_register_ack {
+  ack_result result = 1;                    // 结果
+  repeated s_gate_info gates = 2;           // 其他的gate信息
+}
+
+// id_s_gate_register_brd
+message s_gate_register_brd {
+  repeated s_gate_info gates = 1;           // 其他的gate信息
+}
+
+// id_s_service_update_req
+message s_service_update_req {
+  repeated s_service_info services = 1;     // gate所在机器上新增的服务 (st_gate_master、st_gate、st_ai 除外)
+}
+
+// id_s_service_update_ack
+// msg_common_ack
+
+// 共享内存的参数
+message s_service_shm {
+  string name = 1;
+  uint32 size = 2;
+}
+
+// id_s_service_register_req
+message s_service_register_req {
+  s_service_info info = 1;
+  uint32 channel_size = 2;                  // 共享内存通道的大小
+  repeated s_service_shm shm = 3;           // 数据的共享内存大小
+}
+
+// id_s_service_register_ack
+message s_service_register_ack {
+  ack_result result = 1;                   // 结果
+  uint32 gate = 2;                         // gate的服务id
+}
+
+// id_s_gate_forward_brd
+message s_gate_forward_brd {
+  uint32 from = 1;                        // 消息来源
+  uint32 to = 2;                          // 消息目的地
+  uint32 id = 3;                          // 转发的消息id
+  uint64 session = 4;                     // 转发的消息session
+  bytes data = 5;                         // 转发的消息内容
+}
+
+// id_s_service_subscribe_req
+message s_service_subscribe_req {
+  service_type tp = 1;                     // 服务类型
+}
+
+// id_s_service_subscribe_ack
+message s_service_subscribe_ack {
+  ack_result result = 1;                   // 结果
+  repeated s_service_info services = 2;
+}
+
+// id_s_service_subscribe_brd
+message s_service_subscribe_brd {
+  repeated s_service_info services = 1;
+}
+
+
+

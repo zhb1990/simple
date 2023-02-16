@@ -20,15 +20,15 @@ class timer_queue {
         time_point point;
     };
 
-    DS_API bool remove(node* n);
+    SIMPLE_API bool remove(node* n);
 
-    DS_API void enqueue(node* n);
+    SIMPLE_API void enqueue(node* n);
 
-    [[nodiscard]] DS_API duration wait_duration(time_point now) const;
+    [[nodiscard]] SIMPLE_API duration wait_duration(time_point now) const;
 
-    DS_API std::vector<node*> get_ready_timers(time_point now);
+    SIMPLE_API std::vector<node*> get_ready_timers(time_point now);
 
-    DS_API std::vector<node*> get_all_timers();
+    SIMPLE_API std::vector<node*> get_all_timers();
 
   private:
     void up_heap(size_t index);

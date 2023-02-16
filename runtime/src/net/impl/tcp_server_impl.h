@@ -19,7 +19,7 @@ class tcp_server_impl final : public socket_base, public std::enable_shared_from
 
     ~tcp_server_impl() noexcept override = default;
 
-    DS_NON_COPYABLE(tcp_server_impl)
+    SIMPLE_NON_COPYABLE(tcp_server_impl)
 
     void start(const tcp::endpoint& endpoint, bool reuse);
 

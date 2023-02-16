@@ -22,7 +22,7 @@ class tcp_client_impl final : public socket_base, public std::enable_shared_from
 
     ~tcp_client_impl() noexcept override = default;
 
-    DS_NON_COPYABLE(tcp_client_impl)
+    SIMPLE_NON_COPYABLE(tcp_client_impl)
 
     void start(const std::string& host, const std::string& service, const asio_timer::duration& timeout);
 

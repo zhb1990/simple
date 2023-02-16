@@ -33,26 +33,26 @@ constexpr bool is_websocket_control(websocket_opcode op) { return static_cast<ui
 
 class websocket {
   public:
-    DS_API websocket(websocket_type tp, uint32_t socket);
+    SIMPLE_API websocket(websocket_type tp, uint32_t socket);
 
-    DS_COPYABLE_DEFAULT(websocket)
+    SIMPLE_COPYABLE_DEFAULT(websocket)
 
     ~websocket() noexcept = default;
 
     // 客户端握手
-    [[nodiscard]] DS_API simple::task<> handshake(std::string_view host, std::string_view uri = "/") const;
+    [[nodiscard]] SIMPLE_API simple::task<> handshake(std::string_view host, std::string_view uri = "/") const;
 
     // 服务端握手
-    [[nodiscard]] DS_API simple::task<> handshake() const;
+    [[nodiscard]] SIMPLE_API simple::task<> handshake() const;
 
     // 握手成功后接收websocket消息
-    [[nodiscard]] DS_API simple::task<websocket_opcode> read(memory_buffer& buf) const;
+    [[nodiscard]] SIMPLE_API simple::task<websocket_opcode> read(memory_buffer& buf) const;
 
     // 握手成功后发送websocket消息
-    DS_API void write(websocket_opcode op, const void* data, size_t size) const;
+    SIMPLE_API void write(websocket_opcode op, const void* data, size_t size) const;
 
     // 握手成功后发送websocket消息, 将要发送的消息拆分成多个帧，payload_max 为单帧最大的消息长度
-    DS_API void write(websocket_opcode op, const void* data, size_t size, size_t payload_max) const;
+    SIMPLE_API void write(websocket_opcode op, const void* data, size_t size, size_t payload_max) const;
 
     [[nodiscard]] auto socket() const noexcept { return socket_; }
 

@@ -13,11 +13,11 @@ namespace simple {
 
 class frame_awaiter {
   public:
-    DS_API explicit frame_awaiter(uint64_t frame);
+    SIMPLE_API explicit frame_awaiter(uint64_t frame);
 
     frame_awaiter(const frame_awaiter&) = delete;
 
-    DS_API frame_awaiter(frame_awaiter&& other) noexcept;
+    SIMPLE_API frame_awaiter(frame_awaiter&& other) noexcept;
 
     ~frame_awaiter() noexcept = default;
 
@@ -48,7 +48,7 @@ class frame_awaiter {
         return true;
     }
 
-    DS_API void await_resume();
+    SIMPLE_API void await_resume();
 
   private:
     uint64_t frame_{0};
@@ -57,6 +57,6 @@ class frame_awaiter {
     std::coroutine_handle<> handle_;
 };
 
-DS_API frame_awaiter skip_frame(uint64_t skip);
+SIMPLE_API frame_awaiter skip_frame(uint64_t skip);
 
 }  // namespace simple

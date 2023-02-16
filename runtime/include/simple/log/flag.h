@@ -23,7 +23,7 @@ class log_flag {
 
     explicit log_flag(const log_padding &pad) : pad_(pad) {}
 
-    DS_NON_COPYABLE(log_flag)
+    SIMPLE_NON_COPYABLE(log_flag)
 
     virtual ~log_flag() noexcept = default;
 

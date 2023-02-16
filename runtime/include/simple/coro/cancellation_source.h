@@ -11,19 +11,19 @@ class cancellation_state;
 
 class cancellation_source {
   public:
-    DS_API cancellation_source();
+    SIMPLE_API cancellation_source();
 
-    DS_COPYABLE_DEFAULT(cancellation_source)
+    SIMPLE_COPYABLE_DEFAULT(cancellation_source)
 
     ~cancellation_source() noexcept = default;
 
-    [[nodiscard]] DS_API cancellation_token token() const noexcept;
+    [[nodiscard]] SIMPLE_API cancellation_token token() const noexcept;
 
-    DS_API void request_cancellation() const;
+    SIMPLE_API void request_cancellation() const;
 
-    [[nodiscard]] DS_API bool can_be_cancelled() const noexcept;
+    [[nodiscard]] SIMPLE_API bool can_be_cancelled() const noexcept;
 
-    [[nodiscard]] DS_API bool is_cancellation_requested() const noexcept;
+    [[nodiscard]] SIMPLE_API bool is_cancellation_requested() const noexcept;
 
   private:
     friend class cancellation_token;

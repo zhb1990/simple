@@ -1,0 +1,13 @@
+﻿syntax = "proto3";
+
+package game;
+
+// 定义所有的错误码
+
+enum error_code {
+  ec_success = 0;
+  // 未知错误
+  ec_unknown = 1;
+  // 系统错误
+  ec_system = 2;
+}

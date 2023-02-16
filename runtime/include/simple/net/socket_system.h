@@ -27,39 +27,39 @@ class socket_system {
 
     ~socket_system() noexcept;
 
-    DS_NON_COPYABLE(socket_system)
+    SIMPLE_NON_COPYABLE(socket_system)
 
-    DS_API static socket_system& instance();
+    SIMPLE_API static socket_system& instance();
 
-    DS_API void start();
+    SIMPLE_API void start();
 
-    DS_API void stop();
+    SIMPLE_API void stop();
 
-    DS_API void join();
+    SIMPLE_API void join();
 
     uint32_t new_socket_id(socket_type tp);
 
-    DS_API uint32_t tcp_listen(const std::string& host, uint16_t port, bool reuse);
+    SIMPLE_API uint32_t tcp_listen(const std::string& host, uint16_t port, bool reuse);
 
-    DS_API uint32_t ssl_listen(const std::string& host, uint16_t port, bool reuse, const std::string& cert,
+    SIMPLE_API uint32_t ssl_listen(const std::string& host, uint16_t port, bool reuse, const std::string& cert,
                                const std::string& key, const std::string& dh, const std::string& password);
 
-    DS_API uint32_t kcp_listen(const std::string& host, uint16_t port, bool reuse);
+    SIMPLE_API uint32_t kcp_listen(const std::string& host, uint16_t port, bool reuse);
 
-    DS_API uint32_t tcp_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout);
+    SIMPLE_API uint32_t tcp_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout);
 
-    DS_API uint32_t ssl_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout,
+    SIMPLE_API uint32_t ssl_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout,
                                 const std::string& verify = "", bool ignore_cert = true);
 
-    DS_API uint32_t kcp_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout);
+    SIMPLE_API uint32_t kcp_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout);
 
-    DS_API void send(uint32_t socket_id, const memory_buffer_ptr& buf);
+    SIMPLE_API void send(uint32_t socket_id, const memory_buffer_ptr& buf);
 
-    DS_API void accept(uint32_t socket_id);
+    SIMPLE_API void accept(uint32_t socket_id);
 
-    DS_API void close(uint32_t socket_id);
+    SIMPLE_API void close(uint32_t socket_id);
 
-    DS_API void no_delay(uint32_t socket_id, bool on);
+    SIMPLE_API void no_delay(uint32_t socket_id, bool on);
 
     [[nodiscard]] size_t max_buffers() const noexcept { return max_buffers_; }
 

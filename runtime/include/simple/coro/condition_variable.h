@@ -18,15 +18,15 @@ class condition_variable_state {
   public:
     condition_variable_state() = default;
 
-    DS_NON_COPYABLE(condition_variable_state)
+    SIMPLE_NON_COPYABLE(condition_variable_state)
 
     ~condition_variable_state() noexcept = default;
 
-    DS_API void add_awaiter(condition_variable_awaiter* awaiter) noexcept;
+    SIMPLE_API void add_awaiter(condition_variable_awaiter* awaiter) noexcept;
 
-    DS_API void remove_awaiter(condition_variable_awaiter* awaiter) noexcept;
+    SIMPLE_API void remove_awaiter(condition_variable_awaiter* awaiter) noexcept;
 
-    [[nodiscard]] DS_API bool has_awaiter(condition_variable_awaiter* awaiter) const noexcept;
+    [[nodiscard]] SIMPLE_API bool has_awaiter(condition_variable_awaiter* awaiter) const noexcept;
 
     void notify_one() noexcept;
 
@@ -41,7 +41,7 @@ class condition_variable_awaiter {
     condition_variable_awaiter() = default;
 
   public:
-    DS_API condition_variable_awaiter(condition_variable_awaiter&& other) noexcept;
+    SIMPLE_API condition_variable_awaiter(condition_variable_awaiter&& other) noexcept;
 
     condition_variable_awaiter(const condition_variable_awaiter&) = delete;
 
@@ -78,7 +78,7 @@ class condition_variable_awaiter {
         return true;
     }
 
-    DS_API void await_resume();
+    SIMPLE_API void await_resume();
 
   protected:
     friend class condition_variable_state;
@@ -95,17 +95,17 @@ class condition_variable_awaiter {
 
 class condition_variable {
   public:
-    DS_API condition_variable();
+    SIMPLE_API condition_variable();
 
-    DS_COPYABLE_DEFAULT(condition_variable)
+    SIMPLE_COPYABLE_DEFAULT(condition_variable)
 
     ~condition_variable() noexcept = default;
 
-    [[nodiscard]] DS_API condition_variable_awaiter wait() const noexcept;
+    [[nodiscard]] SIMPLE_API condition_variable_awaiter wait() const noexcept;
 
-    DS_API void notify_one() const noexcept;
+    SIMPLE_API void notify_one() const noexcept;
 
-    DS_API void notify_all() const noexcept;
+    SIMPLE_API void notify_all() const noexcept;
 
   private:
     std::shared_ptr<condition_variable_state> state_;

@@ -64,7 +64,7 @@ void scheduler::run(const std::stop_token& token) {
         now = timer_queue::clock::now();
         const auto nodes = timer_queue_.get_ready_timers(now);
         for (auto* ptr : nodes) {
-            if (const auto* timed = DS_CONVERT(ptr, timed_awaiter, node)) {
+            if (const auto* timed = SIMPLE_CONVERT(ptr, timed_awaiter, node)) {
                 timed->wake_up();
             }
         }

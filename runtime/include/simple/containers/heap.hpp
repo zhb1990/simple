@@ -28,7 +28,7 @@ class heap_raw {
   public:
     heap_raw() = default;
 
-    DS_NON_COPYABLE(heap_raw)
+    SIMPLE_NON_COPYABLE(heap_raw)
 
     ~heap_raw() noexcept = default;
 
@@ -223,7 +223,7 @@ class heap : public heap_raw {
 
     explicit heap(Field field) : field_(field) {}
 
-    DS_NON_COPYABLE(heap)
+    SIMPLE_NON_COPYABLE(heap)
 
     ~heap() noexcept = default;
 

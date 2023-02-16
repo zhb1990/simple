@@ -16,25 +16,25 @@ class scheduler {
     scheduler() = default;
 
   public:
-    DS_NON_COPYABLE(scheduler)
+    SIMPLE_NON_COPYABLE(scheduler)
     ~scheduler() noexcept = default;
 
-    DS_API static scheduler& instance();
+    SIMPLE_API static scheduler& instance();
 
-    DS_API void post(std::function<void()> func);
+    SIMPLE_API void post(std::function<void()> func);
 
-    DS_API void post_immediate(std::function<void()> func);
+    SIMPLE_API void post_immediate(std::function<void()> func);
 
     // 启动线程
-    DS_API void start();
+    SIMPLE_API void start();
 
-    DS_API void stop();
+    SIMPLE_API void stop();
 
-    DS_API void join();
+    SIMPLE_API void join();
 
     auto& get_timer_queue() { return timer_queue_; }
 
-    DS_API void wake_up_coroutine(std::coroutine_handle<> handle) noexcept;
+    SIMPLE_API void wake_up_coroutine(std::coroutine_handle<> handle) noexcept;
 
     static auto* current_scheduler() noexcept { return current_scheduler_; }
 

@@ -69,6 +69,6 @@ simple::task<> test1::session_start(uint32_t session) {
     --accepted_;
 }
 
-DS_SERVICE_API simple::service_base* test1_create(const simple::toml_value_t*) { return new test1(); }
+SIMPLE_SERVICE_API simple::service_base* test1_create(const simple::toml_value_t*) { return new test1(); }
 
-DS_SERVICE_API void test1_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void test1_release(const simple::service_base* t) { delete t; }

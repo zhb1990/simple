@@ -28,13 +28,13 @@ using log_buf_t = fmt::basic_memory_buffer<char, 250>;
 
 struct log_message;
 
-DS_API std::string_view to_string_view(log_level level) noexcept;
+SIMPLE_API std::string_view to_string_view(log_level level) noexcept;
 
-DS_API std::string_view to_string_view_short(log_level level) noexcept;
+SIMPLE_API std::string_view to_string_view_short(log_level level) noexcept;
 
-DS_API log_level log_level_from_string_view(const std::string_view& strv) noexcept;
+SIMPLE_API log_level log_level_from_string_view(const std::string_view& strv) noexcept;
 
-DS_API log_time_type log_time_from_string_view(const std::string_view& strv) noexcept;
+SIMPLE_API log_time_type log_time_from_string_view(const std::string_view& strv) noexcept;
 
 class log_formatter;
 

@@ -16,13 +16,13 @@ class cancellation_token {
 
     explicit cancellation_token(const cancellation_source& source);
 
-    DS_COPYABLE_DEFAULT(cancellation_token)
+    SIMPLE_COPYABLE_DEFAULT(cancellation_token)
 
     ~cancellation_token() noexcept = default;
 
-    [[nodiscard]] DS_API bool can_be_cancelled() const noexcept;
+    [[nodiscard]] SIMPLE_API bool can_be_cancelled() const noexcept;
 
-    [[nodiscard]] DS_API bool is_cancellation_requested() const noexcept;
+    [[nodiscard]] SIMPLE_API bool is_cancellation_requested() const noexcept;
 
     explicit operator bool() const noexcept { return static_cast<bool>(state_); }
 

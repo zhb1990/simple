@@ -18,21 +18,21 @@ class mutex_state {
   public:
     mutex_state() = default;
 
-    DS_NON_COPYABLE(mutex_state)
+    SIMPLE_NON_COPYABLE(mutex_state)
 
     ~mutex_state() noexcept = default;
 
     [[nodiscard]] auto locked() const noexcept { return current_ != nullptr; }
 
-    DS_API bool try_lock(mutex_awaiter* awaiter) noexcept;
+    SIMPLE_API bool try_lock(mutex_awaiter* awaiter) noexcept;
 
     void unlock() noexcept;
 
     void add_awaiter(mutex_awaiter* awaiter) noexcept;
 
-    DS_API void remove_awaiter(mutex_awaiter* awaiter) noexcept;
+    SIMPLE_API void remove_awaiter(mutex_awaiter* awaiter) noexcept;
 
-    [[nodiscard]] DS_API std::coroutine_handle<> current() const noexcept;
+    [[nodiscard]] SIMPLE_API std::coroutine_handle<> current() const noexcept;
 
   private:
     std::coroutine_handle<> current_;
@@ -44,7 +44,7 @@ class mutex_awaiter {
     mutex_awaiter() = default;
 
   public:
-    DS_API mutex_awaiter(mutex_awaiter&& other) noexcept;
+    SIMPLE_API mutex_awaiter(mutex_awaiter&& other) noexcept;
 
     mutex_awaiter(const mutex_awaiter&) = delete;
 
@@ -79,7 +79,7 @@ class mutex_awaiter {
         return true;
     }
 
-    DS_API void await_resume();
+    SIMPLE_API void await_resume();
 
   protected:
     friend class mutex;
@@ -96,17 +96,17 @@ class mutex_awaiter {
 // 注意不能重复加锁
 class mutex {
   public:
-    DS_API mutex();
+    SIMPLE_API mutex();
 
-    DS_COPYABLE_DEFAULT(mutex)
+    SIMPLE_COPYABLE_DEFAULT(mutex)
 
     ~mutex() noexcept = default;
 
-    [[nodiscard]] DS_API mutex_awaiter lock() const noexcept;
+    [[nodiscard]] SIMPLE_API mutex_awaiter lock() const noexcept;
 
-    // DS_API bool try_lock() const;
+    // SIMPLE_API bool try_lock() const;
 
-    DS_API void unlock() const noexcept;
+    SIMPLE_API void unlock() const noexcept;
 
   private:
     std::shared_ptr<mutex_state> state_;

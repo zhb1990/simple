@@ -21,16 +21,16 @@ class async_system {
   public:
     ~async_system() noexcept = default;
 
-    DS_NON_COPYABLE(async_system)
+    SIMPLE_NON_COPYABLE(async_system)
 
-    DS_API static async_system& instance();
+    SIMPLE_API static async_system& instance();
 
-    DS_API uint64_t create_session() noexcept;
+    SIMPLE_API uint64_t create_session() noexcept;
 
-    DS_API void insert_session(uint64_t session, std::coroutine_handle<> handle);
+    SIMPLE_API void insert_session(uint64_t session, std::coroutine_handle<> handle);
 
     // 唤醒对应的协程
-    DS_API void wake_up_session(uint64_t session) noexcept;
+    SIMPLE_API void wake_up_session(uint64_t session) noexcept;
 
   private:
     uint64_t session_{0};

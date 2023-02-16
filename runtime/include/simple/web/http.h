@@ -64,13 +64,13 @@ struct reply {
         content.clear();
     }
 
-    [[nodiscard]] DS_API memory_buffer_ptr to_buffer() const;
+    [[nodiscard]] SIMPLE_API memory_buffer_ptr to_buffer() const;
 
-    DS_API static reply stock(status_t status);
+    SIMPLE_API static reply stock(status_t status);
 };
 
-DS_API simple::task<> parser(request& req, uint32_t socket);
+SIMPLE_API simple::task<> parser(request& req, uint32_t socket);
 
-DS_API simple::task<> parser(reply& req, uint32_t socket);
+SIMPLE_API simple::task<> parser(reply& req, uint32_t socket);
 
 }  // namespace simple::http

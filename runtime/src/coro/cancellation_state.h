@@ -12,7 +12,7 @@ class cancellation_state {
   public:
     cancellation_state();
 
-    DS_NON_COPYABLE(cancellation_state)
+    SIMPLE_NON_COPYABLE(cancellation_state)
 
     ~cancellation_state() noexcept = default;
 

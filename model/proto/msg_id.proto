@@ -1,0 +1,62 @@
+﻿syntax = "proto3";
+
+package game;
+
+// 定义所有的消息id
+
+/// 0x0xxx :客户端请求服务器
+/// 0x1xxx :服务器回复客户端
+/// 0x2xxx :客户端提交给服务器，无需返回
+/// 0x3xxx :服务器推送给客户端
+/// 0x4xxx :服务器内部请求
+/// 0x5xxx :服务器内部回复
+/// 0x6xxx :服务器内部推送
+
+enum message_type {
+  msg_c2s_req = 0;           // 客户端请求服务器
+  msg_s2c_ack = 0x1000;      // 服务器回复客户端请求
+  msg_c2s_brd = 0x2000;      // 客户端通知服务器
+  msg_s2c_brd = 0x3000;      // 服务器通知客户端
+  msg_s2s_req = 0x4000;      // 服务器请求服务器
+  msg_s2s_ack = 0x5000;      // 服务器回复服务器请求
+  msg_s2s_brd = 0x6000;      // 服务器通知服务器
+
+  msg_mask = 0xf000;
+}
+
+enum message_id {
+  id_none = 0;
+  //===========================================================
+  //                 client <-> server 消息定义
+  //===========================================================
+
+  //===========================================================
+  //                 server <-> server 消息定义
+  //===========================================================
+
+  // ping
+  id_s_ping_req = 0x4001;
+  id_s_ping_ack = 0x5001;
+
+  // gate向gate master注册
+  id_s_gate_register_req = 0x4002;
+  id_s_gate_register_ack = 0x5002;
+  id_s_gate_register_brd = 0x6002;
+
+  // 同一个机器上的其他服务向gate注册
+  id_s_service_register_req = 0x4003;
+  id_s_service_register_ack = 0x5003;
+
+  // 其他服务向gate注册时，gate向gate master 验证
+  // 简化逻辑，暂时设定成 注册后不能更改到其他的gate上
+  id_s_service_update_req = 0x4004;
+  id_s_service_update_ack = 0x5004;
+
+  // 通过 gate 转发消息 （一台机器的gate服务向其他机器的gate发送）
+  id_s_gate_forward_brd = 0x6005;
+
+  // 订阅特定类型的所有服务在线状态
+  id_s_service_subscribe_req = 0x4006;
+  id_s_service_subscribe_ack = 0x5006;
+  id_s_service_subscribe_brd = 0x6006;
+}

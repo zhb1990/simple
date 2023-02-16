@@ -23,16 +23,16 @@ struct file_appender_config {
 
 class file_appender final : public log_appender {
   public:
-    DS_API explicit file_appender(file_appender_config config);
+    SIMPLE_API explicit file_appender(file_appender_config config);
 
     ~file_appender() noexcept override = default;
 
-    DS_NON_COPYABLE(file_appender)
+    SIMPLE_NON_COPYABLE(file_appender)
 
   protected:
-    DS_API void write(log_level, const log_clock_point& point, const log_buf_t& buf, size_t, size_t) override;
+    SIMPLE_API void write(log_level, const log_clock_point& point, const log_buf_t& buf, size_t, size_t) override;
 
-    DS_API void flush_unlock() override;
+    SIMPLE_API void flush_unlock() override;
 
   private:
     void make_full_name();

@@ -63,7 +63,7 @@ log_system::~log_system() noexcept {
     while (true) {
         auto* n = writer_queue_.pop();
         if (!n) break;
-        release_message(DS_CONVERT(n, log_message, node));
+        release_message(SIMPLE_CONVERT(n, log_message, node));
     }
 }
 
@@ -239,7 +239,7 @@ log_message* log_system::recv(const interval_t& dur) {
         }
     }
 
-    return DS_CONVERT(n, log_message, node);
+    return SIMPLE_CONVERT(n, log_message, node);
 }
 
 void log_system::backend_flush() {

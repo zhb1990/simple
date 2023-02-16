@@ -64,7 +64,7 @@ class name_flag final : public log_flag {
   public:
     explicit name_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(name_flag)
+    SIMPLE_NON_COPYABLE(name_flag)
 
     ~name_flag() noexcept override = default;
 
@@ -85,7 +85,7 @@ class level_flag final : public log_flag {
   public:
     explicit level_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(level_flag)
+    SIMPLE_NON_COPYABLE(level_flag)
 
     ~level_flag() noexcept override = default;
 
@@ -104,7 +104,7 @@ class short_level_flag final : public log_flag {
   public:
     explicit short_level_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(short_level_flag)
+    SIMPLE_NON_COPYABLE(short_level_flag)
 
     ~short_level_flag() noexcept override = default;
 
@@ -169,7 +169,7 @@ class short_weekday_flag final : public log_flag {
   public:
     explicit short_weekday_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(short_weekday_flag)
+    SIMPLE_NON_COPYABLE(short_weekday_flag)
 
     ~short_weekday_flag() noexcept override = default;
 
@@ -188,7 +188,7 @@ class weekday_flag final : public log_flag {
   public:
     explicit weekday_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(weekday_flag)
+    SIMPLE_NON_COPYABLE(weekday_flag)
 
     ~weekday_flag() noexcept override = default;
 
@@ -207,7 +207,7 @@ class short_month_name_flag final : public log_flag {
   public:
     explicit short_month_name_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(short_month_name_flag)
+    SIMPLE_NON_COPYABLE(short_month_name_flag)
 
     ~short_month_name_flag() noexcept override = default;
 
@@ -226,7 +226,7 @@ class month_name_flag final : public log_flag {
   public:
     explicit month_name_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(month_name_flag)
+    SIMPLE_NON_COPYABLE(month_name_flag)
 
     ~month_name_flag() noexcept override = default;
 
@@ -245,7 +245,7 @@ class date_time_flag final : public log_flag {
   public:
     explicit date_time_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(date_time_flag)
+    SIMPLE_NON_COPYABLE(date_time_flag)
 
     ~date_time_flag() noexcept override = default;
 
@@ -275,7 +275,7 @@ class short_year_flag final : public log_flag {
   public:
     explicit short_year_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(short_year_flag)
+    SIMPLE_NON_COPYABLE(short_year_flag)
 
     ~short_year_flag() noexcept override = default;
 
@@ -293,7 +293,7 @@ class year_flag final : public log_flag {
   public:
     explicit year_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(year_flag)
+    SIMPLE_NON_COPYABLE(year_flag)
 
     ~year_flag() noexcept override = default;
 
@@ -311,7 +311,7 @@ class month_flag final : public log_flag {
   public:
     explicit month_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(month_flag)
+    SIMPLE_NON_COPYABLE(month_flag)
 
     ~month_flag() noexcept override = default;
 
@@ -329,7 +329,7 @@ class day_flag final : public log_flag {
   public:
     explicit day_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(day_flag)
+    SIMPLE_NON_COPYABLE(day_flag)
 
     ~day_flag() noexcept override = default;
 
@@ -347,7 +347,7 @@ class short_date_flag final : public log_flag {
   public:
     explicit short_date_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(short_date_flag)
+    SIMPLE_NON_COPYABLE(short_date_flag)
 
     ~short_date_flag() noexcept override = default;
 
@@ -369,7 +369,7 @@ class hour24_flag final : public log_flag {
   public:
     explicit hour24_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(hour24_flag)
+    SIMPLE_NON_COPYABLE(hour24_flag)
 
     ~hour24_flag() noexcept override = default;
 
@@ -387,7 +387,7 @@ class hour12_flag final : public log_flag {
   public:
     explicit hour12_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(hour12_flag)
+    SIMPLE_NON_COPYABLE(hour12_flag)
 
     ~hour12_flag() noexcept override = default;
 
@@ -405,7 +405,7 @@ class min_flag final : public log_flag {
   public:
     explicit min_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(min_flag)
+    SIMPLE_NON_COPYABLE(min_flag)
 
     ~min_flag() noexcept override = default;
 
@@ -423,7 +423,7 @@ class second_flag final : public log_flag {
   public:
     explicit second_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(second_flag)
+    SIMPLE_NON_COPYABLE(second_flag)
 
     ~second_flag() noexcept override = default;
 
@@ -441,7 +441,7 @@ class millis_flag final : public log_flag {
   public:
     explicit millis_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(millis_flag)
+    SIMPLE_NON_COPYABLE(millis_flag)
 
     ~millis_flag() noexcept override = default;
 
@@ -460,7 +460,7 @@ class micros_flag final : public log_flag {
   public:
     explicit micros_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(micros_flag)
+    SIMPLE_NON_COPYABLE(micros_flag)
 
     ~micros_flag() noexcept override = default;
 
@@ -479,7 +479,7 @@ class nanosecond_flag final : public log_flag {
   public:
     explicit nanosecond_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(nanosecond_flag)
+    SIMPLE_NON_COPYABLE(nanosecond_flag)
 
     ~nanosecond_flag() noexcept override = default;
 
@@ -498,7 +498,7 @@ class timestamp_flag final : public log_flag {
   public:
     explicit timestamp_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(timestamp_flag)
+    SIMPLE_NON_COPYABLE(timestamp_flag)
 
     ~timestamp_flag() noexcept override = default;
 
@@ -518,7 +518,7 @@ class noon_flag final : public log_flag {
   public:
     explicit noon_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(noon_flag)
+    SIMPLE_NON_COPYABLE(noon_flag)
 
     ~noon_flag() noexcept override = default;
 
@@ -537,7 +537,7 @@ class clock_hour12_flag final : public log_flag {
   public:
     explicit clock_hour12_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(clock_hour12_flag)
+    SIMPLE_NON_COPYABLE(clock_hour12_flag)
 
     ~clock_hour12_flag() noexcept override = default;
 
@@ -561,7 +561,7 @@ class short_clock_hour24_flag final : public log_flag {
   public:
     explicit short_clock_hour24_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(short_clock_hour24_flag)
+    SIMPLE_NON_COPYABLE(short_clock_hour24_flag)
 
     ~short_clock_hour24_flag() noexcept override = default;
 
@@ -581,7 +581,7 @@ class clock_hour24_flag final : public log_flag {
   public:
     explicit clock_hour24_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(clock_hour24_flag)
+    SIMPLE_NON_COPYABLE(clock_hour24_flag)
 
     ~clock_hour24_flag() noexcept override = default;
 
@@ -603,7 +603,7 @@ class timezone_flag final : public log_flag {
   public:
     explicit timezone_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(timezone_flag)
+    SIMPLE_NON_COPYABLE(timezone_flag)
 
     ~timezone_flag() noexcept override = default;
 
@@ -649,7 +649,7 @@ class tid_flag final : public log_flag {
   public:
     explicit tid_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(tid_flag)
+    SIMPLE_NON_COPYABLE(tid_flag)
 
     ~tid_flag() noexcept override = default;
 
@@ -668,7 +668,7 @@ class pid_flag final : public log_flag {
   public:
     explicit pid_flag(const log_padding &pad) : log_flag(pad) { pid_ = os::pid(); }
 
-    DS_NON_COPYABLE(pid_flag)
+    SIMPLE_NON_COPYABLE(pid_flag)
 
     ~pid_flag() noexcept override = default;
 
@@ -690,7 +690,7 @@ class log_value_flag final : public log_flag {
   public:
     explicit log_value_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(log_value_flag)
+    SIMPLE_NON_COPYABLE(log_value_flag)
 
     ~log_value_flag() noexcept override = default;
 
@@ -707,7 +707,7 @@ class ch_flag final : public log_flag {
   public:
     explicit ch_flag(const char ch) : log_flag(), ch_(ch) {}
 
-    DS_NON_COPYABLE(ch_flag)
+    SIMPLE_NON_COPYABLE(ch_flag)
 
     ~ch_flag() noexcept override = default;
 
@@ -724,7 +724,7 @@ class aggregate_flag final : public log_flag {
   public:
     explicit aggregate_flag() : log_flag() {}
 
-    DS_NON_COPYABLE(aggregate_flag)
+    SIMPLE_NON_COPYABLE(aggregate_flag)
 
     ~aggregate_flag() noexcept override = default;
 
@@ -751,7 +751,7 @@ class color_start_flag final : public log_flag {
   public:
     explicit color_start_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(color_start_flag)
+    SIMPLE_NON_COPYABLE(color_start_flag)
 
     ~color_start_flag() noexcept override = default;
 
@@ -765,7 +765,7 @@ class color_stop_flag final : public log_flag {
   public:
     explicit color_stop_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(color_stop_flag)
+    SIMPLE_NON_COPYABLE(color_stop_flag)
 
     ~color_stop_flag() noexcept override = default;
 
@@ -780,7 +780,7 @@ class source_location_flag final : public log_flag {
   public:
     explicit source_location_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(source_location_flag)
+    SIMPLE_NON_COPYABLE(source_location_flag)
 
     ~source_location_flag() noexcept override = default;
 
@@ -814,7 +814,7 @@ class filename_flag final : public log_flag {
   public:
     explicit filename_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(filename_flag)
+    SIMPLE_NON_COPYABLE(filename_flag)
 
     ~filename_flag() noexcept override = default;
 
@@ -840,7 +840,7 @@ class short_filename_flag final : public log_flag {
   public:
     explicit short_filename_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(short_filename_flag)
+    SIMPLE_NON_COPYABLE(short_filename_flag)
 
     ~short_filename_flag() noexcept override = default;
 
@@ -868,7 +868,7 @@ class line_flag final : public log_flag {
   public:
     explicit line_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(line_flag)
+    SIMPLE_NON_COPYABLE(line_flag)
 
     ~line_flag() noexcept override = default;
 
@@ -892,7 +892,7 @@ class func_flag final : public log_flag {
   public:
     explicit func_flag(const log_padding &pad) : log_flag(pad) {}
 
-    DS_NON_COPYABLE(func_flag)
+    SIMPLE_NON_COPYABLE(func_flag)
 
     ~func_flag() noexcept override = default;
 
@@ -917,7 +917,7 @@ class elapsed_time_flag final : public log_flag {
   public:
     explicit elapsed_time_flag(const log_padding &pad) : log_flag(pad), last_message_time_(std::chrono::system_clock::now()) {}
 
-    DS_NON_COPYABLE(elapsed_time_flag)
+    SIMPLE_NON_COPYABLE(elapsed_time_flag)
 
     ~elapsed_time_flag() noexcept override = default;
 
@@ -945,7 +945,7 @@ class default_flag final : public log_flag {
   public:
     explicit default_flag() : log_flag() {}
 
-    DS_NON_COPYABLE(default_flag)
+    SIMPLE_NON_COPYABLE(default_flag)
 
     ~default_flag() noexcept override = default;
 

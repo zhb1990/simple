@@ -10,7 +10,7 @@
 
 namespace simple {
 
-DS_API void write_console(const std::string_view &strv, FILE *file);
+SIMPLE_API void write_console(const std::string_view &strv, FILE *file);
 
 template <typename... Args>
 void print_error(fmt::format_string<Args...> fmt, Args &&...args) {
@@ -22,33 +22,33 @@ void print_error(fmt::format_string<Args...> fmt, Args &&...args) {
     }
 }
 
-DS_API void load_log_config(const std::string &utf8_path);
+SIMPLE_API void load_log_config(const std::string &utf8_path);
 
-DS_API void register_logger(logger_ptr new_logger);
+SIMPLE_API void register_logger(logger_ptr new_logger);
 
-DS_API void initialize_logger(logger_ptr new_logger);
+SIMPLE_API void initialize_logger(logger_ptr new_logger);
 
-DS_API logger_ptr find_logger(const std::string &name);
+SIMPLE_API logger_ptr find_logger(const std::string &name);
 
-DS_API void drop_logger(const std::string &name);
+SIMPLE_API void drop_logger(const std::string &name);
 
-DS_API void drop_all_loggers();
+SIMPLE_API void drop_all_loggers();
 
-DS_API logger_ptr default_logger();
+SIMPLE_API logger_ptr default_logger();
 
-DS_API void set_default_logger(logger_ptr new_default_logger);
+SIMPLE_API void set_default_logger(logger_ptr new_default_logger);
 
-DS_API void set_log_level(log_level level);
+SIMPLE_API void set_log_level(log_level level);
 
-DS_API void set_log_levels(log_levels levels, const log_level *global_level = nullptr);
+SIMPLE_API void set_log_levels(log_levels levels, const log_level *global_level = nullptr);
 
-DS_API void set_log_formatter(std::unique_ptr<log_formatter> formatter);
+SIMPLE_API void set_log_formatter(std::unique_ptr<log_formatter> formatter);
 
-DS_API void set_log_pattern(const std::string_view &pattern, log_time_type time_type = log_time_type::local);
+SIMPLE_API void set_log_pattern(const std::string_view &pattern, log_time_type time_type = log_time_type::local);
 
-DS_API void log_flush();
+SIMPLE_API void log_flush();
 
-DS_API void set_log_flush_interval(int64_t seconds);
+SIMPLE_API void set_log_flush_interval(int64_t seconds);
 
 template <typename... Args>
 struct log {

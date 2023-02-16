@@ -5,7 +5,7 @@
 
 namespace simple {
 
-DS_API int32_t utc_minutes_offset(const std::chrono::system_clock::time_point&, const std::tm& lc);
+SIMPLE_API int32_t utc_minutes_offset(const std::chrono::system_clock::time_point&, const std::tm& lc);
 
 inline int64_t get_timestamp_seconds() {
     using namespace std::chrono;

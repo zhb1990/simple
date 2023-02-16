@@ -17,13 +17,13 @@ class timed_awaiter {
     using time_point = timer_queue::time_point;
     using duration = timer_queue::duration;
 
-    DS_API explicit timed_awaiter(time_point point);
+    SIMPLE_API explicit timed_awaiter(time_point point);
 
-    DS_API explicit timed_awaiter(duration dur);
+    SIMPLE_API explicit timed_awaiter(duration dur);
 
     timed_awaiter(const timed_awaiter&) = delete;
 
-    DS_API timed_awaiter(timed_awaiter&& other) noexcept;
+    SIMPLE_API timed_awaiter(timed_awaiter&& other) noexcept;
 
     ~timed_awaiter() noexcept = default;
 
@@ -58,7 +58,7 @@ class timed_awaiter {
         return true;
     }
 
-    DS_API void await_resume();
+    SIMPLE_API void await_resume();
 
     void wake_up() const;
 

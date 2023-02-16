@@ -24,7 +24,7 @@ class ssl_session_impl final : public socket_base, public std::enable_shared_fro
 
     ~ssl_session_impl() noexcept override = default;
 
-    DS_NON_COPYABLE(ssl_session_impl)
+    SIMPLE_NON_COPYABLE(ssl_session_impl)
 
     void start(uint32_t acceptor_id);
 

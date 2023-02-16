@@ -19,29 +19,29 @@ class application {
     application() = default;
 
   public:
-    DS_NON_COPYABLE(application)
+    SIMPLE_NON_COPYABLE(application)
 
-    DS_API ~application() noexcept;
+    SIMPLE_API ~application() noexcept;
 
-    DS_API static application& instance();
+    SIMPLE_API static application& instance();
 
     /**
      * \brief 根据配置文件启动
      * \param utf8_path 配置文件的utf8路径
      */
-    DS_API void start(const std::string& utf8_path);
+    SIMPLE_API void start(const std::string& utf8_path);
 
     /**
      * \brief 关闭
      */
-    DS_API static void stop();
+    SIMPLE_API static void stop();
 
     /**
      * \brief 查看是否有加载对应名字的服务
      * \param id 服务id
      * \return 返回 是否有该服务
      */
-    [[nodiscard]] DS_API bool contains_service(uint16_t id) const;
+    [[nodiscard]] SIMPLE_API bool contains_service(uint16_t id) const;
 
     using message_callback = std::function<task<>(const memory_buffer&)>;
 
@@ -51,14 +51,14 @@ class application {
      * \param service 服务类指针
      * \param callback 回调函数
      */
-    DS_API void register_message_callback(uint32_t id, const service_base* service, message_callback callback);
+    SIMPLE_API void register_message_callback(uint32_t id, const service_base* service, message_callback callback);
 
     /**
      * \brief 取消注册消息的回调函数
      * \param id 消息id
      * \param service 服务类指针
      */
-    DS_API void deregister_message_callback(uint32_t id, const service_base* service);
+    SIMPLE_API void deregister_message_callback(uint32_t id, const service_base* service);
 
     /**
      * \brief 分发消息
@@ -66,7 +66,7 @@ class application {
      * \param message 消息内容
      * \return 无返回的task
      */
-    DS_API task<> forward_message(uint32_t id, const memory_buffer& message);
+    SIMPLE_API task<> forward_message(uint32_t id, const memory_buffer& message);
 
     /**
      * \brief 获取当前帧
@@ -80,9 +80,9 @@ class application {
      */
     [[nodiscard]] const toml_table_t& config() const noexcept { return config_; }
 
-    DS_API void wait_frame(uint64_t frame, std::coroutine_handle<> handle);
+    SIMPLE_API void wait_frame(uint64_t frame, std::coroutine_handle<> handle);
 
-    DS_API bool remove_frame_coroutine(uint64_t frame, std::coroutine_handle<> handle);
+    SIMPLE_API bool remove_frame_coroutine(uint64_t frame, std::coroutine_handle<> handle);
 
   private:
     void load_services();

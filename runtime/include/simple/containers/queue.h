@@ -15,27 +15,27 @@ class mpsc_queue_base {
         std::atomic<node*> next;
     };
 
-    DS_API mpsc_queue_base();
+    SIMPLE_API mpsc_queue_base();
 
-    DS_NON_COPYABLE(mpsc_queue_base)
+    SIMPLE_NON_COPYABLE(mpsc_queue_base)
 
-    DS_API ~mpsc_queue_base() noexcept;
+    SIMPLE_API ~mpsc_queue_base() noexcept;
 
     // Push a node
     // Thread safe - can be called from multiple threads concurrently
     // Returns true if this was possibly the first node (may return true
     // sporadically, will not return false sporadically)
-    DS_API bool push(node* n);
+    SIMPLE_API bool push(node* n);
 
     // Pop a node.  Returns NULL only if the queue was empty at some point after
     // calling this function
-    DS_API node* pop();
+    SIMPLE_API node* pop();
 
     // Pop a node; sets *empty to true if the queue is empty, or false if it is
     // not.
-    DS_API node* pop_and_check_end(bool* empty);
+    SIMPLE_API node* pop_and_check_end(bool* empty);
 
-    [[nodiscard]] DS_API size_t size() const noexcept;
+    [[nodiscard]] SIMPLE_API size_t size() const noexcept;
 
   private:
     bool push_base(node* n);
@@ -43,7 +43,7 @@ class mpsc_queue_base {
     node* pop_and_check_end_base(bool* empty);
 
     std::atomic<node*> head_;
-    [[maybe_unused]] char padding_[ds_cache_line_bytes - sizeof(head_)]{};
+    [[maybe_unused]] char padding_[simple_cache_line_bytes - sizeof(head_)]{};
     node* tail_;
     node stub_;
     std::atomic_size_t size_;
@@ -57,18 +57,18 @@ class mpmc_queue_base {
     // Thread safe - can be called from multiple threads concurrently
     // Returns true if this was possibly the first node (may return true
     // sporadically, will not return false sporadically)
-    DS_API bool push(node* n);
+    SIMPLE_API bool push(node* n);
 
     // Pop a node.  Returns NULL only if the queue was empty at some point after
     // calling this function
-    DS_API node* pop();
+    SIMPLE_API node* pop();
 
     // Pop a node (returns NULL if no node is ready - which doesn't indicate that
     // the queue is empty!!)
     // Thread compatible - can only be called from one thread at a time
-    DS_API node* try_pop();
+    SIMPLE_API node* try_pop();
 
-    [[nodiscard]] DS_API size_t size() const;
+    [[nodiscard]] SIMPLE_API size_t size() const;
 
   private:
     mpsc_queue_base queue_;
@@ -89,7 +89,7 @@ class mpsc_queue {
 
     explicit mpsc_queue(Field field) : field_(field) {}
 
-    DS_NON_COPYABLE(mpsc_queue)
+    SIMPLE_NON_COPYABLE(mpsc_queue)
 
     ~mpsc_queue() noexcept = default;
 
@@ -114,7 +114,7 @@ class mpmc_queue {
 
     explicit mpmc_queue(Field field) : field_(field) {}
 
-    DS_NON_COPYABLE(mpmc_queue)
+    SIMPLE_NON_COPYABLE(mpmc_queue)
 
     ~mpmc_queue() noexcept = default;
 

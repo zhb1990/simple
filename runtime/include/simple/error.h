@@ -23,9 +23,9 @@ enum class coro_errors {
     invalid_action
 };
 
-DS_API const std::error_category& get_socket_category();
+SIMPLE_API const std::error_category& get_socket_category();
 
-DS_API const std::error_category& get_coro_category();
+SIMPLE_API const std::error_category& get_coro_category();
 
 }  // namespace simple
 

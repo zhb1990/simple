@@ -14,20 +14,20 @@ class thread_pool {
     thread_pool() = default;
 
   public:
-    DS_NON_COPYABLE(thread_pool)
+    SIMPLE_NON_COPYABLE(thread_pool)
 
     ~thread_pool() noexcept = default;
 
-    DS_API static thread_pool& instance();
+    SIMPLE_API static thread_pool& instance();
 
     // 启动线程池, 参数为线程数量
-    DS_API void start(size_t num);
+    SIMPLE_API void start(size_t num);
 
-    DS_API void stop();
+    SIMPLE_API void stop();
 
-    DS_API void join();
+    SIMPLE_API void join();
 
-    DS_API void post(std::function<void()>&& func);
+    SIMPLE_API void post(std::function<void()>&& func);
 
   private:
     void run(const std::stop_token& token);

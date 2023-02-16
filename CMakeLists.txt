@@ -41,8 +41,8 @@ file(RENAME ${PROJECT_BINARY_DIR}/common.vcxproj.user ${PROJECT_BINARY_DIR}/exec
 ##SET_PROPERTY(TARGET libkernel PROPERTY FOLDER "model")
 
 ## proto
-##add_subdirectory(model/proto)
-##SET_PROPERTY(TARGET libproto PROPERTY FOLDER "model")
+add_subdirectory(model/proto)
+SET_PROPERTY(TARGET libproto PROPERTY FOLDER "model")
 
 # service 
 

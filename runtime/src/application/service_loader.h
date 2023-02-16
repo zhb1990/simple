@@ -53,7 +53,7 @@ class service_loader {
     service_loader() = default;
 
   public:
-    DS_NON_COPYABLE(service_loader)
+    SIMPLE_NON_COPYABLE(service_loader)
 
     ~service_loader() noexcept = default;
 

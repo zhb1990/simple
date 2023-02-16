@@ -16,7 +16,7 @@ class shm_channel_select {
     shm_channel_select() = default;
 
   public:
-    DS_NON_COPYABLE(shm_channel_select)
+    SIMPLE_NON_COPYABLE(shm_channel_select)
 
     ~shm_channel_select() noexcept = default;
 

@@ -175,12 +175,12 @@ if (WIN32)
             _WIN32_WINNT=0x0A00
             NOMINMAX)
     source_group(TREE ${PROJECT_SOURCE_DIR} FILES ${SIMPLE_HEADS} ${SIMPLE_SOURCES})
-    target_compile_definitions(${PROJECT_NAME} INTERFACE DS_DLL_IMPORT)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE DS_DLL_EXPORT ASIO_NO_DEPRECATED)
+    target_compile_definitions(${PROJECT_NAME} INTERFACE SIMPLE_DLL_IMPORT)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE SIMPLE_DLL_EXPORT ASIO_NO_DEPRECATED)
 else ()
     add_library(${PROJECT_NAME} SHARED ${SIMPLE_SOURCES})
     target_compile_definitions(${PROJECT_NAME} PRIVATE ASIO_NO_DEPRECATED)
-    target_compile_definitions(${PROJECT_NAME} PUBLIC DS_LIB_VISIBILITY)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC SIMPLE_LIB_VISIBILITY)
 endif ()
 
 target_compile_options(${PROJECT_NAME}

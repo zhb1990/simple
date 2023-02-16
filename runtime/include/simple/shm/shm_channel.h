@@ -16,15 +16,15 @@ class shm_channel_select;
 
 class shm_channel {
   public:
-    DS_API shm_channel(std::string_view src, std::string_view dst, size_t size);
+    SIMPLE_API shm_channel(std::string_view src, std::string_view dst, size_t size);
 
     shm_channel(const shm_channel&) = delete;
 
-    DS_API shm_channel(shm_channel&& other) noexcept;
+    SIMPLE_API shm_channel(shm_channel&& other) noexcept;
 
     shm_channel& operator=(const shm_channel&) = delete;
 
-    DS_API shm_channel& operator=(shm_channel&& other) noexcept;
+    SIMPLE_API shm_channel& operator=(shm_channel&& other) noexcept;
 
     ~shm_channel() noexcept = default;
 
@@ -34,7 +34,7 @@ class shm_channel {
      * \param len 要写入的数据长度
      * \return 是否成功写入
      */
-    DS_API bool try_write(const void* buf, uint32_t len);
+    SIMPLE_API bool try_write(const void* buf, uint32_t len);
 
     /**
      * \brief 尝试读出数据
@@ -42,13 +42,13 @@ class shm_channel {
      * \param size 读的缓冲区size
      * \return 如果 <= size 表示已读出的字节数，否则表示缓冲区不够，返回实际需要的大小
      */
-    DS_API uint32_t try_read(void* buf, uint32_t size);
+    SIMPLE_API uint32_t try_read(void* buf, uint32_t size);
 
-    DS_API task<> write(const void* buf, uint32_t len);
+    SIMPLE_API task<> write(const void* buf, uint32_t len);
 
-    DS_API task<memory_buffer_ptr> read();
+    SIMPLE_API task<memory_buffer_ptr> read();
 
-    DS_API task<> read(memory_buffer& buf);
+    SIMPLE_API task<> read(memory_buffer& buf);
 
   private:
     friend class shm_channel_select;

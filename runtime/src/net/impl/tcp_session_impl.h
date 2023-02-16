@@ -22,7 +22,7 @@ class tcp_session_impl final : public socket_base, public std::enable_shared_fro
 
     ~tcp_session_impl() noexcept override = default;
 
-    DS_NON_COPYABLE(tcp_session_impl)
+    SIMPLE_NON_COPYABLE(tcp_session_impl)
 
     void start(uint32_t acceptor_id);
 

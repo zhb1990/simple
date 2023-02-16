@@ -13,45 +13,45 @@ class log_system {
     log_system();
 
   public:
-    DS_NON_COPYABLE(log_system)
+    SIMPLE_NON_COPYABLE(log_system)
 
-    DS_API ~log_system() noexcept;
+    SIMPLE_API ~log_system() noexcept;
 
-    DS_API static log_system& instance();
+    SIMPLE_API static log_system& instance();
 
-    DS_API void register_logger(logger_ptr new_logger);
+    SIMPLE_API void register_logger(logger_ptr new_logger);
 
-    DS_API void initialize_logger(logger_ptr new_logger);
+    SIMPLE_API void initialize_logger(logger_ptr new_logger);
 
-    DS_API logger_ptr find(const std::string& name);
+    SIMPLE_API logger_ptr find(const std::string& name);
 
-    DS_API void drop(const std::string& name);
+    SIMPLE_API void drop(const std::string& name);
 
-    DS_API void drop_all();
+    SIMPLE_API void drop_all();
 
-    DS_API logger_ptr default_logger() const;
+    SIMPLE_API logger_ptr default_logger() const;
 
-    DS_API void set_default(logger_ptr new_default_logger);
+    SIMPLE_API void set_default(logger_ptr new_default_logger);
 
-    DS_API void set_level(log_level level);
+    SIMPLE_API void set_level(log_level level);
 
-    DS_API void set_levels(log_levels levels, const log_level* global_level = nullptr);
+    SIMPLE_API void set_levels(log_levels levels, const log_level* global_level = nullptr);
 
-    DS_API void set_formatter(std::unique_ptr<log_formatter> formatter);
+    SIMPLE_API void set_formatter(std::unique_ptr<log_formatter> formatter);
 
-    DS_API void set_pattern(const std::string_view& pattern, log_time_type time_type = log_time_type::local);
+    SIMPLE_API void set_pattern(const std::string_view& pattern, log_time_type time_type = log_time_type::local);
 
-    DS_API void flush();
+    SIMPLE_API void flush();
 
-    DS_API log_message* new_message();
+    SIMPLE_API log_message* new_message();
 
-    DS_API void release_message(log_message* msg);
+    SIMPLE_API void release_message(log_message* msg);
 
-    DS_API void send(log_message* msg);
+    SIMPLE_API void send(log_message* msg);
 
-    DS_API void set_flush_interval(int64_t seconds);
+    SIMPLE_API void set_flush_interval(int64_t seconds);
 
-    DS_API void post_lz4(const std::string& src, const std::string& dest);
+    SIMPLE_API void post_lz4(const std::string& src, const std::string& dest);
 
   private:
     void insert_loggers(logger_ptr ptr);

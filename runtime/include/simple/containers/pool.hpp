@@ -25,7 +25,7 @@ class pool {
         }
     }
 
-    DS_NON_COPYABLE(pool)
+    SIMPLE_NON_COPYABLE(pool)
 
     class_type* create() {
         if (auto* n = queue_.pop()) {

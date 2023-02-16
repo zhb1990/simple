@@ -17,27 +17,27 @@ class logger : public std::enable_shared_from_this<logger> {
         : name_(name), async_(async), appenders_(std::ranges::begin(range), std::ranges::end(range)) {}
 
     // Logger with single appender
-    DS_API logger(const std::string_view &name, log_appender_ptr appender, bool async = false);
+    SIMPLE_API logger(const std::string_view &name, log_appender_ptr appender, bool async = false);
 
-    DS_NON_COPYABLE(logger)
+    SIMPLE_NON_COPYABLE(logger)
 
     ~logger() noexcept = default;
 
-    DS_API void set_level(log_level level);
+    SIMPLE_API void set_level(log_level level);
 
-    [[nodiscard]] DS_API log_level level() const { return level_; }
+    [[nodiscard]] SIMPLE_API log_level level() const { return level_; }
 
-    [[nodiscard]] DS_API bool should_log(log_level level) const;
+    [[nodiscard]] SIMPLE_API bool should_log(log_level level) const;
 
-    [[nodiscard]] DS_API const std::string &name() const { return name_; }
+    [[nodiscard]] SIMPLE_API const std::string &name() const { return name_; }
 
-    DS_API void set_formatter(std::unique_ptr<log_formatter> formatter);
+    SIMPLE_API void set_formatter(std::unique_ptr<log_formatter> formatter);
 
-    DS_API void set_pattern(const std::string_view &pattern, log_time_type time_type = log_time_type::local);
+    SIMPLE_API void set_pattern(const std::string_view &pattern, log_time_type time_type = log_time_type::local);
 
-    DS_API void flush() const;
+    SIMPLE_API void flush() const;
 
-    DS_API void log(const std::source_location &source, log_level level, log_buf_t &buf) const;
+    SIMPLE_API void log(const std::source_location &source, log_level level, log_buf_t &buf) const;
 
     template <typename... Args>
     void log(const std::source_location &source, log_level level, const fmt::format_string<Args...> &fmt,

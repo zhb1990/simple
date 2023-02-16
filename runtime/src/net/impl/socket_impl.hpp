@@ -13,7 +13,7 @@ class socket_base {
   public:
     explicit socket_base(uint32_t socket_id) : socket_id_(socket_id) {}
 
-    DS_NON_COPYABLE(socket_base)
+    SIMPLE_NON_COPYABLE(socket_base)
 
     virtual ~socket_base() noexcept = default;
 

@@ -15,7 +15,7 @@ class service_base {
   public:
     service_base() = default;
 
-    DS_NON_COPYABLE(service_base)
+    SIMPLE_NON_COPYABLE(service_base)
 
     virtual ~service_base() noexcept = default;
 
@@ -60,4 +60,4 @@ using service_release_t = std::add_pointer_t<void(const service_base*)>;
 
 }  // namespace simple
 
-#define DS_SERVICE_API extern "C" __declspec(dllexport)
+#define SIMPLE_SERVICE_API extern "C" __declspec(dllexport)
