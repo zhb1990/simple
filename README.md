@@ -15,6 +15,7 @@ vcpkg install kcp
 vcpkg install lz4
 vcpkg install openssl
 vcpkg install toml11
+vcpkg install gtest
 ```
 
 可以使用命令`vcpkg integrate install`, 然后vs2022直接打开文件夹  

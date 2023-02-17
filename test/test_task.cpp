@@ -53,7 +53,7 @@ TEST(task, cancellation) {
             a = 100;
         }());
     } catch (std::exception &e) {
-        auto ec = make_error_code(simple::coro_errors::canceled);
+        const auto ec = make_error_code(simple::coro_errors::canceled);
         EXPECT_EQ(e.what(), ec.message());
     }
 
