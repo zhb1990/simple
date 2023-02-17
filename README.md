@@ -30,3 +30,8 @@ cmake -DCMAKE_TOOLCHAIN_FILE=XXX/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 cd bin\Debug
 .\executor.exe ..\..\config\test.toml
 ```
+
+启动五子棋服务器（未完成）
+```
+.\executor.exe ..\..\config\server.toml
+```

@@ -44,27 +44,29 @@ SET_PROPERTY(TARGET libkernel PROPERTY FOLDER "model")
 add_subdirectory(model/proto)
 SET_PROPERTY(TARGET libproto PROPERTY FOLDER "model")
 
-# service 
+# example
 
 ## test1
-add_subdirectory(service/test1)
-SET_PROPERTY(TARGET test1 PROPERTY FOLDER "service")
+add_subdirectory(example/test1)
+SET_PROPERTY(TARGET test1 PROPERTY FOLDER "gobang")
 
 ## test2
-add_subdirectory(service/test2)
-SET_PROPERTY(TARGET test2 PROPERTY FOLDER "service")
+add_subdirectory(example/test2)
+SET_PROPERTY(TARGET test2 PROPERTY FOLDER "gobang")
+
+# gobang
 
 ## gate_master
-add_subdirectory(service/gate_master)
-SET_PROPERTY(TARGET gate_master PROPERTY FOLDER "service")
+add_subdirectory(gobang/gate_master)
+SET_PROPERTY(TARGET gate_master PROPERTY FOLDER "gobang")
 
 ## gate
-add_subdirectory(service/gate)
-SET_PROPERTY(TARGET gate PROPERTY FOLDER "service")
+add_subdirectory(gobang/gate)
+SET_PROPERTY(TARGET gate PROPERTY FOLDER "gobang")
 
 ## proxy
-add_subdirectory(service/proxy)
-SET_PROPERTY(TARGET proxy PROPERTY FOLDER "service")
+add_subdirectory(gobang/proxy)
+SET_PROPERTY(TARGET proxy PROPERTY FOLDER "gobang")
 
 
 
