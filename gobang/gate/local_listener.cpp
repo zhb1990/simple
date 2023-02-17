@@ -190,7 +190,7 @@ simple::task<> local_listener::service_register(const local_listener::socket_dat
         simple::network::instance().close(last->socket);
     }
 
-    simple::error("[{}] socket:{} registered service:{} succ.", gate_.name(), ptr->socket, service);
+    simple::warn("[{}] socket:{} registered service:{} succ.", gate_.name(), ptr->socket, service);
 
     if (ptr->socket == 0) {
         // 发布服务状态给订阅的
