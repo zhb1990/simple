@@ -42,16 +42,19 @@ class socket_system {
     SIMPLE_API uint32_t tcp_listen(const std::string& host, uint16_t port, bool reuse);
 
     SIMPLE_API uint32_t ssl_listen(const std::string& host, uint16_t port, bool reuse, const std::string& cert,
-                               const std::string& key, const std::string& dh, const std::string& password);
+                                   const std::string& key, const std::string& dh, const std::string& password);
 
     SIMPLE_API uint32_t kcp_listen(const std::string& host, uint16_t port, bool reuse);
 
-    SIMPLE_API uint32_t tcp_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout);
+    SIMPLE_API uint32_t tcp_connect(const std::string& host, const std::string& service,
+                                    const std::chrono::milliseconds& timeout);
 
-    SIMPLE_API uint32_t ssl_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout,
-                                const std::string& verify = "", bool ignore_cert = true);
+    SIMPLE_API uint32_t ssl_connect(const std::string& host, const std::string& service,
+                                    const std::chrono::milliseconds& timeout, const std::string& verify = "",
+                                    bool ignore_cert = true);
 
-    SIMPLE_API uint32_t kcp_connect(const std::string& host, const std::string& service, const std::chrono::milliseconds& timeout);
+    SIMPLE_API uint32_t kcp_connect(const std::string& host, const std::string& service,
+                                    const std::chrono::milliseconds& timeout);
 
     SIMPLE_API void send(uint32_t socket_id, const memory_buffer_ptr& buf);
 
@@ -65,7 +68,7 @@ class socket_system {
 
     asio::io_context& context() noexcept { return context_; }
 
-    void hand_start(uint32_t socket_id) const;
+    void hand_start(uint32_t socket_id, const std::string& local = {}) const;
 
     void hand_stop(uint32_t socket_id, const std::error_code& ec) const;
 
@@ -77,7 +80,7 @@ class socket_system {
 
     void erase(uint32_t socket_id);
 
-    using start_handle = std::function<void(uint32_t)>;
+    using start_handle = std::function<void(uint32_t, const std::string&)>;
 
     void register_start_handle(start_handle&& handler) { start_ = std::move(handler); }
 

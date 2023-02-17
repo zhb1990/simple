@@ -29,13 +29,13 @@ inline constexpr auto simple_cache_line_bytes = 64;
 
 // clang-format on
 
-#define SIMPLE_NON_COPYABLE(type)                                                     \
+#define SIMPLE_NON_COPYABLE(type)                                                 \
     type(const type&) = delete;                                                   \
     type(type&&) = delete;                 /*NOLINT(bugprone-macro-parentheses)*/ \
     type& operator=(const type&) = delete; /*NOLINT(bugprone-macro-parentheses)*/ \
     type& operator=(type&&) = delete;      /*NOLINT(bugprone-macro-parentheses)*/
 
-#define SIMPLE_COPYABLE_DEFAULT(type)                                                      \
+#define SIMPLE_COPYABLE_DEFAULT(type)                                                  \
     type(const type&) = default;                                                       \
     type(type&&) noexcept = default;            /*NOLINT(bugprone-macro-parentheses)*/ \
     type& operator=(const type&) = default;     /*NOLINT(bugprone-macro-parentheses)*/ \

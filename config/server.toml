@@ -22,7 +22,7 @@ order = 2
 master_address = "127.0.0.1,10099" #gate_master 的地址
 local_port = 10098  #本地监听端口，同机器的其他服务来注册
 remote_port = 10097 #远程监听端口，其他gate访问
-remote_hosts = ["192.168.1.13"] #其他gate访问的ip地址或域名
+remote_hosts = ["127.0.0.1"] #其他gate访问的ip地址或域名
 
 [[services]]
 id = 5
@@ -33,7 +33,7 @@ order = 2
 master_address = "127.0.0.1,10099" #gate_master 的地址
 local_port = 10096  #本地监听端口，同机器的其他服务来注册
 remote_port = 10095 #远程监听端口，其他gate访问
-remote_hosts = ["192.168.1.13"] #其他gate访问的ip地址或域名
+remote_hosts = ["127.0.0.1"] #其他gate访问的ip地址或域名
 
 [[services]]
 id = 6

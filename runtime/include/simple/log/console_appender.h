@@ -13,7 +13,7 @@ class console_appender : public log_appender {
 
   protected:
     SIMPLE_API void write(log_level level, const log_clock_point &, const log_buf_t &buf, size_t color_start,
-                      size_t color_stop) override;
+                          size_t color_stop) override;
 
     SIMPLE_API void flush_unlock() override;
 

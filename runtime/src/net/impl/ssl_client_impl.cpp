@@ -170,7 +170,9 @@ asio::awaitable<void> ssl_client_impl::co_connect(const std::string& host, const
     }
 
     auto self = shared_from_this();
-    system.hand_start(socket_id_);
+    std::error_code ec_ignore;
+    auto local = socket_raw.local_endpoint(ec_ignore);
+    system.hand_start(socket_id_, to_string(local));
 
     // 发送协程
     co_spawn(

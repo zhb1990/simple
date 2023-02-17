@@ -84,7 +84,9 @@ asio::awaitable<void> tcp_client_impl::co_connect(const std::string& host, const
     }
 
     auto self = shared_from_this();
-    system.hand_start(socket_id_);
+    std::error_code ec_ignore;
+    auto local = socket_.local_endpoint(ec_ignore);
+    system.hand_start(socket_id_, to_string(local));
 
     // 发送协程
     co_spawn(

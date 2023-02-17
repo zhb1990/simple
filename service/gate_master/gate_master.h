@@ -95,9 +95,9 @@ class gate_master final : public simple::service_base {
     // gate 上报当前机器上的其他进程变更
     void gate_upload(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
 
-    bool checkServices(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, uint16_t gate);
+    bool check_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, uint16_t gate);
 
-    void addServices(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, const gate_data* gate);
+    void add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, const gate_data* gate);
 
     // gate 的service id —> gate_data
     std::unordered_set<gate_data, std::hash<gate_data>, std::equal_to<>> gates_;

@@ -96,7 +96,7 @@ network& network::instance() {
 template <typename Service>
 std::string to_address_string(const std::string& host, const Service& service) {
     try {
-        if (host.find(':') == std::string::npos) {
+        if (host.find(':') != std::string::npos) {
             return fmt::format("[{}]:{}", host, service);
         }
 
@@ -110,6 +110,11 @@ template <typename Service>
 network_awaiter network::create_start_awaiter(uint32_t socket_id, const std::string& host, const Service& service) {
     auto ptr = std::make_shared<network_data>();
     ptr->id = socket_id;
+    if (get_socket_class(socket_id) == socket_class::server) {
+        ptr->local = to_address_string(host, service);
+    } else {
+        ptr->remote = to_address_string(host, service);
+    }
     ptr->local = to_address_string(host, service);
     sockets_.emplace(socket_id, ptr);
 
@@ -318,8 +323,9 @@ void network::init() {
                 [this, socket_id, accepted, local, remote] { return hand_accept(socket_id, accepted, local, remote); });
         });
 
-    system.register_start_handle(
-        [this, &scheduler](uint32_t socket_id) { return scheduler.post([this, socket_id] { return hand_start(socket_id); }); });
+    system.register_start_handle([this, &scheduler](uint32_t socket_id, const std::string& local) {
+        return scheduler.post([this, socket_id, local] { return hand_start(socket_id, local); });
+    });
 
     system.register_stop_handle([this, &scheduler](uint32_t socket_id, const std::error_code& ec) {
         return scheduler.post([this, socket_id, ec] { return hand_stop(socket_id, ec); });
@@ -332,8 +338,12 @@ void network::init() {
 
 bool network::remove_socket(uint32_t socket_id) { return sockets_.erase(socket_id) > 0; }
 
-void network::hand_start(uint32_t socket_id) {
+void network::hand_start(uint32_t socket_id, const std::string& local) {
     if (const auto it = sockets_.find(socket_id); it != sockets_.end() && it->second->handle) {
+        if (get_socket_class(socket_id) == socket_class::client) {
+            it->second->local = local;
+        }
+
         it->second->handle.resume();
     }
 }

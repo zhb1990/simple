@@ -166,7 +166,7 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
     const auto id = static_cast<uint16_t>(info.id());
     const auto& services = info.services();
     // 先检查service是否能被加入到gate
-    if (!checkServices(services, id)) {
+    if (!check_services(services, id)) {
         result.set_ec(game::ec_system);
         return send(socket.socket, game::id_s_gate_register_ack, session, ack);
     }
@@ -197,7 +197,7 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
 
     gate->socket = socket.socket;
     gate->addresses = info.addresses();
-    addServices(services, gate);
+    add_services(services, gate);
 
     simple::warn("[{}] socket:{} gate:{} register succ", name(), socket.socket, id);
     result.set_ec(game::ec_success);
@@ -227,18 +227,18 @@ void gate_master::gate_upload(const socket_data& socket, uint64_t session, const
 
     const auto& services = req.services();
     // 先检查service是否能被加入到gate
-    if (!checkServices(services, socket.data->id)) {
+    if (!check_services(services, socket.data->id)) {
         result.set_ec(game::ec_system);
         return send(socket.socket, game::id_s_service_update_ack, session, ack);
     }
 
-    addServices(services, socket.data);
+    add_services(services, socket.data);
     result.set_ec(game::ec_success);
     send(socket.socket, game::id_s_service_update_ack, session, ack);
     publish(socket.data);
 }
 
-bool gate_master::checkServices(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, uint16_t gate) {
+bool gate_master::check_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, uint16_t gate) {
     return std::ranges::all_of(services, [this, gate](const auto& service) {
         if (const auto it = services_.find(service.id()); it != services_.end() && it->gate != gate) {
             return false;
@@ -248,7 +248,7 @@ bool gate_master::checkServices(const google::protobuf::RepeatedPtrField<game::s
     });
 }
 
-void gate_master::addServices(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, const gate_data* gate) {
+void gate_master::add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, const gate_data* gate) {
     for (const auto& s : services) {
         const auto it = services_.find(s.id());
         if (it != services_.end()) {
