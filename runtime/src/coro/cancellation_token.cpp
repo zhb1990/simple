@@ -1,8 +1,6 @@
 ﻿#include <simple/coro/cancellation_source.h>
 #include <simple/coro/cancellation_token.h>
 
-#include <unordered_map>
-
 #include "cancellation_state.h"
 
 namespace simple {
