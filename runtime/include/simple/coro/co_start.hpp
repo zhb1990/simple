@@ -12,7 +12,7 @@ template <is_continuation_func F>
 void co_start(F&& callback, cancellation_token token = {}) {
     using func_t = std::remove_cvref_t<F>;
     func_t temp = std::forward<F>(callback);
-    scheduler::instance().post([func_temp = std::move(temp), token_temp = std::move(token)]() mutable {
+    scheduler::instance().post_immediate([func_temp = std::move(temp), token_temp = std::move(token)]() mutable {
         if (token_temp.is_cancellation_requested()) {
             return;
         }
@@ -29,7 +29,7 @@ void co_start(F&& callback, cancellation_token token = {}) {
 template <is_continuation_func F>
 requires(is_normal_func<F> && std::is_pointer_v<F>)
 void co_start(F& callback, cancellation_token token = {}) {
-    scheduler::instance().post([callback, token_temp = std::move(token)]() mutable {
+    scheduler::instance().post_immediate([callback, token_temp = std::move(token)]() mutable {
         if (token_temp.is_cancellation_requested()) {
             return;
         }
@@ -46,7 +46,7 @@ void co_start(F& callback, cancellation_token token = {}) {
 template <is_continuation_func F>
 requires(is_normal_func<F> && !std::is_pointer_v<F>)
 void co_start(F& callback, cancellation_token token = {}) {
-    scheduler::instance().post([&callback, token_temp = std::move(token)]() mutable {
+    scheduler::instance().post_immediate([&callback, token_temp = std::move(token)]() mutable {
         if (token_temp.is_cancellation_requested()) {
             return;
         }
