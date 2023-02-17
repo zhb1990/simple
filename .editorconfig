@@ -2,7 +2,7 @@ root = true
 
 [*.{lua,c,cpp,h,hpp,ipp,proto}]
 charset = utf-8-bom
-end_of_line = crlf
+end_of_line = lf
 indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
