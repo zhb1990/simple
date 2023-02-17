@@ -20,13 +20,13 @@ class shm_channel_select {
 
     ~shm_channel_select() noexcept = default;
 
-    static shm_channel_select& instance();
+    SIMPLE_API static shm_channel_select& instance();
 
-    void start();
+    SIMPLE_API void start();
 
-    void join();
+    SIMPLE_API void join();
 
-    void stop();
+    SIMPLE_API void stop();
 
     simple::task<> wait(shm_channel* channel, bool is_read_or_write, size_t size);
 

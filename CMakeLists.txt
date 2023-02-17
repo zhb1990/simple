@@ -27,12 +27,8 @@ file(COPY common.vcxproj.user DESTINATION ${PROJECT_BINARY_DIR})
 file(RENAME ${PROJECT_BINARY_DIR}/common.vcxproj.user ${PROJECT_BINARY_DIR}/executor.vcxproj.user)
 
 # test
-##add_executable(test "test/main.cpp")
-##add_dependencies(test libruntime)
-##target_link_libraries(test PRIVATE libruntime)
-##file(COPY common.vcxproj.user DESTINATION ${PROJECT_BINARY_DIR})
-##file(RENAME ${PROJECT_BINARY_DIR}/common.vcxproj.user ${PROJECT_BINARY_DIR}/test.vcxproj.user)
-##SET_PROPERTY(TARGET test PROPERTY FOLDER "tests")
+add_subdirectory(test)
+SET_PROPERTY(TARGET test PROPERTY FOLDER "test")
 
 # model
 

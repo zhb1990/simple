@@ -5,6 +5,7 @@
 #include <simple/coro/timed_awaiter.h>
 #include <simple/log/log.h>
 #include <simple/net/socket_system.h>
+#include <simple/shm/shm_channel_select.h>
 #include <simple/utils/os.h>
 
 #include <algorithm>
@@ -16,7 +17,6 @@
 #include <simple/coro/sync_wait.hpp>
 #include <stdexcept>
 
-#include "../shm/shm_channel_select.h"
 #include "service_loader.h"
 
 namespace simple {

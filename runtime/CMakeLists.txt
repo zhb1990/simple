@@ -90,7 +90,7 @@ file(GLOB
         "include/simple/shm/shm.h"
         "include/simple/shm/shm_buffer.h"
         "include/simple/shm/shm_channel.h"
-        "src/shm/shm_channel_select.h"
+        "include/simple/shm/shm_channel_select.h"
 
         # web
         "include/simple/web/http.h"

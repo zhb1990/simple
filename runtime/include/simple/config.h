@@ -12,11 +12,13 @@
 #define SIMPLE_API
 #endif  // defined(SIMPLE_DLL_EXPORT)
 
+namespace simple {
 #if defined(powerpc) || defined(__powerpc__) || defined(__ppc__)
 inline constexpr auto simple_cache_line_bytes = 128
 #else
 inline constexpr auto simple_cache_line_bytes = 64;
 #endif
+}  // namespace simple
 
 // clang-format off
 
