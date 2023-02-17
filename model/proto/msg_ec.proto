@@ -10,4 +10,6 @@ enum error_code {
   ec_unknown = 1;
   // 系统错误
   ec_system = 2;
+  // 服务超时
+  ec_timeout = 3;
 }

@@ -55,16 +55,16 @@ add_subdirectory(service/test2)
 SET_PROPERTY(TARGET test2 PROPERTY FOLDER "service")
 
 ## gate_master
-##add_subdirectory(service/gate_master)
-##SET_PROPERTY(TARGET gate_master PROPERTY FOLDER "service")
+add_subdirectory(service/gate_master)
+SET_PROPERTY(TARGET gate_master PROPERTY FOLDER "service")
 
 ## gate
-##add_subdirectory(service/gate)
-##SET_PROPERTY(TARGET gate PROPERTY FOLDER "service")
+add_subdirectory(service/gate)
+SET_PROPERTY(TARGET gate PROPERTY FOLDER "service")
 
 ## proxy
-##add_subdirectory(service/proxy)
-##SET_PROPERTY(TARGET proxy PROPERTY FOLDER "service")
+add_subdirectory(service/proxy)
+SET_PROPERTY(TARGET proxy PROPERTY FOLDER "service")
 
 
 
