@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Set the project name
-project(landlord)
+project(game)
 
 if (${CMAKE_SIZEOF_VOID_P} MATCHES "4")
     message(FATAL_ERROR "only support x64 toolchain")
