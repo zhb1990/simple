@@ -1,6 +1,5 @@
 ﻿#include <gtest/gtest.h>
 #include <simple/coro/network.h>
-#include <simple/utils/time.h>
 
 #include <simple/coro/sync_wait.hpp>
 #include <simple/coro/task_operators.hpp>
@@ -25,8 +24,7 @@ TEST(network, connect_disconnect_tcp) {
 
 TEST(network, send_recv_tcp) {
     simple::memory_buffer recv_data;
-    std::string_view send_data{"hello"};
-    auto t1 = simple::get_timestamp_millis();
+    const std::string_view send_data{"hello"};
     auto server = [&]() -> simple::task<> {
         auto& network = simple::network::instance();
         const auto listen_id = co_await network.tcp_listen("", 10034, true);
@@ -52,8 +50,7 @@ TEST(network, send_recv_tcp) {
 
 TEST(network, send_recv_kcp) {
     simple::memory_buffer recv_data;
-    std::string_view send_data{"hello"};
-    auto t1 = simple::get_timestamp_millis();
+    const std::string_view send_data{"hello"};
     auto server = [&]() -> simple::task<> {
         auto& network = simple::network::instance();
         const auto listen_id = co_await network.kcp_listen("", 10034, true);

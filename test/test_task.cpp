@@ -87,7 +87,7 @@ TEST(task, parallel_task) {
     };
     auto task2 = []() -> simple::task<std::string> { co_return "hello"; };
 
-    auto [ret1, ret2] = sync_wait(when_ready(simple::wait_type::wait_all, task1(), task2()));
+    auto [ret1, ret2] = sync_wait(when_ready(simple::wait_type::all, task1(), task2()));
     EXPECT_EQ(ret1.result(), 101);
     EXPECT_EQ(ret2.result(), "hello");
 }

@@ -158,7 +158,7 @@ task<> application::forward_message(uint32_t id, const memory_buffer& message) {
         tasks.emplace_back(callback(message));
     }
 
-    for (const auto results = co_await when_ready(wait_type::wait_all, tasks);
+    for (const auto results = co_await when_ready(wait_type::all, tasks);
          const auto& result : results) {
         if (const auto e = result.get_exception()) {
             std::rethrow_exception(e);
@@ -258,7 +258,7 @@ void application::awake_services() {
             }
 
             size_t index = 0;
-            for (const auto results = co_await when_ready(wait_type::wait_one_fail, tasks);
+            for (const auto results = co_await when_ready(wait_type::one_fail, tasks);
                  const auto& result : results) {
                 if (const auto e = result.get_exception()) {
                     fail_name = service_sort_[index]->name();
@@ -305,7 +305,7 @@ void application::update_frame() {
                 }
 
                 size_t index = 0;
-                for (const auto results = co_await when_ready(wait_type::wait_all, tasks);
+                for (const auto results = co_await when_ready(wait_type::all, tasks);
                      const auto& result : results) {
                     if (const auto e = result.get_exception()) {
                         fail_name = update_services[index]->name();

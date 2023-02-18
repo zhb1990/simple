@@ -21,7 +21,7 @@ class parallel_task;
 template <typename Tasks>
 class parallel_task_ready_awaitable;
 
-enum class wait_type { wait_all, wait_one, wait_one_fail, wait_one_succ };
+enum class wait_type { all, one, one_fail, one_succ };
 
 class parallel_counter {
   public:
@@ -35,15 +35,15 @@ class parallel_counter {
     }
 
     void notify(bool has_exception) noexcept {
-        if (type_ == wait_type::wait_one) {
+        if (type_ == wait_type::one) {
             if (!source_.is_cancellation_requested()) {
                 source_.request_cancellation();
             }
-        } else if (type_ == wait_type::wait_one_fail) {
+        } else if (type_ == wait_type::one_fail) {
             if (has_exception && !source_.is_cancellation_requested()) {
                 source_.request_cancellation();
             }
-        } else if (type_ == wait_type::wait_one_succ) {
+        } else if (type_ == wait_type::one_succ) {
             if (!has_exception && !source_.is_cancellation_requested()) {
                 source_.request_cancellation();
             }

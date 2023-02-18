@@ -7,7 +7,7 @@
 namespace simple {
 
 inline task<> operator&&(task<> left, task<> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_fail, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_fail, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -26,7 +26,7 @@ inline task<> operator&&(task<> left, task<> right) {
 
 template <typename Left>
 task<Left> operator&&(task<Left> left, task<> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_fail, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_fail, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -47,7 +47,7 @@ task<Left> operator&&(task<Left> left, task<> right) {
 
 template <typename Right>
 task<Right> operator&&(task<> left, task<Right> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_fail, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_fail, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -68,7 +68,7 @@ task<Right> operator&&(task<> left, task<Right> right) {
 
 template <typename Left, typename Right>
 task<std::tuple<Left, Right>> operator&&(task<Left> left, task<Right> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_fail, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_fail, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -89,7 +89,7 @@ task<std::tuple<Left, Right>> operator&&(task<Left> left, task<Right> right) {
 
 template <typename... Left>
 task<std::tuple<Left...>> operator&&(task<std::tuple<Left...>> left, task<> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_fail, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_fail, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -110,7 +110,7 @@ task<std::tuple<Left...>> operator&&(task<std::tuple<Left...>> left, task<> righ
 
 template <typename... Left, typename Right>
 task<std::tuple<Left..., Right>> operator&&(task<std::tuple<Left...>> left, task<Right> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_fail, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_fail, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -130,7 +130,7 @@ task<std::tuple<Left..., Right>> operator&&(task<std::tuple<Left...>> left, task
 }
 
 inline task<std::variant<std::monostate, std::monostate>> operator||(task<> left, task<> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_succ, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_succ, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -159,7 +159,7 @@ inline task<std::variant<std::monostate, std::monostate>> operator||(task<> left
 
 template <typename Left>
 task<std::variant<Left, std::monostate>> operator||(task<Left> left, task<> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_succ, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_succ, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -188,7 +188,7 @@ task<std::variant<Left, std::monostate>> operator||(task<Left> left, task<> righ
 
 template <typename Right>
 task<std::variant<std::monostate, Right>> operator||(task<> left, task<Right> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_succ, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_succ, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -217,7 +217,7 @@ task<std::variant<std::monostate, Right>> operator||(task<> left, task<Right> ri
 
 template <typename Left, typename Right>
 task<std::variant<Left, Right>> operator||(task<Left> left, task<Right> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_succ, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_succ, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
 
@@ -246,7 +246,7 @@ task<std::variant<Left, Right>> operator||(task<Left> left, task<Right> right) {
 
 template <typename... Left>
 task<std::variant<Left..., std::monostate>> operator||(task<std::variant<Left...>> left, task<> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_succ, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_succ, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
     using widen = widen_variant<Left..., std::monostate>;
@@ -276,7 +276,7 @@ task<std::variant<Left..., std::monostate>> operator||(task<std::variant<Left...
 
 template <typename... Left, typename Right>
 task<std::variant<Left..., Right>> operator||(task<std::variant<Left...>> left, task<Right> right) {
-    auto [l, r] = co_await when_ready(wait_type::wait_one_succ, std::move(left), std::move(right));
+    auto [l, r] = co_await when_ready(wait_type::one_succ, std::move(left), std::move(right));
     const auto le = l.get_exception();
     const auto re = r.get_exception();
     using widen = widen_variant<Left..., Right>;
