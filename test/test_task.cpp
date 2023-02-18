@@ -1,6 +1,7 @@
 ﻿#include <gtest/gtest.h>
 #include <simple/coro/async_session.h>
 #include <simple/coro/cancellation_source.h>
+#include <simple/coro/condition_variable.h>
 #include <simple/coro/mutex.h>
 #include <simple/coro/thread_pool.h>
 #include <simple/coro/timed_awaiter.h>
@@ -124,4 +125,23 @@ TEST(task, mutex) {
 
     sync_wait(task1() && task2());
     EXPECT_EQ(a, 1000);
+}
+
+TEST(task, condition_variable) {
+    simple::condition_variable cv;
+    int a = 1;
+
+    auto task1 = [&]() -> simple::task<> {
+        co_await cv.wait();
+        a = 1010;
+    };
+
+    auto task2 = [&]() -> simple::task<> {
+        a = 2020;
+        cv.notify_all();
+        co_return;
+    };
+
+    sync_wait(task1() && task2());
+    EXPECT_EQ(a, 1010);
 }

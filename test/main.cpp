@@ -2,6 +2,7 @@
 #include <simple/coro/network.h>
 #include <simple/coro/scheduler.h>
 #include <simple/coro/thread_pool.h>
+#include <simple/log/log.h>
 #include <simple/net/socket_system.h>
 #include <simple/shm/shm_channel_select.h>
 
@@ -27,9 +28,8 @@ class test_env : public testing::Environment {
 };
 
 int main(int argc, char** argv) {
+    set_log_level(simple::log_level::off);
     testing::InitGoogleTest(&argc, argv);
-
     testing::AddGlobalTestEnvironment(new test_env);
-
     return RUN_ALL_TESTS();
 }

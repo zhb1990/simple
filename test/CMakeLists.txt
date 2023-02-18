@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 project(test)
 
 # test
-add_executable(test test_task.cpp main.cpp)
+add_executable(test test_task.cpp test_network.cpp main.cpp)
 
 enable_testing()
 
