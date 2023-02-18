@@ -80,7 +80,10 @@ TEST(task, async_session) {
 }
 
 TEST(task, parallel_task) {
-    auto task1 = []() -> simple::task<int> { co_return 101; };
+    auto task1 = []() -> simple::task<int> {
+        co_await simple::sleep_for(1ms);
+        co_return 101;
+    };
     auto task2 = []() -> simple::task<std::string> { co_return "hello"; };
 
     auto [ret1, ret2] = sync_wait(when_ready(simple::wait_type::wait_all, task1(), task2()));

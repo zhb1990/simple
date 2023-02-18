@@ -291,7 +291,7 @@ asio::awaitable<void> kcp_client_impl::co_kcp_update() {
     auto next_update = now + milliseconds(next - cur);
 
     while (state_ == state::connected) {
-        kcp_update_.expires_after(milliseconds(10));
+        kcp_update_.expires_after(milliseconds(5));
         if (auto [ec] = co_await kcp_update_.async_wait(); ec) {
             co_return;
         }
