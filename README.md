@@ -12,7 +12,7 @@ log库修改自 https://github.com/gabime/spdlog ，主要是为了学习下spdl
 
 服务为一个独立的功能，需要继承`simple::service_base` 实现 `awake()`，
 如果需要每几帧调用一次某个逻辑，可以重写`update()`，并在配置文件中设置调用的间隔`interval`（帧）。
-服务的动态库，需要导出两个函数分别为 `xxx_create` 和 `xxx_release`, `xxx` 为服务的类型名字与配置文件中的`type`对应，用过skynet的应该不陌生。  
+服务的动态库，需要导出两个函数分别为 `xxx_create` 和 `xxx_release`, `xxx` 为服务的类型名字与配置文件中的`type`对应。  
 可以参看`config/test.toml`
 
 框架根据配置文件加载服务，所有的服务与协程调度器运行在同一个单线程中
