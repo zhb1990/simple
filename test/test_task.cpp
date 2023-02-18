@@ -1,11 +1,15 @@
 ﻿#include <gtest/gtest.h>
+#include <simple/coro/async_session.h>
 #include <simple/coro/cancellation_source.h>
+#include <simple/coro/thread_pool.h>
 #include <simple/coro/timed_awaiter.h>
-
+#include <simple/coro/task_operators.hpp>
 #include <simple/coro/co_start.hpp>
+#include <simple/coro/parallel_task.hpp>
 #include <simple/coro/sync_wait.hpp>
 #include <simple/coro/task.hpp>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 
 using namespace std::chrono_literals;
@@ -58,4 +62,45 @@ TEST(task, cancellation) {
     }
 
     EXPECT_EQ(a, 10);
+}
+
+TEST(task, async_session) {
+    int a = 10;
+    sync_wait([&a]() -> simple::task<> {
+        simple::async_session_awaiter<int> awaiter;
+        simple::thread_pool::instance().post([session = awaiter.get_async_session()] { session.set_result(111); });
+
+        a = co_await awaiter;
+    }());
+
+    EXPECT_EQ(a, 111);
+}
+
+TEST(task, parallel_task) {
+    auto task1 = []() -> simple::task<int> { co_return 101; };
+    auto task2 = []() -> simple::task<std::string> { co_return "hello"; };
+
+    auto [ret1, ret2] = sync_wait(wait_parallel_task_ready(simple::parallel_task_type::wait_all, task1(), task2()));
+    EXPECT_EQ(ret1.result(), 101);
+    EXPECT_EQ(ret2.result(), "hello");
+}
+
+TEST(task, task_operators) {
+    auto task1 = []() -> simple::task<int> {
+        co_await simple::sleep_for(100ms);
+        co_return 101;
+    };
+
+    auto task2 = []() -> simple::task<std::string> {
+        co_await simple::sleep_for(200ms);
+        co_return "hello";
+    };
+
+    auto [ret1, ret2] = sync_wait(task1() && task2());
+    EXPECT_EQ(ret1, 101);
+    EXPECT_EQ(ret2, "hello");
+
+    auto ret3 = sync_wait(task1() || task2());
+    EXPECT_EQ(ret3.index(), 0);
+    EXPECT_EQ(std::get<0>(ret3), 101);
 }
