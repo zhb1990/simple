@@ -18,7 +18,7 @@ void co_start(F&& callback, cancellation_token token = {}) {
         }
 
         auto launch = [](func_t func, cancellation_token token) -> detached_task {
-            co_await set_cancellation_token_awaiter{token};
+            co_await set_cancellation_token_awaiter{std::move(token)};
             co_await func();
         };
 
@@ -35,7 +35,7 @@ void co_start(F& callback, cancellation_token token = {}) {
         }
 
         auto launch = [](F& func, cancellation_token token) -> detached_task {
-            co_await set_cancellation_token_awaiter{token};
+            co_await set_cancellation_token_awaiter{std::move(token)};
             co_await func();
         };
 
@@ -52,7 +52,7 @@ void co_start(F& callback, cancellation_token token = {}) {
         }
 
         auto launch = [](F& func, cancellation_token token) -> detached_task {
-            co_await set_cancellation_token_awaiter{token};
+            co_await set_cancellation_token_awaiter{std::move(token)};
             co_await func();
         };
 

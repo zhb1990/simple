@@ -54,11 +54,12 @@ TEST(task, cancellation) {
     });
 
     try {
-        sync_wait([&a, &source]() -> simple::task<> {
-            co_await simple::set_cancellation_token_awaiter{source.token()};
-            co_await simple::sleep_for(10s);
-            a = 100;
-        }());
+        sync_wait(
+            [&a, &source]() -> simple::task<> {
+                co_await simple::sleep_for(10s);
+                a = 100;
+            }(),
+            source.token());
     } catch (std::exception &e) {
         const auto ec = make_error_code(simple::coro_errors::canceled);
         EXPECT_EQ(e.what(), ec.message());

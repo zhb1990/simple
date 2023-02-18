@@ -10,13 +10,14 @@ namespace simple {
 
 // 只能在调度线程外使用
 template <is_awaitable AWAITABLE>
-auto sync_wait(AWAITABLE&& awaitable) {
+auto sync_wait(AWAITABLE&& awaitable, cancellation_token token = {}) {
     using result_t = remove_rvalue_reference_t<awaitable_result_t<AWAITABLE&&>>;
     std::promise<result_t> promise;
     auto future = promise.get_future();
 
     scheduler::instance().post([&] {
-        auto launch = [](AWAITABLE&& awaitable, std::promise<result_t>& promise) -> detached_task {
+        auto launch = [](AWAITABLE&& awaitable, std::promise<result_t>& promise, cancellation_token token) -> detached_task {
+            co_await set_cancellation_token_awaiter{std::move(token)};
             try {
                 if constexpr (std::same_as<result_t, void>) {
                     co_await std::forward<AWAITABLE>(awaitable);
@@ -29,7 +30,7 @@ auto sync_wait(AWAITABLE&& awaitable) {
             }
         };
 
-        [[maybe_unused]] auto detached = launch(std::forward<AWAITABLE>(awaitable), promise);
+        [[maybe_unused]] auto detached = launch(std::forward<AWAITABLE>(awaitable), promise, std::move(token));
     });
 
     return future.get();
