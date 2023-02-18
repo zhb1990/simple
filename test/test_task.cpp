@@ -1,13 +1,15 @@
 ﻿#include <gtest/gtest.h>
 #include <simple/coro/async_session.h>
 #include <simple/coro/cancellation_source.h>
+#include <simple/coro/mutex.h>
 #include <simple/coro/thread_pool.h>
 #include <simple/coro/timed_awaiter.h>
-#include <simple/coro/task_operators.hpp>
+
 #include <simple/coro/co_start.hpp>
 #include <simple/coro/parallel_task.hpp>
 #include <simple/coro/sync_wait.hpp>
 #include <simple/coro/task.hpp>
+#include <simple/coro/task_operators.hpp>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -103,4 +105,23 @@ TEST(task, task_operators) {
     auto ret3 = sync_wait(task1() || task2());
     EXPECT_EQ(ret3.index(), 0);
     EXPECT_EQ(std::get<0>(ret3), 101);
+}
+
+TEST(task, mutex) {
+    simple::mutex mtx;
+    int a = 10;
+
+    auto task1 = [&]() -> simple::task<> {
+        auto lock = co_await make_scoped_lock(mtx);
+        co_await simple::sleep_for(100ms);
+        a = 1;
+    };
+
+    auto task2 = [&]() -> simple::task<> {
+        auto lock = co_await make_scoped_lock(mtx);
+        a = 1000;
+    };
+
+    sync_wait(task1() && task2());
+    EXPECT_EQ(a, 1000);
 }

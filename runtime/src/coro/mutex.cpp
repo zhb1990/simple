@@ -4,13 +4,8 @@
 namespace simple {
 
 bool mutex_state::try_lock(mutex_awaiter* awaiter) noexcept {
-    if (awaiter->handle_ == current_) {
-        // 当前协程已经加锁了
-        return true;
-    }
-
-    if (!locked()) {
-        current_ = awaiter->handle_;
+    if (!locked_) {
+        locked_ = true;
         return true;
     }
 
@@ -19,17 +14,17 @@ bool mutex_state::try_lock(mutex_awaiter* awaiter) noexcept {
 }
 
 void mutex_state::unlock() noexcept {
-    if (!locked()) {
+    if (!locked_) {
         return;
     }
 
     if (header_) {
         mutex_awaiter* awaiter = header_;
         remove_awaiter(awaiter);
-        current_ = awaiter->handle_;
-        scheduler::instance().wake_up_coroutine(current_);
+        awaiter->reset_registration();
+        scheduler::instance().wake_up_coroutine(awaiter->handle_);
     } else {
-        current_ = nullptr;
+        locked_ = false;
     }
 }
 
@@ -75,8 +70,6 @@ void mutex_state::remove_awaiter(mutex_awaiter* awaiter) noexcept {
     awaiter->prev_ = nullptr;
 }
 
-std::coroutine_handle<> mutex_state::current() const noexcept { return current_; }
-
 mutex_awaiter::mutex_awaiter(mutex_awaiter&& other) noexcept { state_ = other.state_; }
 
 void mutex_awaiter::await_resume() {
@@ -85,6 +78,8 @@ void mutex_awaiter::await_resume() {
         throw std::system_error(coro_errors::canceled);
     }
 }
+
+void mutex_awaiter::reset_registration() { registration_.reset(); }
 
 mutex::mutex() : state_(std::make_shared<mutex_state>()) {}
 

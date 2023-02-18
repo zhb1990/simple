@@ -22,8 +22,6 @@ class mutex_state {
 
     ~mutex_state() noexcept = default;
 
-    [[nodiscard]] auto locked() const noexcept { return current_ != nullptr; }
-
     SIMPLE_API bool try_lock(mutex_awaiter* awaiter) noexcept;
 
     void unlock() noexcept;
@@ -32,10 +30,8 @@ class mutex_state {
 
     SIMPLE_API void remove_awaiter(mutex_awaiter* awaiter) noexcept;
 
-    [[nodiscard]] SIMPLE_API std::coroutine_handle<> current() const noexcept;
-
   private:
-    std::coroutine_handle<> current_;
+    bool locked_{false};
     mutex_awaiter* header_{nullptr};
     mutex_awaiter* tail_{nullptr};
 };
@@ -69,10 +65,8 @@ class mutex_awaiter {
         if (token_.can_be_cancelled()) {
             auto& scheduler = scheduler::instance();
             registration_.emplace(token_, [this, &scheduler]() {
-                if (state_->current() != handle_) {
-                    state_->remove_awaiter(this);
-                    scheduler.wake_up_coroutine(handle_);
-                }
+                state_->remove_awaiter(this);
+                scheduler.wake_up_coroutine(handle_);
             });
         }
 
@@ -80,6 +74,8 @@ class mutex_awaiter {
     }
 
     SIMPLE_API void await_resume();
+
+    void reset_registration();
 
   protected:
     friend class mutex;
