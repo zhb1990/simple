@@ -27,6 +27,15 @@ void init_shm_buffer(simple::memory_buffer& buf, const shm_header& header, const
     buf.written(len);
 }
 
+void init_client_buffer(simple::memory_buffer& buf, uint16_t id, uint64_t session, const google::protobuf::Message& msg) {
+    ws_header header{flag_valid, {}, id, session};
+    const auto len = static_cast<uint32_t>(msg.ByteSizeLong());
+    buf.reserve(sizeof(header) + len);
+    buf.append(&header, sizeof(header));
+    msg.SerializePartialToArray(buf.begin_write(), static_cast<int>(buf.writable()));
+    buf.written(len);
+}
+
 simple::task<> recv_net_buffer(simple::memory_buffer& buf, net_header& header, uint32_t socket) {
     buf.clear();
     memset(&header, 0, sizeof(header));
@@ -78,4 +87,18 @@ simple::task<int64_t> rpc_ping(rpc_system& system, uint32_t socket) {
     req.set_t1(last);
     [[maybe_unused]] const auto ack = co_await rpc_call<game::s_ping_ack>(system, socket, game::id_s_ping_req, req);
     co_return simple::get_system_clock_millis() - last;
+}
+
+int64_t connect_interval(size_t fail_count) {
+    if (fail_count < 2) {
+        return 0;
+    }
+
+    constexpr int64_t intervals[] = {1, 2, 4, 6, 8};
+    constexpr size_t size = std::size(intervals);
+    if (const auto idx = fail_count - 2; idx >= size) {
+        return intervals[size - 1];
+    } else {
+        return intervals[idx];
+    }
 }

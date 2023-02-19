@@ -1,0 +1,67 @@
+﻿syntax = "proto3";
+
+import "msg_base.proto";
+
+package game;
+
+message user_info_lite {
+  string account = 1;
+  int32 userid = 2;
+}
+
+// id_login_req
+message login_req {
+  string account = 1;
+  string password = 2;
+}
+
+// id_login_ack
+message login_ack {
+  ack_result result = 1;
+  int32 userid = 2;
+  bool has_match = 3;
+}
+
+// id_match_req
+// msg_empty
+
+// id_match_ack
+// msg_common_ack
+
+// id_enter_room_req
+// msg_empty
+
+// id_enter_room_ack
+message enter_room_ack {
+  ack_result result = 1;
+  bool is_black = 2;
+  bool is_my_turn = 3;
+  user_info_lite opponent = 4;
+}
+
+// id_move_req
+message move_req {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+enum game_result {
+  none = 0;
+  win = 1;
+  lose = 2;
+  draw = 3;
+}
+
+// id_move_ack
+message move_ack {
+  ack_result result = 1;
+  game_result game = 2;
+}
+
+// id_move_brd
+message move_brd {
+  int32 x = 1;
+  int32 y = 2;
+  game_result game = 3;
+}
+

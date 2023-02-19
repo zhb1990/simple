@@ -1,0 +1,30 @@
+# 全局配置
+pattern = ["[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%t] [%s:%#] %v", "local"]     # [日志的格式, log时间类型]
+level = "trace"                                                             # log等级
+default = "async"                                                       # 默认logger名字
+
+# 自定义的logger async
+[async]                                                                 # async 的配置
+#pattern = ["[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%t] [%s:%#] %v", "local"]     # [日志的格式, log时间类型]
+level = "trace"                                                              # log等级
+async = true                                                                # 异步logger
+[[async.appenders]]
+type = "stdout"                                                             # 标准输出
+#pattern = ["[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%t] [%s:%#] %v", "local"]    # [日志的格式, log时间类型]
+level = "warn"                                                            # log等级
+[[async.appenders]]
+type = "msvc"                                                               # vs debug 输出log
+#pattern = ["[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%t] [%s:%#] %v", "local"]    # [日志的格式, log时间类型]
+#level = "trace"                                                            # log等级
+[[async.appenders]]
+type = "file"                                                               # 文件log
+#pattern = ["[%Y-%m-%d %H:%M:%S.%e] [%^%l%$] [%t] [%s:%#] %v", "local"]    # [日志的格式, log时间类型]
+#level = "trace"                                                            # log等级
+name = "client"                                                               # log文件基础名字 默认为 appname+_loggername
+log_directory = "../log"                                                    # log文件压缩的目录
+lz4_directory = "../lz4"                                                    # log压缩文件目录
+max_size = 200000000                                                        # 单个log文件最大长度
+file_time = "local"                                                         # 文件按本地时间还是utc时间
+daily_roll = true                                                           # 是否每天刷新log文件
+
+

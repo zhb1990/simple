@@ -1,4 +1,5 @@
 ﻿#include <simple/log/console_appender.h>
+#include <simple/log/log.h>
 #include <simple/utils/os.h>
 
 #include <array>

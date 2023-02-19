@@ -17,9 +17,9 @@ struct net_header {
 
 struct ws_header {
     uint8_t flag;
-    uint8_t padding;
+    uint8_t padding[5];
     uint16_t id;
-    uint32_t session;
+    uint64_t session;
 
     [[nodiscard]] bool valid() const noexcept { return flag == flag_valid; }
 };

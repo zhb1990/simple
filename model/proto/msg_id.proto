@@ -29,6 +29,25 @@ enum message_id {
   //===========================================================
   //                 client <-> server 消息定义
   //===========================================================
+  id_ping_req = 0x0001;
+  id_ping_ack = 0x1001;
+
+  // 登录注册
+  id_login_req = 0x0002;
+  id_login_ack = 0x1002;
+
+  // 匹配
+  id_match_req = 0x0003;
+  id_match_ack = 0x1003;
+
+  // 进入棋局
+  id_enter_room_req = 0x0004;
+  id_enter_room_ack = 0x1004;
+
+  // 落子
+  id_move_req = 0x0005;
+  id_move_ack = 0x1005;
+  id_move_brd = 0x3005;
 
   //===========================================================
   //                 server <-> server 消息定义

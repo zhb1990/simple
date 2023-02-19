@@ -33,22 +33,27 @@ const char descriptor_table_protodef_msg_5fid_2eproto[] PROTOBUF_SECTION_VARIABL
   "\013msg_c2s_req\020\000\022\020\n\013msg_s2c_ack\020\200 \022\020\n\013msg_"
   "c2s_brd\020\200@\022\020\n\013msg_s2c_brd\020\200`\022\021\n\013msg_s2s_"
   "req\020\200\200\001\022\021\n\013msg_s2s_ack\020\200\240\001\022\021\n\013msg_s2s_br"
-  "d\020\200\300\001\022\016\n\010msg_mask\020\200\340\003*\240\003\n\nmessage_id\022\013\n\007"
-  "id_none\020\000\022\023\n\rid_s_ping_req\020\201\200\001\022\023\n\rid_s_p"
-  "ing_ack\020\201\240\001\022\034\n\026id_s_gate_register_req\020\202\200"
-  "\001\022\034\n\026id_s_gate_register_ack\020\202\240\001\022\034\n\026id_s_"
-  "gate_register_brd\020\202\300\001\022\037\n\031id_s_service_re"
-  "gister_req\020\203\200\001\022\037\n\031id_s_service_register_"
-  "ack\020\203\240\001\022\035\n\027id_s_service_update_req\020\204\200\001\022\035"
-  "\n\027id_s_service_update_ack\020\204\240\001\022\033\n\025id_s_ga"
-  "te_forward_brd\020\205\300\001\022 \n\032id_s_service_subsc"
-  "ribe_req\020\206\200\001\022 \n\032id_s_service_subscribe_a"
-  "ck\020\206\240\001\022 \n\032id_s_service_subscribe_brd\020\206\300\001"
-  "b\006proto3"
+  "d\020\200\300\001\022\016\n\010msg_mask\020\200\340\003*\361\004\n\nmessage_id\022\013\n\007"
+  "id_none\020\000\022\017\n\013id_ping_req\020\001\022\020\n\013id_ping_ac"
+  "k\020\201 \022\020\n\014id_login_req\020\002\022\021\n\014id_login_ack\020\202"
+  " \022\020\n\014id_match_req\020\003\022\021\n\014id_match_ack\020\203 \022\025"
+  "\n\021id_enter_room_req\020\004\022\026\n\021id_enter_room_a"
+  "ck\020\204 \022\017\n\013id_move_req\020\005\022\020\n\013id_move_ack\020\205 "
+  "\022\020\n\013id_move_brd\020\205`\022\023\n\rid_s_ping_req\020\201\200\001\022"
+  "\023\n\rid_s_ping_ack\020\201\240\001\022\034\n\026id_s_gate_regist"
+  "er_req\020\202\200\001\022\034\n\026id_s_gate_register_ack\020\202\240\001"
+  "\022\034\n\026id_s_gate_register_brd\020\202\300\001\022\037\n\031id_s_s"
+  "ervice_register_req\020\203\200\001\022\037\n\031id_s_service_"
+  "register_ack\020\203\240\001\022\035\n\027id_s_service_update_"
+  "req\020\204\200\001\022\035\n\027id_s_service_update_ack\020\204\240\001\022\033"
+  "\n\025id_s_gate_forward_brd\020\205\300\001\022 \n\032id_s_serv"
+  "ice_subscribe_req\020\206\200\001\022 \n\032id_s_service_su"
+  "bscribe_ack\020\206\240\001\022 \n\032id_s_service_subscrib"
+  "e_brd\020\206\300\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_msg_5fid_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fid_2eproto = {
-    false, false, 608, descriptor_table_protodef_msg_5fid_2eproto,
+    false, false, 817, descriptor_table_protodef_msg_5fid_2eproto,
     "msg_id.proto",
     &descriptor_table_msg_5fid_2eproto_once, nullptr, 0, 0,
     schemas, file_default_instances, TableStruct_msg_5fid_2eproto::offsets,
@@ -89,6 +94,17 @@ const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* message_id_descriptor() {
 bool message_id_IsValid(int value) {
   switch (value) {
     case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 4097:
+    case 4098:
+    case 4099:
+    case 4100:
+    case 4101:
+    case 12293:
     case 16385:
     case 16386:
     case 16387:

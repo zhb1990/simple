@@ -284,8 +284,9 @@ void service_data::to_proto(game::s_service_info& info) const noexcept {
 }
 
 void channel_cached::write(const void* buf, uint32_t len) {
-    if (!channel.try_write(buf, len)) {
-        // 写入失败说明共享内存写满了，先放入发送队列
+    // 发送队列中有数据，或者写入失败说明共享内存写满了
+    if (!send_queue.empty() || !channel.try_write(buf, len)) {
+        // 放入发送队列
         send_queue.emplace_back(std::make_shared<simple::memory_buffer>(buf, len));
         cv_send_queue.notify_all();
     }

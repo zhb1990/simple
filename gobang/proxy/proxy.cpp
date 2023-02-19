@@ -224,7 +224,7 @@ uint16_t proxy::rand_login() {
     return online[dis(engine_)];
 }
 
-void proxy::forward_gate(uint32_t socket, uint64_t session, uint16_t id, const simple::memory_buffer& buffer) {
+void proxy::forward_gate([[maybe_unused]] uint32_t socket, uint64_t session, uint16_t id, const simple::memory_buffer& buffer) {
     // 只有订阅的广播
     if (id != game::id_s_service_subscribe_brd) {
         return;

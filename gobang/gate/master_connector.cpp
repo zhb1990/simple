@@ -49,6 +49,10 @@ simple::task<> master_connector::run() {
         const auto port = address.substr(pos + 1);
 
         try {
+            if (const auto interval = connect_interval(cnt_fail); interval > 0) {
+                co_await simple::sleep_for(std::chrono::milliseconds(interval));
+            }
+
             socket_ = co_await network.tcp_connect(host, port, 10s);
             if (socket_ == 0) {
                 ++cnt_fail;
@@ -99,6 +103,7 @@ simple::task<> master_connector::run() {
         } catch (std::exception& e) {
             network.close(socket_);
             socket_ = 0;
+            ++cnt_fail;
             simple::error("[{}] exception {}", gate_.name(), ERROR_CODE_MESSAGE(e.what()));
         }
     }

@@ -68,6 +68,10 @@ simple::task<> gate_connector::run() {
     auto timeout = []() -> simple::task<> { co_await simple::sleep_for(5s); };
     for (;;) {
         try {
+            if (const auto interval = connect_interval(cnt_fail); interval > 0) {
+                co_await simple::sleep_for(std::chrono::milliseconds(interval));
+            }
+
             socket_ = co_await network.tcp_connect("localhost", std::to_string(port_), 10s);
             if (socket_ == 0) {
                 ++cnt_fail;
@@ -117,6 +121,7 @@ simple::task<> gate_connector::run() {
         } catch (std::exception& e) {
             network.close(socket_);
             socket_ = 0;
+            ++cnt_fail;
             simple::error("[{}] exception {}", service_.name(), ERROR_CODE_MESSAGE(e.what()));
         }
     }

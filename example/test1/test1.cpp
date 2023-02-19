@@ -52,7 +52,6 @@ simple::task<> test1::accept(uint32_t server) {
 
 simple::task<> test1::session_start(uint32_t session) {
     try {
-        auto& network = simple::network::instance();
         simple::websocket ws(simple::websocket_type::server, session);
         co_await ws.handshake();
         simple::memory_buffer buf;

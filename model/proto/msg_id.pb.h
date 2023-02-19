@@ -81,6 +81,17 @@ inline bool message_type_Parse(
 }
 enum message_id : int {
   id_none = 0,
+  id_ping_req = 1,
+  id_ping_ack = 4097,
+  id_login_req = 2,
+  id_login_ack = 4098,
+  id_match_req = 3,
+  id_match_ack = 4099,
+  id_enter_room_req = 4,
+  id_enter_room_ack = 4100,
+  id_move_req = 5,
+  id_move_ack = 4101,
+  id_move_brd = 12293,
   id_s_ping_req = 16385,
   id_s_ping_ack = 20481,
   id_s_gate_register_req = 16386,

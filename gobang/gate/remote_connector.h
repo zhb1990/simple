@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <proto_rpc.h>
-#include <simple/coro/condition_variable.h>
 
 #include <simple/containers/buffer.hpp>
 #include <simple/coro/task.hpp>
@@ -27,7 +26,7 @@ class remote_connector {
 
     simple::task<> auto_ping(uint32_t socket);
 
-    simple::task<> auto_send(uint32_t socket);
+    void auto_send(uint32_t socket);
 
     simple::task<> ping_to_remote(uint32_t socket);
 
@@ -35,6 +34,5 @@ class remote_connector {
     gate& gate_;
     rpc_system system_;
     uint32_t socket_{0};
-    simple::condition_variable cv_send_queue_;
     std::deque<simple::memory_buffer_ptr> send_queue_;
 };

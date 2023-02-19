@@ -10,6 +10,7 @@ file(GLOB
         msg_ec.pb.h
         msg_base.pb.h
         msg_server.pb.h
+        msg_client.pb.h
         )
 
 file(GLOB
@@ -18,6 +19,7 @@ file(GLOB
         msg_ec.pb.cc
         msg_base.pb.cc
         msg_server.pb.cc
+        msg_client.pb.cc
         )
 
 add_library(${PROJECT_NAME} SHARED ${PROTO_HEADS} ${PROTO_SOURCES})

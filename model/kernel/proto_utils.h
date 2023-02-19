@@ -13,11 +13,16 @@ KERNEL_API simple::memory_buffer_ptr create_net_buffer(uint16_t id, uint64_t ses
 
 KERNEL_API void init_shm_buffer(simple::memory_buffer& buf, const shm_header& header, const google::protobuf::Message& msg);
 
+KERNEL_API void init_client_buffer(simple::memory_buffer& buf, uint16_t id, uint64_t session,
+                                   const google::protobuf::Message& msg);
+
 KERNEL_API simple::task<> recv_net_buffer(simple::memory_buffer& buf, net_header& header, uint32_t socket);
 
 KERNEL_API void proc_ping(uint32_t socket, uint64_t session, const simple::memory_buffer& buffer);
 
 KERNEL_API simple::task<int64_t> rpc_ping(rpc_system& system, uint32_t socket);
+
+KERNEL_API int64_t connect_interval(size_t fail_count);
 
 template <std::derived_from<google::protobuf::Message> Message>
 simple::task<Message> rpc_call(rpc_system& system, uint32_t socket, uint16_t id, const google::protobuf::Message& req) {

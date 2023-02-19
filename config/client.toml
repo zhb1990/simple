@@ -1,0 +1,13 @@
+name = "client"
+dump_path = "../dump"
+log_config = "../../config/client_log.toml"                       # 日志的配置文件路径
+thread_pool_num = 1                                        # 线程池的线程数 0表示按照cpu核心数来设置 最少为1
+service_path = ["./?.dll"]                                 # 加载服务的路径
+frame_interval = 100                                       # 游戏帧间隔时间 毫秒
+
+[[services]]
+id = 9999
+name = "client"
+type = "client"
+order = 1
+

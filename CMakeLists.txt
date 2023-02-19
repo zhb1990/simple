@@ -66,8 +66,9 @@ SET_PROPERTY(TARGET gate PROPERTY FOLDER "gobang")
 add_subdirectory(gobang/proxy)
 SET_PROPERTY(TARGET proxy PROPERTY FOLDER "gobang")
 
-
-
+## client
+add_subdirectory(gobang/client)
+SET_PROPERTY(TARGET client PROPERTY FOLDER "gobang")
 
 
 

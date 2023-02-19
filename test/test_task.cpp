@@ -117,13 +117,13 @@ TEST(task, mutex) {
     int a = 10;
 
     auto task1 = [&]() -> simple::task<> {
-        auto lock = co_await make_scoped_lock(mtx);
+        [[maybe_unused]] auto lock = co_await make_scoped_lock(mtx);
         co_await simple::sleep_for(100ms);
         a = 1;
     };
 
     auto task2 = [&]() -> simple::task<> {
-        auto lock = co_await make_scoped_lock(mtx);
+        [[maybe_unused]] auto lock = co_await make_scoped_lock(mtx);
         a = 1000;
     };
 

@@ -54,12 +54,14 @@ class websocket {
     // 握手成功后发送websocket消息, 将要发送的消息拆分成多个帧，payload_max 为单帧最大的消息长度
     SIMPLE_API void write(websocket_opcode op, const void* data, size_t size, size_t payload_max) const;
 
-    [[nodiscard]] auto socket() const noexcept { return socket_; }
+    auto& socket() noexcept { return socket_; }
+
+    [[nodiscard]] auto& socket() const noexcept { return socket_; }
 
   private:
     void encode_header(memory_buffer& buf, websocket_opcode op, size_t size, bool fin) const;
 
-    void encode_body(memory_buffer& buf, websocket_opcode op, const void* data, size_t size) const;
+    void encode_body(memory_buffer& buf, const void* data, size_t size) const;
 
     websocket_type tp_;
     uint32_t socket_;

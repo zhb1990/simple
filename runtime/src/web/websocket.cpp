@@ -27,14 +27,6 @@ void rand_key(char (&key)[Size]) {
     }
 }
 
-static void rand_key(uint8_t* data, size_t len) {
-    thread_local std::default_random_engine en(std::random_device{}());
-    thread_local std::uniform_int_distribution<uint16_t> dist(0, 255);
-    for (size_t i = 0; i < len; ++i) {
-        data[i] = static_cast<uint8_t>(dist(en));
-    }
-}
-
 constexpr std::string_view websocket_key_name = "Sec-WebSocket-Key";
 constexpr std::string_view websocket_accept_name = "Sec-WebSocket-Accept";
 constexpr std::string_view connection_name = "Connection";
@@ -292,7 +284,7 @@ simple::task<websocket_opcode> websocket::read(memory_buffer& buf) const {
 void websocket::write(websocket_opcode op, const void* data, size_t size) const {
     auto buf = std::make_shared<memory_buffer>();
     encode_header(*buf, op, size, true);
-    encode_body(*buf, op, data, size);
+    encode_body(*buf, data, size);
     simple::network::instance().write(socket_, buf);
 }
 
@@ -304,18 +296,18 @@ void websocket::write(websocket_opcode op, const void* data, size_t size, size_t
     const char* temp = static_cast<const char*>(data);
     auto buf = std::make_shared<memory_buffer>();
     encode_header(*buf, op, payload_max, false);
-    encode_body(*buf, op, temp, payload_max);
+    encode_body(*buf, temp, payload_max);
     size -= payload_max;
     temp += payload_max;
     while (size > payload_max) {
         encode_header(*buf, websocket_opcode::continuation, payload_max, false);
-        encode_body(*buf, websocket_opcode::continuation, temp, payload_max);
+        encode_body(*buf, temp, payload_max);
         size -= payload_max;
         temp += payload_max;
     }
 
     encode_header(*buf, websocket_opcode::continuation, size, true);
-    encode_body(*buf, websocket_opcode::continuation, temp, size);
+    encode_body(*buf, temp, size);
 
     simple::network::instance().write(socket_, buf);
 }
@@ -351,7 +343,7 @@ void websocket::encode_header(memory_buffer& buf, websocket_opcode op, size_t si
     }
 }
 
-void websocket::encode_body(memory_buffer& buf, websocket_opcode op, const void* data, size_t size) const {
+void websocket::encode_body(memory_buffer& buf, const void* data, size_t size) const {
     if (tp_ == websocket_type::client) {
         char mask[4];
         rand_key(mask);
