@@ -28,7 +28,9 @@ file(RENAME ${PROJECT_BINARY_DIR}/common.vcxproj.user ${PROJECT_BINARY_DIR}/exec
 
 # test
 add_subdirectory(test)
-SET_PROPERTY(TARGET test PROPERTY FOLDER "test")
+SET_PROPERTY(TARGET unit_test PROPERTY FOLDER "test")
+enable_testing()
+add_test(NAME ut WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/$<CONFIGURATION> COMMAND unit_test)
 
 # model
 
