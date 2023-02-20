@@ -54,6 +54,8 @@ PROTOBUF_CONSTEXPR login_ack::login_ack(
     /*decltype(_impl_.result_)*/nullptr
   , /*decltype(_impl_.userid_)*/0
   , /*decltype(_impl_.has_match_)*/false
+  , /*decltype(_impl_.win_count_)*/0u
+  , /*decltype(_impl_.lose_count_)*/0u
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct login_ackDefaultTypeInternal {
   PROTOBUF_CONSTEXPR login_ackDefaultTypeInternal()
@@ -158,6 +160,8 @@ const uint32_t TableStruct_msg_5fclient_2eproto::offsets[] PROTOBUF_SECTION_VARI
   PROTOBUF_FIELD_OFFSET(::game::login_ack, _impl_.result_),
   PROTOBUF_FIELD_OFFSET(::game::login_ack, _impl_.userid_),
   PROTOBUF_FIELD_OFFSET(::game::login_ack, _impl_.has_match_),
+  PROTOBUF_FIELD_OFFSET(::game::login_ack, _impl_.win_count_),
+  PROTOBUF_FIELD_OFFSET(::game::login_ack, _impl_.lose_count_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::game::enter_room_ack, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -200,10 +204,10 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 0, -1, -1, sizeof(::game::user_info_lite)},
   { 8, -1, -1, sizeof(::game::login_req)},
   { 16, -1, -1, sizeof(::game::login_ack)},
-  { 25, -1, -1, sizeof(::game::enter_room_ack)},
-  { 37, -1, -1, sizeof(::game::move_req)},
-  { 45, -1, -1, sizeof(::game::move_ack)},
-  { 53, -1, -1, sizeof(::game::move_brd)},
+  { 27, -1, -1, sizeof(::game::enter_room_ack)},
+  { 39, -1, -1, sizeof(::game::move_req)},
+  { 47, -1, -1, sizeof(::game::move_ack)},
+  { 55, -1, -1, sizeof(::game::move_brd)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -220,26 +224,27 @@ const char descriptor_table_protodef_msg_5fclient_2eproto[] PROTOBUF_SECTION_VAR
   "\n\020msg_client.proto\022\004game\032\016msg_base.proto"
   "\"1\n\016user_info_lite\022\017\n\007account\030\001 \001(\t\022\016\n\006u"
   "serid\030\002 \001(\005\".\n\tlogin_req\022\017\n\007account\030\001 \001("
-  "\t\022\020\n\010password\030\002 \001(\t\"P\n\tlogin_ack\022 \n\006resu"
+  "\t\022\020\n\010password\030\002 \001(\t\"w\n\tlogin_ack\022 \n\006resu"
   "lt\030\001 \001(\0132\020.game.ack_result\022\016\n\006userid\030\002 \001"
-  "(\005\022\021\n\thas_match\030\003 \001(\010\"\236\001\n\016enter_room_ack"
-  "\022 \n\006result\030\001 \001(\0132\020.game.ack_result\022\020\n\010is"
-  "_black\030\002 \001(\010\022\022\n\nis_my_turn\030\003 \001(\010\022&\n\010oppo"
-  "nent\030\004 \001(\0132\024.game.user_info_lite\022\r\n\005whit"
-  "e\030\005 \003(\r\022\r\n\005black\030\006 \003(\r\" \n\010move_req\022\t\n\001x\030"
-  "\001 \001(\r\022\t\n\001y\030\002 \001(\r\"M\n\010move_ack\022 \n\006result\030\001"
-  " \001(\0132\020.game.ack_result\022\037\n\004game\030\002 \001(\0162\021.g"
-  "ame.game_result\"A\n\010move_brd\022\t\n\001x\030\001 \001(\r\022\t"
-  "\n\001y\030\002 \001(\r\022\037\n\004game\030\003 \001(\0162\021.game.game_resu"
-  "lt*4\n\013game_result\022\010\n\004none\020\000\022\007\n\003win\020\001\022\010\n\004"
-  "lose\020\002\022\010\n\004draw\020\003b\006proto3"
+  "(\005\022\021\n\thas_match\030\003 \001(\010\022\021\n\twin_count\030\004 \001(\r"
+  "\022\022\n\nlose_count\030\005 \001(\r\"\236\001\n\016enter_room_ack\022"
+  " \n\006result\030\001 \001(\0132\020.game.ack_result\022\020\n\010is_"
+  "black\030\002 \001(\010\022\022\n\nis_my_turn\030\003 \001(\010\022&\n\010oppon"
+  "ent\030\004 \001(\0132\024.game.user_info_lite\022\r\n\005white"
+  "\030\005 \003(\r\022\r\n\005black\030\006 \003(\r\" \n\010move_req\022\t\n\001x\030\001"
+  " \001(\r\022\t\n\001y\030\002 \001(\r\"M\n\010move_ack\022 \n\006result\030\001 "
+  "\001(\0132\020.game.ack_result\022\037\n\004game\030\002 \001(\0162\021.ga"
+  "me.game_result\"A\n\010move_brd\022\t\n\001x\030\001 \001(\r\022\t\n"
+  "\001y\030\002 \001(\r\022\037\n\004game\030\003 \001(\0162\021.game.game_resul"
+  "t*4\n\013game_result\022\010\n\004none\020\000\022\007\n\003win\020\001\022\010\n\004l"
+  "ose\020\002\022\010\n\004draw\020\003b\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_msg_5fclient_2eproto_deps[1] = {
   &::descriptor_table_msg_5fbase_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_msg_5fclient_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fclient_2eproto = {
-    false, false, 624, descriptor_table_protodef_msg_5fclient_2eproto,
+    false, false, 663, descriptor_table_protodef_msg_5fclient_2eproto,
     "msg_client.proto",
     &descriptor_table_msg_5fclient_2eproto_once, descriptor_table_msg_5fclient_2eproto_deps, 1, 7,
     schemas, file_default_instances, TableStruct_msg_5fclient_2eproto::offsets,
@@ -783,6 +788,8 @@ login_ack::login_ack(const login_ack& from)
       decltype(_impl_.result_){nullptr}
     , decltype(_impl_.userid_){}
     , decltype(_impl_.has_match_){}
+    , decltype(_impl_.win_count_){}
+    , decltype(_impl_.lose_count_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
@@ -790,8 +797,8 @@ login_ack::login_ack(const login_ack& from)
     _this->_impl_.result_ = new ::game::ack_result(*from._impl_.result_);
   }
   ::memcpy(&_impl_.userid_, &from._impl_.userid_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.has_match_) -
-    reinterpret_cast<char*>(&_impl_.userid_)) + sizeof(_impl_.has_match_));
+    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.lose_count_) -
+    reinterpret_cast<char*>(&_impl_.userid_)) + sizeof(_impl_.lose_count_));
   // @@protoc_insertion_point(copy_constructor:game.login_ack)
 }
 
@@ -803,6 +810,8 @@ inline void login_ack::SharedCtor(
       decltype(_impl_.result_){nullptr}
     , decltype(_impl_.userid_){0}
     , decltype(_impl_.has_match_){false}
+    , decltype(_impl_.win_count_){0u}
+    , decltype(_impl_.lose_count_){0u}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -836,8 +845,8 @@ void login_ack::Clear() {
   }
   _impl_.result_ = nullptr;
   ::memset(&_impl_.userid_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.has_match_) -
-      reinterpret_cast<char*>(&_impl_.userid_)) + sizeof(_impl_.has_match_));
+      reinterpret_cast<char*>(&_impl_.lose_count_) -
+      reinterpret_cast<char*>(&_impl_.userid_)) + sizeof(_impl_.lose_count_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -867,6 +876,22 @@ const char* login_ack::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
           _impl_.has_match_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 win_count = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+          _impl_.win_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // uint32 lose_count = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+          _impl_.lose_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -919,6 +944,18 @@ uint8_t* login_ack::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteBoolToArray(3, this->_internal_has_match(), target);
   }
 
+  // uint32 win_count = 4;
+  if (this->_internal_win_count() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(4, this->_internal_win_count(), target);
+  }
+
+  // uint32 lose_count = 5;
+  if (this->_internal_lose_count() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(5, this->_internal_lose_count(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -952,6 +989,16 @@ size_t login_ack::ByteSizeLong() const {
     total_size += 1 + 1;
   }
 
+  // uint32 win_count = 4;
+  if (this->_internal_win_count() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_win_count());
+  }
+
+  // uint32 lose_count = 5;
+  if (this->_internal_lose_count() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_lose_count());
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -980,6 +1027,12 @@ void login_ack::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROT
   if (from._internal_has_match() != 0) {
     _this->_internal_set_has_match(from._internal_has_match());
   }
+  if (from._internal_win_count() != 0) {
+    _this->_internal_set_win_count(from._internal_win_count());
+  }
+  if (from._internal_lose_count() != 0) {
+    _this->_internal_set_lose_count(from._internal_lose_count());
+  }
   _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -998,8 +1051,8 @@ void login_ack::InternalSwap(login_ack* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(login_ack, _impl_.has_match_)
-      + sizeof(login_ack::_impl_.has_match_)
+      PROTOBUF_FIELD_OFFSET(login_ack, _impl_.lose_count_)
+      + sizeof(login_ack::_impl_.lose_count_)
       - PROTOBUF_FIELD_OFFSET(login_ack, _impl_.result_)>(
           reinterpret_cast<char*>(&_impl_.result_),
           reinterpret_cast<char*>(&other->_impl_.result_));

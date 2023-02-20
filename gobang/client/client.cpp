@@ -237,25 +237,32 @@ simple::task<> client::logic(const simple::websocket& ws) {
 }
 
 simple::task<> client::login() {
+    using namespace std::chrono_literals;
     game::login_req req;
     req.set_account(account_);
     req.set_password(password_);
-    const auto ack = co_await call<game::login_ack>(game::id_login_req, req);
+    auto value = co_await (call<game::login_ack>(game::id_login_req, req) || show_wait("登录中"));
+    const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
         simple::error("[{}] login ec:{} {}", name(), ec, result.msg());
-        // 注册失败退出
+        // 登录失败退出
         simple::application::stop();
         co_return;
     }
 
     userid_ = ack.userid();
     has_match_ = ack.has_match();
+    win_count_ = ack.win_count();
+    lose_count_ = ack.lose_count();
+    simple::write_console(ERROR_CODE_MESSAGE("\r登录成功   \n"), stdout);
+    co_await simple::sleep_for(500ms);
 }
 
 simple::task<> client::match() {
-    game::msg_empty req;
-    const auto ack = co_await call<game::msg_common_ack>(game::id_match_req, req);
+    using namespace std::chrono_literals;
+    auto value = co_await (call<game::msg_common_ack>(game::id_match_req, game::msg_empty{}) || show_wait("匹配中"));
+    const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
         simple::error("[{}] match ec:{} {}", name(), ec, result.msg());
@@ -264,12 +271,15 @@ simple::task<> client::match() {
         co_return;
     }
 
+    simple::write_console(ERROR_CODE_MESSAGE("\r匹配成功   \n"), stdout);
+    co_await simple::sleep_for(500ms);
     has_match_ = true;
 }
 
 simple::task<> client::enter_room() {
-    game::msg_empty req;
-    const auto ack = co_await call<game::enter_room_ack>(game::id_enter_room_req, req);
+    using namespace std::chrono_literals;
+    auto value = co_await (call<game::enter_room_ack>(game::id_enter_room_req, game::msg_empty{}) || show_wait("加载棋局中"));
+    const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
         simple::error("[{}] match ec:{} {}", name(), ec, result.msg());
@@ -289,6 +299,8 @@ simple::task<> client::enter_room() {
         checkerboard_[idx] = static_cast<uint8_t>(pos_state::black);
     }
 
+    simple::write_console(ERROR_CODE_MESSAGE("\r加载棋局完毕   \n"), stdout);
+    co_await simple::sleep_for(500ms);
     show();
 }
 
@@ -316,11 +328,15 @@ void client::show() {
     // 控制台显示
     simple::memory_buffer temp;
     {
+        uint32_t rate = 0;
+        if (const auto total = win_count_ + lose_count_; total > 0) {
+            rate = win_count_ * 100 / total;
+        }
         simple::memory_buffer temp1;
         fmt::format_to(std::back_inserter(temp1),
                        "      ------------ {} vs {} ------------\n"
-                       "      我方执:",
-                       account_, opponent_);
+                       "      胜率:{}% 我方执:",
+                       account_, opponent_, rate);
         const auto str = ERROR_CODE_MESSAGE(std::string_view(temp1));
         temp.append(str.c_str(), str.size());
     }
@@ -359,14 +375,15 @@ void client::show() {
         }
     }
     temp.append("\n", 1);
+    system("clear");
     simple::write_console(std::string_view(temp), stdout);
 }
 
 simple::task<> client::next_game() {
-    system("clear");
     simple::write_console(ERROR_CODE_MESSAGE("是否继续(y/n):"), stdout);
     const auto line = co_await cin();
     if (!line.empty() && line[0] == 'y') {
+        system("clear");
         // 匹配
         co_await match();
         // 进入棋局
@@ -415,6 +432,31 @@ void client::show_game_result(int32_t result) {
             break;
     }
     cv_turn_.notify_all();
+}
+
+simple::task<> client::show_wait(std::string_view info) {
+    using namespace std::chrono_literals;
+    for (;;) {
+        simple::write_console("\r", stdout);
+        simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
+        simple::write_console("   ", stdout);
+        co_await simple::sleep_for(500ms);
+
+        simple::write_console("\r", stdout);
+        simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
+        simple::write_console(".  ", stdout);
+        co_await simple::sleep_for(500ms);
+
+        simple::write_console("\r", stdout);
+        simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
+        simple::write_console(".. ", stdout);
+        co_await simple::sleep_for(500ms);
+
+        simple::write_console("\r", stdout);
+        simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
+        simple::write_console("...", stdout);
+        co_await simple::sleep_for(500ms);
+    }
 }
 
 SIMPLE_SERVICE_API simple::service_base* client_create(const simple::toml_value_t* value) { return new client(); }

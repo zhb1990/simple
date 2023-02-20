@@ -20,6 +20,8 @@ message login_ack {
   ack_result result = 1;
   int32 userid = 2;
   bool has_match = 3;
+  uint32 win_count = 4;
+  uint32 lose_count = 5;
 }
 
 // id_match_req
