@@ -23,8 +23,7 @@ enum service_type {
   st_match = 7;            // 匹配服务 全局唯一 加载ai等
   st_room = 8;             // 房间服务
   st_center = 9;           // 中心服务 全局唯一 排行榜 名字唯一 等
-  st_ai_center = 10;       // ai 服务中心, 对ai请求进行负载均衡
-  st_ai = 11;              // ai 计算服务 直接连接 st_ai_center
+  st_ai = 10;              // ai 计算服务
 }
 
 
@@ -41,7 +40,7 @@ message s_gate_address {
 
 message s_gate_info {
   uint32 id = 1;                            // 服务 id
-  repeated s_service_info services = 2;     // gate所在机器上的其他服务 (st_gate_master、st_gate、st_ai 除外)
+  repeated s_service_info services = 2;     // gate所在机器上的其他服务 (st_gate_master、st_gate 除外)
   repeated s_gate_address addresses = 3;    // 所有可以访问的地址 如果是跨机房的一般将局域网地址放前面，广域网放后面，这样gate互联时优先使用局域网
 }
 
@@ -63,7 +62,7 @@ message s_gate_register_brd {
 
 // id_s_service_update_req
 message s_service_update_req {
-  repeated s_service_info services = 1;     // gate所在机器上新增的服务 (st_gate_master、st_gate、st_ai 除外)
+  repeated s_service_info services = 1;     // gate所在机器上新增的服务 (st_gate_master、st_gate 除外)
 }
 
 // id_s_service_update_ack

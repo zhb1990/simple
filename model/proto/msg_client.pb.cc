@@ -66,7 +66,11 @@ struct login_ackDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 login_ackDefaultTypeInternal _login_ack_default_instance_;
 PROTOBUF_CONSTEXPR enter_room_ack::enter_room_ack(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.result_)*/nullptr
+    /*decltype(_impl_.white_)*/{}
+  , /*decltype(_impl_._white_cached_byte_size_)*/{0}
+  , /*decltype(_impl_.black_)*/{}
+  , /*decltype(_impl_._black_cached_byte_size_)*/{0}
+  , /*decltype(_impl_.result_)*/nullptr
   , /*decltype(_impl_.opponent_)*/nullptr
   , /*decltype(_impl_.is_black_)*/false
   , /*decltype(_impl_.is_my_turn_)*/false
@@ -82,8 +86,8 @@ struct enter_room_ackDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 enter_room_ackDefaultTypeInternal _enter_room_ack_default_instance_;
 PROTOBUF_CONSTEXPR move_req::move_req(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.x_)*/0
-  , /*decltype(_impl_.y_)*/0
+    /*decltype(_impl_.x_)*/0u
+  , /*decltype(_impl_.y_)*/0u
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct move_reqDefaultTypeInternal {
   PROTOBUF_CONSTEXPR move_reqDefaultTypeInternal()
@@ -110,8 +114,8 @@ struct move_ackDefaultTypeInternal {
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 move_ackDefaultTypeInternal _move_ack_default_instance_;
 PROTOBUF_CONSTEXPR move_brd::move_brd(
     ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.x_)*/0
-  , /*decltype(_impl_.y_)*/0
+    /*decltype(_impl_.x_)*/0u
+  , /*decltype(_impl_.y_)*/0u
   , /*decltype(_impl_.game_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct move_brdDefaultTypeInternal {
@@ -164,6 +168,8 @@ const uint32_t TableStruct_msg_5fclient_2eproto::offsets[] PROTOBUF_SECTION_VARI
   PROTOBUF_FIELD_OFFSET(::game::enter_room_ack, _impl_.is_black_),
   PROTOBUF_FIELD_OFFSET(::game::enter_room_ack, _impl_.is_my_turn_),
   PROTOBUF_FIELD_OFFSET(::game::enter_room_ack, _impl_.opponent_),
+  PROTOBUF_FIELD_OFFSET(::game::enter_room_ack, _impl_.white_),
+  PROTOBUF_FIELD_OFFSET(::game::enter_room_ack, _impl_.black_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::game::move_req, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -195,9 +201,9 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 8, -1, -1, sizeof(::game::login_req)},
   { 16, -1, -1, sizeof(::game::login_ack)},
   { 25, -1, -1, sizeof(::game::enter_room_ack)},
-  { 35, -1, -1, sizeof(::game::move_req)},
-  { 43, -1, -1, sizeof(::game::move_ack)},
-  { 51, -1, -1, sizeof(::game::move_brd)},
+  { 37, -1, -1, sizeof(::game::move_req)},
+  { 45, -1, -1, sizeof(::game::move_ack)},
+  { 53, -1, -1, sizeof(::game::move_brd)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -216,23 +222,24 @@ const char descriptor_table_protodef_msg_5fclient_2eproto[] PROTOBUF_SECTION_VAR
   "serid\030\002 \001(\005\".\n\tlogin_req\022\017\n\007account\030\001 \001("
   "\t\022\020\n\010password\030\002 \001(\t\"P\n\tlogin_ack\022 \n\006resu"
   "lt\030\001 \001(\0132\020.game.ack_result\022\016\n\006userid\030\002 \001"
-  "(\005\022\021\n\thas_match\030\003 \001(\010\"\200\001\n\016enter_room_ack"
+  "(\005\022\021\n\thas_match\030\003 \001(\010\"\236\001\n\016enter_room_ack"
   "\022 \n\006result\030\001 \001(\0132\020.game.ack_result\022\020\n\010is"
   "_black\030\002 \001(\010\022\022\n\nis_my_turn\030\003 \001(\010\022&\n\010oppo"
-  "nent\030\004 \001(\0132\024.game.user_info_lite\" \n\010move"
-  "_req\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\"M\n\010move_ack\022 "
-  "\n\006result\030\001 \001(\0132\020.game.ack_result\022\037\n\004game"
-  "\030\002 \001(\0162\021.game.game_result\"A\n\010move_brd\022\t\n"
-  "\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\037\n\004game\030\003 \001(\0162\021.game"
-  ".game_result*4\n\013game_result\022\010\n\004none\020\000\022\007\n"
-  "\003win\020\001\022\010\n\004lose\020\002\022\010\n\004draw\020\003b\006proto3"
+  "nent\030\004 \001(\0132\024.game.user_info_lite\022\r\n\005whit"
+  "e\030\005 \003(\r\022\r\n\005black\030\006 \003(\r\" \n\010move_req\022\t\n\001x\030"
+  "\001 \001(\r\022\t\n\001y\030\002 \001(\r\"M\n\010move_ack\022 \n\006result\030\001"
+  " \001(\0132\020.game.ack_result\022\037\n\004game\030\002 \001(\0162\021.g"
+  "ame.game_result\"A\n\010move_brd\022\t\n\001x\030\001 \001(\r\022\t"
+  "\n\001y\030\002 \001(\r\022\037\n\004game\030\003 \001(\0162\021.game.game_resu"
+  "lt*4\n\013game_result\022\010\n\004none\020\000\022\007\n\003win\020\001\022\010\n\004"
+  "lose\020\002\022\010\n\004draw\020\003b\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_msg_5fclient_2eproto_deps[1] = {
   &::descriptor_table_msg_5fbase_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_msg_5fclient_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fclient_2eproto = {
-    false, false, 594, descriptor_table_protodef_msg_5fclient_2eproto,
+    false, false, 624, descriptor_table_protodef_msg_5fclient_2eproto,
     "msg_client.proto",
     &descriptor_table_msg_5fclient_2eproto_once, descriptor_table_msg_5fclient_2eproto_deps, 1, 7,
     schemas, file_default_instances, TableStruct_msg_5fclient_2eproto::offsets,
@@ -1036,7 +1043,11 @@ enter_room_ack::enter_room_ack(const enter_room_ack& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   enter_room_ack* const _this = this; (void)_this;
   new (&_impl_) Impl_{
-      decltype(_impl_.result_){nullptr}
+      decltype(_impl_.white_){from._impl_.white_}
+    , /*decltype(_impl_._white_cached_byte_size_)*/{0}
+    , decltype(_impl_.black_){from._impl_.black_}
+    , /*decltype(_impl_._black_cached_byte_size_)*/{0}
+    , decltype(_impl_.result_){nullptr}
     , decltype(_impl_.opponent_){nullptr}
     , decltype(_impl_.is_black_){}
     , decltype(_impl_.is_my_turn_){}
@@ -1060,7 +1071,11 @@ inline void enter_room_ack::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.result_){nullptr}
+      decltype(_impl_.white_){arena}
+    , /*decltype(_impl_._white_cached_byte_size_)*/{0}
+    , decltype(_impl_.black_){arena}
+    , /*decltype(_impl_._black_cached_byte_size_)*/{0}
+    , decltype(_impl_.result_){nullptr}
     , decltype(_impl_.opponent_){nullptr}
     , decltype(_impl_.is_black_){false}
     , decltype(_impl_.is_my_turn_){false}
@@ -1079,6 +1094,8 @@ enter_room_ack::~enter_room_ack() {
 
 inline void enter_room_ack::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.white_.~RepeatedField();
+  _impl_.black_.~RepeatedField();
   if (this != internal_default_instance()) delete _impl_.result_;
   if (this != internal_default_instance()) delete _impl_.opponent_;
 }
@@ -1093,6 +1110,8 @@ void enter_room_ack::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  _impl_.white_.Clear();
+  _impl_.black_.Clear();
   if (GetArenaForAllocation() == nullptr && _impl_.result_ != nullptr) {
     delete _impl_.result_;
   }
@@ -1141,6 +1160,28 @@ const char* enter_room_ack::_InternalParse(const char* ptr, ::_pbi::ParseContext
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
           ptr = ctx->ParseMessage(_internal_mutable_opponent(), ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated uint32 white = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedUInt32Parser(_internal_mutable_white(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<uint8_t>(tag) == 40) {
+          _internal_add_white(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr));
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // repeated uint32 black = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::PackedUInt32Parser(_internal_mutable_black(), ptr, ctx);
+          CHK_(ptr);
+        } else if (static_cast<uint8_t>(tag) == 48) {
+          _internal_add_black(::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr));
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -1200,6 +1241,24 @@ uint8_t* enter_room_ack::_InternalSerialize(
         _Internal::opponent(this).GetCachedSize(), target, stream);
   }
 
+  // repeated uint32 white = 5;
+  {
+    int byte_size = _impl_._white_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteUInt32Packed(
+          5, _internal_white(), byte_size, target);
+    }
+  }
+
+  // repeated uint32 black = 6;
+  {
+    int byte_size = _impl_._black_cached_byte_size_.load(std::memory_order_relaxed);
+    if (byte_size > 0) {
+      target = stream->WriteUInt32Packed(
+          6, _internal_black(), byte_size, target);
+    }
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1215,6 +1274,34 @@ size_t enter_room_ack::ByteSizeLong() const {
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // repeated uint32 white = 5;
+  {
+    size_t data_size = ::_pbi::WireFormatLite::
+      UInt32Size(this->_impl_.white_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
+    }
+    int cached_size = ::_pbi::ToCachedSize(data_size);
+    _impl_._white_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
+
+  // repeated uint32 black = 6;
+  {
+    size_t data_size = ::_pbi::WireFormatLite::
+      UInt32Size(this->_impl_.black_);
+    if (data_size > 0) {
+      total_size += 1 +
+        ::_pbi::WireFormatLite::Int32Size(static_cast<int32_t>(data_size));
+    }
+    int cached_size = ::_pbi::ToCachedSize(data_size);
+    _impl_._black_cached_byte_size_.store(cached_size,
+                                    std::memory_order_relaxed);
+    total_size += data_size;
+  }
 
   // .game.ack_result result = 1;
   if (this->_internal_has_result()) {
@@ -1258,6 +1345,8 @@ void enter_room_ack::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const :
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  _this->_impl_.white_.MergeFrom(from._impl_.white_);
+  _this->_impl_.black_.MergeFrom(from._impl_.black_);
   if (from._internal_has_result()) {
     _this->_internal_mutable_result()->::game::ack_result::MergeFrom(
         from._internal_result());
@@ -1289,6 +1378,8 @@ bool enter_room_ack::IsInitialized() const {
 void enter_room_ack::InternalSwap(enter_room_ack* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.white_.InternalSwap(&other->_impl_.white_);
+  _impl_.black_.InternalSwap(&other->_impl_.black_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(enter_room_ack, _impl_.is_my_turn_)
       + sizeof(enter_room_ack::_impl_.is_my_turn_)
@@ -1335,8 +1426,8 @@ inline void move_req::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.x_){0}
-    , decltype(_impl_.y_){0}
+      decltype(_impl_.x_){0u}
+    , decltype(_impl_.y_){0u}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -1376,7 +1467,7 @@ const char* move_req::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // int32 x = 1;
+      // uint32 x = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
           _impl_.x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
@@ -1384,7 +1475,7 @@ const char* move_req::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
         } else
           goto handle_unusual;
         continue;
-      // int32 y = 2;
+      // uint32 y = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
           _impl_.y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
@@ -1421,16 +1512,16 @@ uint8_t* move_req::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 x = 1;
+  // uint32 x = 1;
   if (this->_internal_x() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_x(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_x(), target);
   }
 
-  // int32 y = 2;
+  // uint32 y = 2;
   if (this->_internal_y() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_y(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(2, this->_internal_y(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1449,14 +1540,14 @@ size_t move_req::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 x = 1;
+  // uint32 x = 1;
   if (this->_internal_x() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_x());
   }
 
-  // int32 y = 2;
+  // uint32 y = 2;
   if (this->_internal_y() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_y());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -1780,8 +1871,8 @@ inline void move_brd::SharedCtor(
   (void)arena;
   (void)is_message_owned;
   new (&_impl_) Impl_{
-      decltype(_impl_.x_){0}
-    , decltype(_impl_.y_){0}
+      decltype(_impl_.x_){0u}
+    , decltype(_impl_.y_){0u}
     , decltype(_impl_.game_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
@@ -1822,7 +1913,7 @@ const char* move_brd::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // int32 x = 1;
+      // uint32 x = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
           _impl_.x_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
@@ -1830,7 +1921,7 @@ const char* move_brd::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx)
         } else
           goto handle_unusual;
         continue;
-      // int32 y = 2;
+      // uint32 y = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
           _impl_.y_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
@@ -1876,16 +1967,16 @@ uint8_t* move_brd::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // int32 x = 1;
+  // uint32 x = 1;
   if (this->_internal_x() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_x(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_x(), target);
   }
 
-  // int32 y = 2;
+  // uint32 y = 2;
   if (this->_internal_y() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_y(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(2, this->_internal_y(), target);
   }
 
   // .game.game_result game = 3;
@@ -1911,14 +2002,14 @@ size_t move_brd::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 x = 1;
+  // uint32 x = 1;
   if (this->_internal_x() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_x());
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_x());
   }
 
-  // int32 y = 2;
+  // uint32 y = 2;
   if (this->_internal_y() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_y());
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_y());
   }
 
   // .game.game_result game = 3;

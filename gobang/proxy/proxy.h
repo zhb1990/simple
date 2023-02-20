@@ -60,7 +60,7 @@ class proxy final : public simple::service_base {
 
     uint16_t rand_login();
 
-    void forward_gate([[maybe_unused]] uint32_t socket, uint64_t session, uint16_t id, const simple::memory_buffer& buffer);
+    void forward_gate(uint32_t socket, uint64_t session, uint16_t id, const simple::memory_buffer& buffer);
 
     void forward_shm(uint16_t from, uint64_t session, uint16_t id, const simple::memory_buffer& buffer);
 

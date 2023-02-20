@@ -128,8 +128,7 @@ enum service_type : int {
   st_match = 7,
   st_room = 8,
   st_center = 9,
-  st_ai_center = 10,
-  st_ai = 11,
+  st_ai = 10,
   service_type_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   service_type_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };

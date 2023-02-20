@@ -743,11 +743,57 @@ class PROTO_API enter_room_ack final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kWhiteFieldNumber = 5,
+    kBlackFieldNumber = 6,
     kResultFieldNumber = 1,
     kOpponentFieldNumber = 4,
     kIsBlackFieldNumber = 2,
     kIsMyTurnFieldNumber = 3,
   };
+  // repeated uint32 white = 5;
+  int white_size() const;
+  private:
+  int _internal_white_size() const;
+  public:
+  void clear_white();
+  private:
+  uint32_t _internal_white(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      _internal_white() const;
+  void _internal_add_white(uint32_t value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      _internal_mutable_white();
+  public:
+  uint32_t white(int index) const;
+  void set_white(int index, uint32_t value);
+  void add_white(uint32_t value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      white() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      mutable_white();
+
+  // repeated uint32 black = 6;
+  int black_size() const;
+  private:
+  int _internal_black_size() const;
+  public:
+  void clear_black();
+  private:
+  uint32_t _internal_black(int index) const;
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      _internal_black() const;
+  void _internal_add_black(uint32_t value);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      _internal_mutable_black();
+  public:
+  uint32_t black(int index) const;
+  void set_black(int index, uint32_t value);
+  void add_black(uint32_t value);
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+      black() const;
+  ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+      mutable_black();
+
   // .game.ack_result result = 1;
   bool has_result() const;
   private:
@@ -810,6 +856,10 @@ class PROTO_API enter_room_ack final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t > white_;
+    mutable std::atomic<int> _white_cached_byte_size_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t > black_;
+    mutable std::atomic<int> _black_cached_byte_size_;
     ::game::ack_result* result_;
     ::game::user_info_lite* opponent_;
     bool is_black_;
@@ -945,22 +995,22 @@ class PROTO_API move_req final :
     kXFieldNumber = 1,
     kYFieldNumber = 2,
   };
-  // int32 x = 1;
+  // uint32 x = 1;
   void clear_x();
-  int32_t x() const;
-  void set_x(int32_t value);
+  uint32_t x() const;
+  void set_x(uint32_t value);
   private:
-  int32_t _internal_x() const;
-  void _internal_set_x(int32_t value);
+  uint32_t _internal_x() const;
+  void _internal_set_x(uint32_t value);
   public:
 
-  // int32 y = 2;
+  // uint32 y = 2;
   void clear_y();
-  int32_t y() const;
-  void set_y(int32_t value);
+  uint32_t y() const;
+  void set_y(uint32_t value);
   private:
-  int32_t _internal_y() const;
-  void _internal_set_y(int32_t value);
+  uint32_t _internal_y() const;
+  void _internal_set_y(uint32_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:game.move_req)
@@ -971,8 +1021,8 @@ class PROTO_API move_req final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    int32_t x_;
-    int32_t y_;
+    uint32_t x_;
+    uint32_t y_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1273,22 +1323,22 @@ class PROTO_API move_brd final :
     kYFieldNumber = 2,
     kGameFieldNumber = 3,
   };
-  // int32 x = 1;
+  // uint32 x = 1;
   void clear_x();
-  int32_t x() const;
-  void set_x(int32_t value);
+  uint32_t x() const;
+  void set_x(uint32_t value);
   private:
-  int32_t _internal_x() const;
-  void _internal_set_x(int32_t value);
+  uint32_t _internal_x() const;
+  void _internal_set_x(uint32_t value);
   public:
 
-  // int32 y = 2;
+  // uint32 y = 2;
   void clear_y();
-  int32_t y() const;
-  void set_y(int32_t value);
+  uint32_t y() const;
+  void set_y(uint32_t value);
   private:
-  int32_t _internal_y() const;
-  void _internal_set_y(int32_t value);
+  uint32_t _internal_y() const;
+  void _internal_set_y(uint32_t value);
   public:
 
   // .game.game_result game = 3;
@@ -1308,8 +1358,8 @@ class PROTO_API move_brd final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
-    int32_t x_;
-    int32_t y_;
+    uint32_t x_;
+    uint32_t y_;
     int game_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
@@ -1849,46 +1899,140 @@ inline void enter_room_ack::set_allocated_opponent(::game::user_info_lite* oppon
   // @@protoc_insertion_point(field_set_allocated:game.enter_room_ack.opponent)
 }
 
+// repeated uint32 white = 5;
+inline int enter_room_ack::_internal_white_size() const {
+  return _impl_.white_.size();
+}
+inline int enter_room_ack::white_size() const {
+  return _internal_white_size();
+}
+inline void enter_room_ack::clear_white() {
+  _impl_.white_.Clear();
+}
+inline uint32_t enter_room_ack::_internal_white(int index) const {
+  return _impl_.white_.Get(index);
+}
+inline uint32_t enter_room_ack::white(int index) const {
+  // @@protoc_insertion_point(field_get:game.enter_room_ack.white)
+  return _internal_white(index);
+}
+inline void enter_room_ack::set_white(int index, uint32_t value) {
+  _impl_.white_.Set(index, value);
+  // @@protoc_insertion_point(field_set:game.enter_room_ack.white)
+}
+inline void enter_room_ack::_internal_add_white(uint32_t value) {
+  _impl_.white_.Add(value);
+}
+inline void enter_room_ack::add_white(uint32_t value) {
+  _internal_add_white(value);
+  // @@protoc_insertion_point(field_add:game.enter_room_ack.white)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+enter_room_ack::_internal_white() const {
+  return _impl_.white_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+enter_room_ack::white() const {
+  // @@protoc_insertion_point(field_list:game.enter_room_ack.white)
+  return _internal_white();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+enter_room_ack::_internal_mutable_white() {
+  return &_impl_.white_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+enter_room_ack::mutable_white() {
+  // @@protoc_insertion_point(field_mutable_list:game.enter_room_ack.white)
+  return _internal_mutable_white();
+}
+
+// repeated uint32 black = 6;
+inline int enter_room_ack::_internal_black_size() const {
+  return _impl_.black_.size();
+}
+inline int enter_room_ack::black_size() const {
+  return _internal_black_size();
+}
+inline void enter_room_ack::clear_black() {
+  _impl_.black_.Clear();
+}
+inline uint32_t enter_room_ack::_internal_black(int index) const {
+  return _impl_.black_.Get(index);
+}
+inline uint32_t enter_room_ack::black(int index) const {
+  // @@protoc_insertion_point(field_get:game.enter_room_ack.black)
+  return _internal_black(index);
+}
+inline void enter_room_ack::set_black(int index, uint32_t value) {
+  _impl_.black_.Set(index, value);
+  // @@protoc_insertion_point(field_set:game.enter_room_ack.black)
+}
+inline void enter_room_ack::_internal_add_black(uint32_t value) {
+  _impl_.black_.Add(value);
+}
+inline void enter_room_ack::add_black(uint32_t value) {
+  _internal_add_black(value);
+  // @@protoc_insertion_point(field_add:game.enter_room_ack.black)
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+enter_room_ack::_internal_black() const {
+  return _impl_.black_;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >&
+enter_room_ack::black() const {
+  // @@protoc_insertion_point(field_list:game.enter_room_ack.black)
+  return _internal_black();
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+enter_room_ack::_internal_mutable_black() {
+  return &_impl_.black_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedField< uint32_t >*
+enter_room_ack::mutable_black() {
+  // @@protoc_insertion_point(field_mutable_list:game.enter_room_ack.black)
+  return _internal_mutable_black();
+}
+
 // -------------------------------------------------------------------
 
 // move_req
 
-// int32 x = 1;
+// uint32 x = 1;
 inline void move_req::clear_x() {
-  _impl_.x_ = 0;
+  _impl_.x_ = 0u;
 }
-inline int32_t move_req::_internal_x() const {
+inline uint32_t move_req::_internal_x() const {
   return _impl_.x_;
 }
-inline int32_t move_req::x() const {
+inline uint32_t move_req::x() const {
   // @@protoc_insertion_point(field_get:game.move_req.x)
   return _internal_x();
 }
-inline void move_req::_internal_set_x(int32_t value) {
+inline void move_req::_internal_set_x(uint32_t value) {
   
   _impl_.x_ = value;
 }
-inline void move_req::set_x(int32_t value) {
+inline void move_req::set_x(uint32_t value) {
   _internal_set_x(value);
   // @@protoc_insertion_point(field_set:game.move_req.x)
 }
 
-// int32 y = 2;
+// uint32 y = 2;
 inline void move_req::clear_y() {
-  _impl_.y_ = 0;
+  _impl_.y_ = 0u;
 }
-inline int32_t move_req::_internal_y() const {
+inline uint32_t move_req::_internal_y() const {
   return _impl_.y_;
 }
-inline int32_t move_req::y() const {
+inline uint32_t move_req::y() const {
   // @@protoc_insertion_point(field_get:game.move_req.y)
   return _internal_y();
 }
-inline void move_req::_internal_set_y(int32_t value) {
+inline void move_req::_internal_set_y(uint32_t value) {
   
   _impl_.y_ = value;
 }
-inline void move_req::set_y(int32_t value) {
+inline void move_req::set_y(uint32_t value) {
   _internal_set_y(value);
   // @@protoc_insertion_point(field_set:game.move_req.y)
 }
@@ -2006,42 +2150,42 @@ inline void move_ack::set_game(::game::game_result value) {
 
 // move_brd
 
-// int32 x = 1;
+// uint32 x = 1;
 inline void move_brd::clear_x() {
-  _impl_.x_ = 0;
+  _impl_.x_ = 0u;
 }
-inline int32_t move_brd::_internal_x() const {
+inline uint32_t move_brd::_internal_x() const {
   return _impl_.x_;
 }
-inline int32_t move_brd::x() const {
+inline uint32_t move_brd::x() const {
   // @@protoc_insertion_point(field_get:game.move_brd.x)
   return _internal_x();
 }
-inline void move_brd::_internal_set_x(int32_t value) {
+inline void move_brd::_internal_set_x(uint32_t value) {
   
   _impl_.x_ = value;
 }
-inline void move_brd::set_x(int32_t value) {
+inline void move_brd::set_x(uint32_t value) {
   _internal_set_x(value);
   // @@protoc_insertion_point(field_set:game.move_brd.x)
 }
 
-// int32 y = 2;
+// uint32 y = 2;
 inline void move_brd::clear_y() {
-  _impl_.y_ = 0;
+  _impl_.y_ = 0u;
 }
-inline int32_t move_brd::_internal_y() const {
+inline uint32_t move_brd::_internal_y() const {
   return _impl_.y_;
 }
-inline int32_t move_brd::y() const {
+inline uint32_t move_brd::y() const {
   // @@protoc_insertion_point(field_get:game.move_brd.y)
   return _internal_y();
 }
-inline void move_brd::_internal_set_y(int32_t value) {
+inline void move_brd::_internal_set_y(uint32_t value) {
   
   _impl_.y_ = value;
 }
-inline void move_brd::set_y(int32_t value) {
+inline void move_brd::set_y(uint32_t value) {
   _internal_set_y(value);
   // @@protoc_insertion_point(field_set:game.move_brd.y)
 }

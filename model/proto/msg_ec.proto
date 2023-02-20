@@ -12,4 +12,6 @@ enum error_code {
   ec_system = 2;
   // 服务超时
   ec_timeout = 3;
+  // 错误的落子位置
+  ec_invalid_pos = 4;
 }

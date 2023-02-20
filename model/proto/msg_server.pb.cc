@@ -448,19 +448,18 @@ const char descriptor_table_protodef_msg_5fserver_2eproto[] PROTOBUF_SECTION_VAR
   "e_subscribe_brd\022&\n\010services\030\001 \003(\0132\024.game"
   ".s_service_info\"\030\n\ns_ping_req\022\n\n\002t1\030\001 \001("
   "\003\"$\n\ns_ping_ack\022\n\n\002t1\030\001 \001(\003\022\n\n\002t2\030\002 \001(\003*"
-  "\306\001\n\014service_type\022\022\n\016st_gate_master\020\000\022\013\n\007"
+  "\264\001\n\014service_type\022\022\n\016st_gate_master\020\000\022\013\n\007"
   "st_gate\020\001\022\014\n\010st_proxy\020\002\022\014\n\010st_login\020\003\022\017\n"
   "\013st_db_proxy\020\004\022\014\n\010st_logic\020\005\022\023\n\017st_logic"
   "_master\020\006\022\014\n\010st_match\020\007\022\013\n\007st_room\020\010\022\r\n\t"
-  "st_center\020\t\022\020\n\014st_ai_center\020\n\022\t\n\005st_ai\020\013"
-  "b\006proto3"
+  "st_center\020\t\022\t\n\005st_ai\020\nb\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_msg_5fserver_2eproto_deps[1] = {
   &::descriptor_table_msg_5fbase_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_msg_5fserver_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fserver_2eproto = {
-    false, false, 1368, descriptor_table_protodef_msg_5fserver_2eproto,
+    false, false, 1350, descriptor_table_protodef_msg_5fserver_2eproto,
     "msg_server.proto",
     &descriptor_table_msg_5fserver_2eproto_once, descriptor_table_msg_5fserver_2eproto_deps, 1, 16,
     schemas, file_default_instances, TableStruct_msg_5fserver_2eproto::offsets,
@@ -491,7 +490,6 @@ bool service_type_IsValid(int value) {
     case 8:
     case 9:
     case 10:
-    case 11:
       return true;
     default:
       return false;

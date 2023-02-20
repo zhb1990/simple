@@ -1,6 +1,8 @@
 ﻿#include "client.h"
 
+#include <google/protobuf/util/json_util.h>
 #include <msg_base.pb.h>
+#include <msg_client.pb.h>
 #include <msg_ec.pb.h>
 #include <msg_id.pb.h>
 #include <proto_utils.h>
@@ -11,7 +13,9 @@
 #include <simple/log/log.h>
 #include <simple/utils/os.h>
 #include <simple/utils/time.h>
+
 #include <charconv>
+#include <cstdlib>
 #include <iostream>
 #include <simple/coro/co_start.hpp>
 #include <simple/coro/task_operators.hpp>
@@ -148,7 +152,27 @@ simple::task<> client::auto_ping(const simple::websocket& ws) {
     }
 }
 
-simple::task<> client::forward_message(uint64_t session, uint16_t id, const simple::memory_buffer& buffer) { co_return; }
+simple::task<> client::forward_message([[maybe_unused]] uint64_t session, uint16_t id, const simple::memory_buffer& buffer) {
+    // 仅处理落子的广播
+    if (id != game::id_move_brd) {
+        co_return;
+    }
+
+    game::move_brd brd;
+    if (!brd.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
+        simple::warn("[{}] parse move_brd fail", name());
+        co_return;
+    }
+
+    std::string log_str;
+    google::protobuf::util::MessageToJsonString(brd, &log_str);
+    simple::info("[{}] subscribe brd:{}", name(), log_str);
+
+    // 落子
+    move(!is_black_, brd.x(), brd.y());
+    show_game_result(brd.game());
+    is_my_turn_ = true;
+}
 
 simple::task<> client::logic(const simple::websocket& ws) {
     using namespace std::chrono_literals;
@@ -169,10 +193,11 @@ simple::task<> client::logic(const simple::websocket& ws) {
         int32_t x;
         int32_t y;
         for (;;) {
-            show();
-
             if (!is_my_turn_) {
                 co_await cv_turn_.wait();
+                if (!has_match_) {
+                    co_await next_game();
+                }
             }
 
             simple::write_console(ERROR_CODE_MESSAGE("请输入落子的坐标(x,y):"), stdout);
@@ -186,26 +211,21 @@ simple::task<> client::logic(const simple::websocket& ws) {
             }
 
             auto temp1 = temp.substr(0, pos);
-			std::from_chars(temp1.data(), temp1.data() + temp1.size(), x);
+            std::from_chars(temp1.data(), temp1.data() + temp1.size(), x);
             temp1 = temp.substr(pos + 1);
             std::from_chars(temp1.data(), temp1.data() + temp1.size(), y);
+            if (check_pos(x, y)) {
+                simple::write_console(ERROR_CODE_MESSAGE("输入的坐标无效!!!            \n"), stdout);
+                co_await simple::sleep_for(2s);
+                continue;
+            }
 
-            // todo: 先绘制落子
-
+            // 先绘制落子
+            move(is_black_, x, y);
             co_await move(x, y);
 
             if (!has_match_) {
-                simple::write_console(ERROR_CODE_MESSAGE("是否继续(y/n):"), stdout);
-                line = co_await cin();
-                if (!line.empty() && line[0] == 'y') {
-                    // 匹配
-                    co_await match();
-                    // 进入棋局
-                    co_await enter_room();
-                } else {
-                    simple::application::stop();
-                    co_return;
-                }
+                co_await next_game();
             }
         }
     } catch (std::exception& e) {
@@ -217,32 +237,138 @@ simple::task<> client::logic(const simple::websocket& ws) {
 }
 
 simple::task<> client::login() {
-    // todo:
-    has_match_ = true;
-    co_return;
+    game::login_req req;
+    req.set_account(account_);
+    req.set_password(password_);
+    const auto ack = co_await call<game::login_ack>(game::id_login_req, req);
+    auto& result = ack.result();
+    if (const auto ec = result.ec(); ec != game::ec_success) {
+        simple::error("[{}] login ec:{} {}", name(), ec, result.msg());
+        // 注册失败退出
+        simple::application::stop();
+        co_return;
+    }
+
+    userid_ = ack.userid();
+    has_match_ = ack.has_match();
 }
 
 simple::task<> client::match() {
-    // todo:
+    game::msg_empty req;
+    const auto ack = co_await call<game::msg_common_ack>(game::id_match_req, req);
+    auto& result = ack.result();
+    if (const auto ec = result.ec(); ec != game::ec_success) {
+        simple::error("[{}] match ec:{} {}", name(), ec, result.msg());
+        // 匹配失败退出
+        simple::application::stop();
+        co_return;
+    }
+
     has_match_ = true;
-    co_return;
 }
 
 simple::task<> client::enter_room() {
-    // todo:
-    is_my_turn_ = true;
-    co_return;
+    game::msg_empty req;
+    const auto ack = co_await call<game::enter_room_ack>(game::id_enter_room_req, req);
+    auto& result = ack.result();
+    if (const auto ec = result.ec(); ec != game::ec_success) {
+        simple::error("[{}] match ec:{} {}", name(), ec, result.msg());
+        // 匹配失败退出
+        simple::application::stop();
+        co_return;
+    }
+
+    is_my_turn_ = ack.is_my_turn();
+    is_black_ = ack.is_black();
+    opponent_ = ack.opponent().account();
+    // 还原棋局
+    for (auto idx : ack.white()) {
+        checkerboard_[idx] = static_cast<uint8_t>(pos_state::white);
+    }
+    for (auto idx : ack.black()) {
+        checkerboard_[idx] = static_cast<uint8_t>(pos_state::black);
+    }
+
+    show();
 }
 
-simple::task<> client::move(int32_t x, int32_t y) {
-    // todo:
-    is_my_turn_= false;
-    has_match_ = false;
-    co_return;
+simple::task<> client::move(uint32_t x, uint32_t y) {
+    game::move_req req;
+    req.set_x(x);
+    req.set_y(y);
+    const auto ack = co_await call<game::move_ack>(game::id_move_req, req);
+    auto& result = ack.result();
+    if (const auto ec = result.ec(); ec == game::ec_invalid_pos) {
+        back(x, y);
+        co_return;
+    } else if (ec != game::ec_success) {
+        simple::error("[{}] move ec:{} {}", name(), ec, result.msg());
+        // 其他原因落子失败退出
+        simple::application::stop();
+        co_return;
+    }
+
+    show_game_result(ack.game());
+    is_my_turn_ = false;
 }
 
 void client::show() {
+    // todo: 控制台显示
+}
 
+simple::task<> client::next_game() {
+    system("clear");
+    simple::write_console(ERROR_CODE_MESSAGE("是否继续(y/n):"), stdout);
+    const auto line = co_await cin();
+    if (!line.empty() && line[0] == 'y') {
+        // 匹配
+        co_await match();
+        // 进入棋局
+        co_await enter_room();
+    } else {
+        simple::application::stop();
+        co_return;
+    }
+}
+
+void client::move(bool is_black, uint32_t x, uint32_t y) {
+    // 落子
+    checkerboard_[x * checkerboard_size + y] = static_cast<uint8_t>(is_black ? pos_state::black : pos_state::white);
+    show();
+}
+
+void client::back(uint32_t x, uint32_t y) {
+    // 回退操作
+    checkerboard_[x * checkerboard_size + y] = static_cast<uint8_t>(pos_state::none);
+    show();
+}
+
+bool client::check_pos(uint32_t x, uint32_t y) {
+    if (x >= checkerboard_size || y >= checkerboard_size) {
+        return false;
+    }
+
+    return checkerboard_[x * checkerboard_size + y] == static_cast<uint8_t>(pos_state::none);
+}
+
+void client::show_game_result(int32_t result) {
+    switch (result) {
+        case game::win:
+            simple::write_console(ERROR_CODE_MESSAGE("------获得胜利------\n"), stdout);
+            has_match_ = false;
+            break;
+        case game::lose:
+            simple::write_console(ERROR_CODE_MESSAGE("-------失败了-------\n"), stdout);
+            has_match_ = false;
+            break;
+        case game::draw:
+            simple::write_console(ERROR_CODE_MESSAGE("--------平局--------\n"), stdout);
+            has_match_ = false;
+            break;
+        default:
+            break;
+    }
+    cv_turn_.notify_all();
 }
 
 SIMPLE_SERVICE_API simple::service_base* client_create(const simple::toml_value_t* value) { return new client(); }
