@@ -313,7 +313,53 @@ simple::task<> client::move(uint32_t x, uint32_t y) {
 }
 
 void client::show() {
-    // todo: 控制台显示
+    // 控制台显示
+    simple::memory_buffer temp;
+    {
+        simple::memory_buffer temp1;
+        fmt::format_to(std::back_inserter(temp1),
+                       "      ------------ {} vs {} ------------\n"
+                       "      我方执:",
+                       account_, opponent_);
+        const auto str = ERROR_CODE_MESSAGE(std::string_view(temp1));
+        temp.append(str.c_str(), str.size());
+    }
+
+    constexpr std::u8string_view strv_vertex = u8" ㊣";
+    constexpr std::u8string_view strv_empty = u8" . ";
+    constexpr std::u8string_view strv_white = u8" ○ ";
+    constexpr std::u8string_view strv_black = u8" ● ";
+    constexpr std::u8string_view strv_pos = u8" 0  1  2  3  4  5  6  7  8  9  a  b  c  d  e \n";
+
+    if (is_black_) {
+        fmt::format_to(std::back_inserter(temp), "{}\n", reinterpret_cast<const char*>(strv_black.data()));
+    } else {
+        fmt::format_to(std::back_inserter(temp), "{}\n", reinterpret_cast<const char*>(strv_white.data()));
+    }
+
+    temp.append(strv_vertex.data(), strv_vertex.size());
+    temp.append(strv_pos.data(), strv_pos.size());
+
+    for (size_t i = 0; i < std::size(checkerboard_); ++i) {
+        if (i % checkerboard_size == 0) {
+            if (i > 0) {
+                temp.append("\n", 1);
+            }
+
+            const auto first = strv_pos.substr((i / checkerboard_size) * 3, 3);
+            temp.append(first.data(), first.size());
+        }
+
+        if (const auto s = checkerboard_[i]; s == static_cast<uint8_t>(pos_state::none)) {
+            temp.append(strv_empty.data(), strv_empty.size());
+        } else if (s == static_cast<uint8_t>(pos_state::white)) {
+            temp.append(strv_white.data(), strv_white.size());
+        } else {
+            temp.append(strv_black.data(), strv_black.size());
+        }
+    }
+    temp.append("\n", 1);
+    simple::write_console(std::string_view(temp), stdout);
 }
 
 simple::task<> client::next_game() {
