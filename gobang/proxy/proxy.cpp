@@ -185,7 +185,7 @@ void proxy::forward_player(const socket_data& socket, uint16_t id, uint64_t sess
         socket.wait_login = true;
     } else if (id == game::id_ping_req) {
         if (socket.wait_login) {
-            // 如果还没登录，ping包直接回复
+            // todo: 如果还没登录，ping包直接回复
             return;
         }
 
@@ -195,7 +195,7 @@ void proxy::forward_player(const socket_data& socket, uint16_t id, uint64_t sess
         // 直接发给room房间
         // 判断下是否有房间id
         if (socket.room <= 0) {
-            // 按消息id，回复不同的ack
+            // todo: 按消息id，回复不同的ack
             // 只要所有的ack第一项都是 ack_result result = 1;
             // 可以统一回复msg_common_ack
             return;
@@ -204,8 +204,8 @@ void proxy::forward_player(const socket_data& socket, uint16_t id, uint64_t sess
         dest_service = socket.room;
     } else {
         // 其他的发给逻辑服
-        if (socket.logic <= 0 && socket.wait_login) {
-            // 还没登录完可以缓存下来等登录成功
+        if (socket.wait_login) {
+            // todo: 还没登录完可以缓存下来等登录成功
             return;
         }
 
