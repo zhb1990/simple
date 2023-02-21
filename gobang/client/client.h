@@ -58,7 +58,7 @@ class client final : public simple::service_base {
 
     void show();
 
-    simple::task<> show_wait(std::string_view info);
+    static simple::task<> show_wait(std::string_view info);
 
     std::string host_;
     std::string port_;
@@ -68,7 +68,7 @@ class client final : public simple::service_base {
     uint32_t win_count_{0};
     uint32_t lose_count_{0};
     int32_t userid_{0};
-    bool has_match_{false};
+    int32_t room_{0};
     bool is_my_turn_{false};
     bool is_black_{false};
 

@@ -14,12 +14,13 @@
 #include <stdexcept>
 
 gate_connector::gate_connector(simple::service_base& service, const simple::toml_value_t* value, int32_t service_type,
-                               forward_gate_fn forward_gate, forward_fn forward, shm_infos infos)
+                               fn_on_register on_register, fn_forward forward, shm_infos infos)
     : service_(service),
       service_type_(service_type),
-      forward_gate_(std::move(forward_gate)),
+      on_register_(std::move(on_register)),
       forward_(std::move(forward)),
-      shm_infos_(std::move(infos)) {
+      shm_infos_(std::move(infos)),
+      engine_(std::random_device{}()) {
     if (!value->is_table()) {
         throw std::logic_error("gate_connector need args");
     }
@@ -59,6 +60,79 @@ void gate_connector::write(uint16_t to, uint64_t session, uint16_t id, const goo
         send_queue_.emplace_back(std::make_shared<simple::memory_buffer>(std::move(buf)));
         cv_send_queue_.notify_all();
     }
+}
+
+simple::task<> gate_connector::subscribe(uint16_t tp) {
+    using namespace std::chrono_literals;
+    const auto socket = socket_;
+    auto timeout = []() -> simple::task<> { co_await simple::sleep_for(5s); };
+    game::s_service_subscribe_req req;
+    req.set_tp(game::st_login);
+
+    for (;;) {
+        try {
+            if (socket != socket_) {
+                co_return;
+            }
+
+            auto call_result =
+                co_await (call_gate<game::s_service_subscribe_ack>(game::id_s_service_subscribe_req, req) || timeout());
+            if (call_result.index() == 1) {
+                simple::error("[{}] subscribe {} timeout.", service_.name(), tp);
+                continue;
+            }
+
+            const auto& ack = std::get<0>(call_result);
+            auto& result = ack.result();
+            if (auto ec = result.ec(); ec != game::ec_success) {
+                simple::error("[{}] subscribe {} ec:{} {}", service_.name(), tp, ec, result.msg());
+                continue;
+            }
+
+            for (auto& s : ack.services()) {
+                update_subscribe(s);
+            }
+
+            co_return;
+        } catch (std::exception& e) {
+            simple::error("[{}] subscribe {} exception {}", service_.name(), tp, ERROR_CODE_MESSAGE(e.what()));
+        }
+    }
+}
+
+const std::vector<service_info_subscribe>* gate_connector::find_subscribe(uint16_t tp) const {
+    if (const auto it = subscribes_.find(tp); it != subscribes_.end()) {
+        return &it->second;
+    }
+
+    return nullptr;
+}
+
+uint16_t gate_connector::rand_subscribe(uint16_t tp) {
+    auto* login_infos = find_subscribe(tp);
+    if (!login_infos || login_infos->empty()) {
+        return 0;
+    }
+
+    std::vector<uint16_t> online;
+    online.reserve(login_infos->size());
+    for (const auto& s : *login_infos) {
+        if (s.online) {
+            online.emplace_back(s.id);
+        }
+    }
+
+    const auto size = online.size();
+    if (size == 0) {
+        return 0;
+    }
+
+    if (size == 1) {
+        return online[0];
+    }
+
+    std::uniform_int_distribution<uint16_t> dis(0, static_cast<uint16_t>(size - 1));
+    return online[dis(engine_)];
 }
 
 simple::task<> gate_connector::run() {
@@ -101,6 +175,9 @@ simple::task<> gate_connector::run() {
 
             simple::warn("[{}] register to gate succ.", service_.name());
             cnt_fail = 0;
+            // 触发on_register
+            simple::co_start([this]() { return on_register_(); });
+
             // 开启ping协程
             simple::co_start([this, socket = socket_]() { return auto_ping(socket); });
 
@@ -115,7 +192,7 @@ simple::task<> gate_connector::run() {
                 if ((header.id & game::msg_mask) != game::msg_s2s_ack || header.session == 0 ||
                     (!system_.wake_up_session(header.session, std::string_view(buffer)))) {
                     // 不是rpc调用，分发消息
-                    forward_gate_(socket_, header.session, header.id, buffer);
+                    forward_gate(header.id, buffer);
                 }
             }
         } catch (std::exception& e) {
@@ -219,4 +296,39 @@ simple::task<> gate_connector::channel_write() {
         co_await channel_->write(ptr->begin_read(), static_cast<uint32_t>(ptr->readable()));
         send_queue_.pop_front();
     }
+}
+
+void gate_connector::forward_gate(uint16_t id, const simple::memory_buffer& buffer) {
+    // 只有订阅的的服务状态广播
+    if (id != game::id_s_service_subscribe_brd) {
+        return;
+    }
+
+    game::s_service_subscribe_brd brd;
+    if (!brd.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
+        simple::warn("[{}] parse s_service_subscribe_brd fail", service_.name());
+        return;
+    }
+
+    std::string log_str;
+    google::protobuf::util::MessageToJsonString(brd, &log_str);
+    simple::info("[{}] subscribe brd:{}", service_.name(), log_str);
+
+    for (auto& s : brd.services()) {
+        update_subscribe(s);
+    }
+}
+
+void gate_connector::update_subscribe(const game::s_service_info& service) {
+    auto& subscribe = subscribes_[service.tp()];
+
+    const auto id = static_cast<uint16_t>(service.id());
+    for (auto& s : subscribe) {
+        if (s.id == id) {
+            s.online = service.online();
+            return;
+        }
+    }
+
+    subscribe.emplace_back(id, service.online());
 }

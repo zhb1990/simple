@@ -1,8 +1,6 @@
 ﻿#include "proxy.h"
 
 #include <gate_connector.h>
-#include <google/protobuf/util/json_util.h>
-#include <msg_ec.pb.h>
 #include <msg_id.pb.h>
 #include <msg_server.pb.h>
 #include <simple/coro/timed_awaiter.h>
@@ -14,7 +12,7 @@
 #include <simple/coro/task_operators.hpp>
 #include <stdexcept>
 
-proxy::proxy(const simple::toml_value_t* value) : engine_(std::random_device{}()) {
+proxy::proxy(const simple::toml_value_t* value) {
     if (!value->is_table()) {
         throw std::logic_error("proxy need args");
     }
@@ -28,10 +26,7 @@ proxy::proxy(const simple::toml_value_t* value) : engine_(std::random_device{}()
 
     if (const auto it = args.find("gate"); it != args.end()) {
         gate_connector_ = std::make_shared<gate_connector>(
-            *this, &it->second, game::st_proxy,
-            [this](uint32_t socket, uint64_t session, uint16_t id, const simple::memory_buffer& buffer) {
-                return forward_gate(socket, session, id, buffer);
-            },
+            *this, &it->second, game::st_proxy, [this] { return on_register_to_gate(); },
             [this](uint16_t from, uint64_t session, uint16_t id, const simple::memory_buffer& buffer) {
                 return forward_shm(from, session, id, buffer);
             });
@@ -60,10 +55,6 @@ proxy::proxy(const simple::toml_value_t* value) : engine_(std::random_device{}()
 
 simple::task<> proxy::awake() {
     gate_connector_->start();
-
-    // 订阅login服务
-    simple::co_start([this] { return subscribe_login(); });
-
     auto& network = simple::network::instance();
     auto server = co_await network.tcp_listen("", listen_port_, true);
     simple::co_start([this, server] { return accept(server); });
@@ -148,102 +139,7 @@ simple::task<> proxy::socket_check(uint32_t socket) {
     }
 }
 
-simple::task<> proxy::subscribe_login() {
-    using namespace std::chrono_literals;
-    auto timeout = []() -> simple::task<> { co_await simple::sleep_for(5s); };
-    game::s_service_subscribe_req req;
-    req.set_tp(game::st_login);
-
-    for (;;) {
-        try {
-            if (!gate_connector_->is_socket_valid()) {
-                co_await simple::sleep_for(2s);
-                continue;
-            }
-
-            auto call_result = co_await (
-                gate_connector_->call_gate<game::s_service_subscribe_ack>(game::id_s_service_subscribe_req, req) || timeout());
-            if (call_result.index() == 1) {
-                simple::error("[{}] subscribe login timeout.", name());
-                continue;
-            }
-
-            const auto& ack = std::get<0>(call_result);
-            auto& result = ack.result();
-            if (auto ec = result.ec(); ec != game::ec_success) {
-                simple::error("[{}] subscribe login ec:{} {}", name(), ec, result.msg());
-                continue;
-            }
-
-            for (auto& s : ack.services()) {
-                update_login(s);
-            }
-
-            co_return;
-        } catch (std::exception& e) {
-            simple::error("[{}] subscribe login exception {}", name(), ERROR_CODE_MESSAGE(e.what()));
-        }
-    }
-}
-
-void proxy::update_login(const game::s_service_info& service) {
-    if (service.tp() != game::st_login) {
-        return;
-    }
-
-    const auto id = static_cast<uint16_t>(service.id());
-    for (auto& s : logins_) {
-        if (s.id == id) {
-            s.online = service.online();
-            return;
-        }
-    }
-
-    logins_.emplace_back(id, service.online());
-}
-
-uint16_t proxy::rand_login() {
-    std::vector<uint16_t> online;
-    online.reserve(logins_.size());
-    for (const auto& s : logins_) {
-        if (s.online) {
-            online.emplace_back(s.id);
-        }
-    }
-
-    const auto size = online.size();
-    if (size == 0) {
-        return 0;
-    }
-
-    if (size == 1) {
-        return online[0];
-    }
-
-    std::uniform_int_distribution<uint16_t> dis(0, static_cast<uint16_t>(size - 1));
-    return online[dis(engine_)];
-}
-
-void proxy::forward_gate([[maybe_unused]] uint32_t socket, uint64_t session, uint16_t id, const simple::memory_buffer& buffer) {
-    // 只有订阅的广播
-    if (id != game::id_s_service_subscribe_brd) {
-        return;
-    }
-
-    game::s_service_subscribe_brd brd;
-    if (!brd.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
-        simple::warn("[{}] parse s_service_subscribe_brd fail", name());
-        return;
-    }
-
-    std::string log_str;
-    google::protobuf::util::MessageToJsonString(brd, &log_str);
-    simple::info("[{}] subscribe brd:{}", name(), log_str);
-
-    for (auto& s : brd.services()) {
-        update_login(s);
-    }
-}
+simple::task<> proxy::on_register_to_gate() { return gate_connector_->subscribe(game::st_login); }
 
 void proxy::forward_shm(uint16_t from, uint64_t session, uint16_t id, const simple::memory_buffer& buffer) {
     // todo: 删除
@@ -259,13 +155,64 @@ void proxy::forward_shm(uint16_t from, uint64_t session, uint16_t id, const simp
         ack.set_t2(simple::get_system_clock_millis());
 
         gate_connector_->write(from, session, game::id_s_ping_ack, ack);
+        return;
     }
 
     // todo: 处理gate通过共享内存转发的协议
 }
 
 void proxy::forward_player(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
-    // todo: 处理玩家的协议
+    // 处理玩家的协议
+    game::s_client_forward_brd brd;
+    brd.set_gate(this->id());
+    brd.set_socket(socket.socket);
+    brd.set_data(buffer.begin_read(), buffer.readable());
+
+    uint16_t dest_service = 0;
+    // 直接先if判断下
+    // 注册登录发给login
+    if (id == game::id_login_req) {
+        // 判断下是否已经收到登录协议，已经收到，必须建立新连接才能再次发送登录请求
+        // 可以直接将网络断开，让客户端重试
+        if (socket.userid > 0 || socket.wait_login) {
+            const auto utf8 = ERROR_CODE_MESSAGE("同一个连接重复发登录请求");
+            simple::network::instance().close(socket.socket);
+            return;
+        }
+
+        // 随机一个login去处理
+        dest_service = gate_connector_->rand_subscribe(game::st_login);
+        socket.wait_login = true;
+    } else if (id == game::id_ping_req) {
+        if (socket.wait_login) {
+            // 如果还没登录，ping包直接回复
+            return;
+        }
+
+        // 已经登录了发给逻辑服
+        dest_service = socket.logic;
+    } else if (id == game::id_enter_room_req || id == game::id_move_req) {
+        // 直接发给room房间
+        // 判断下是否有房间id
+        if (socket.room <= 0) {
+            // 按消息id，回复不同的ack
+            // 只要所有的ack第一项都是 ack_result result = 1;
+            // 可以统一回复msg_common_ack
+            return;
+        }
+
+        dest_service = socket.room;
+    } else {
+        // 其他的发给逻辑服
+        if (socket.logic <= 0 && socket.wait_login) {
+            // 还没登录完可以缓存下来等登录成功
+            return;
+        }
+
+        dest_service = socket.logic;
+    }
+
+    gate_connector_->write(dest_service, 0, game::id_s_client_forward_brd, brd);
 }
 
 SIMPLE_SERVICE_API simple::service_base* proxy_create(const simple::toml_value_t* value) { return new proxy(value); }

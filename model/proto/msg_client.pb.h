@@ -57,6 +57,9 @@ PROTO_API extern login_ackDefaultTypeInternal _login_ack_default_instance_;
 class login_req;
 struct login_reqDefaultTypeInternal;
 PROTO_API extern login_reqDefaultTypeInternal _login_req_default_instance_;
+class match_ack;
+struct match_ackDefaultTypeInternal;
+PROTO_API extern match_ackDefaultTypeInternal _match_ack_default_instance_;
 class move_ack;
 struct move_ackDefaultTypeInternal;
 PROTO_API extern move_ackDefaultTypeInternal _move_ack_default_instance_;
@@ -74,6 +77,7 @@ PROTOBUF_NAMESPACE_OPEN
 template<> PROTO_API ::game::enter_room_ack* Arena::CreateMaybeMessage<::game::enter_room_ack>(Arena*);
 template<> PROTO_API ::game::login_ack* Arena::CreateMaybeMessage<::game::login_ack>(Arena*);
 template<> PROTO_API ::game::login_req* Arena::CreateMaybeMessage<::game::login_req>(Arena*);
+template<> PROTO_API ::game::match_ack* Arena::CreateMaybeMessage<::game::match_ack>(Arena*);
 template<> PROTO_API ::game::move_ack* Arena::CreateMaybeMessage<::game::move_ack>(Arena*);
 template<> PROTO_API ::game::move_brd* Arena::CreateMaybeMessage<::game::move_brd>(Arena*);
 template<> PROTO_API ::game::move_req* Arena::CreateMaybeMessage<::game::move_req>(Arena*);
@@ -566,7 +570,7 @@ class PROTO_API login_ack final :
   enum : int {
     kResultFieldNumber = 1,
     kUseridFieldNumber = 2,
-    kHasMatchFieldNumber = 3,
+    kRoomFieldNumber = 3,
     kWinCountFieldNumber = 4,
     kLoseCountFieldNumber = 5,
   };
@@ -597,13 +601,13 @@ class PROTO_API login_ack final :
   void _internal_set_userid(int32_t value);
   public:
 
-  // bool has_match = 3;
-  void clear_has_match();
-  bool has_match() const;
-  void set_has_match(bool value);
+  // int32 room = 3;
+  void clear_room();
+  int32_t room() const;
+  void set_room(int32_t value);
   private:
-  bool _internal_has_match() const;
-  void _internal_set_has_match(bool value);
+  int32_t _internal_room() const;
+  void _internal_set_room(int32_t value);
   public:
 
   // uint32 win_count = 4;
@@ -634,9 +638,177 @@ class PROTO_API login_ack final :
   struct Impl_ {
     ::game::ack_result* result_;
     int32_t userid_;
-    bool has_match_;
+    int32_t room_;
     uint32_t win_count_;
     uint32_t lose_count_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_msg_5fclient_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PROTO_API match_ack final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.match_ack) */ {
+ public:
+  inline match_ack() : match_ack(nullptr) {}
+  ~match_ack() override;
+  explicit PROTOBUF_CONSTEXPR match_ack(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  match_ack(const match_ack& from);
+  match_ack(match_ack&& from) noexcept
+    : match_ack() {
+    *this = ::std::move(from);
+  }
+
+  inline match_ack& operator=(const match_ack& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline match_ack& operator=(match_ack&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const match_ack& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const match_ack* internal_default_instance() {
+    return reinterpret_cast<const match_ack*>(
+               &_match_ack_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(match_ack& a, match_ack& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(match_ack* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(match_ack* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  match_ack* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<match_ack>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const match_ack& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const match_ack& from) {
+    match_ack::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(match_ack* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "game.match_ack";
+  }
+  protected:
+  explicit match_ack(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kResultFieldNumber = 1,
+    kRoomFieldNumber = 2,
+  };
+  // .game.ack_result result = 1;
+  bool has_result() const;
+  private:
+  bool _internal_has_result() const;
+  public:
+  void clear_result();
+  const ::game::ack_result& result() const;
+  PROTOBUF_NODISCARD ::game::ack_result* release_result();
+  ::game::ack_result* mutable_result();
+  void set_allocated_result(::game::ack_result* result);
+  private:
+  const ::game::ack_result& _internal_result() const;
+  ::game::ack_result* _internal_mutable_result();
+  public:
+  void unsafe_arena_set_allocated_result(
+      ::game::ack_result* result);
+  ::game::ack_result* unsafe_arena_release_result();
+
+  // int32 room = 2;
+  void clear_room();
+  int32_t room() const;
+  void set_room(int32_t value);
+  private:
+  int32_t _internal_room() const;
+  void _internal_set_room(int32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:game.match_ack)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::game::ack_result* result_;
+    int32_t room_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -692,7 +864,7 @@ class PROTO_API enter_room_ack final :
                &_enter_room_ack_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(enter_room_ack& a, enter_room_ack& b) {
     a.Swap(&b);
@@ -941,7 +1113,7 @@ class PROTO_API move_req final :
                &_move_req_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(move_req& a, move_req& b) {
     a.Swap(&b);
@@ -1100,7 +1272,7 @@ class PROTO_API move_ack final :
                &_move_ack_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(move_ack& a, move_ack& b) {
     a.Swap(&b);
@@ -1268,7 +1440,7 @@ class PROTO_API move_brd final :
                &_move_brd_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(move_brd& a, move_brd& b) {
     a.Swap(&b);
@@ -1682,24 +1854,24 @@ inline void login_ack::set_userid(int32_t value) {
   // @@protoc_insertion_point(field_set:game.login_ack.userid)
 }
 
-// bool has_match = 3;
-inline void login_ack::clear_has_match() {
-  _impl_.has_match_ = false;
+// int32 room = 3;
+inline void login_ack::clear_room() {
+  _impl_.room_ = 0;
 }
-inline bool login_ack::_internal_has_match() const {
-  return _impl_.has_match_;
+inline int32_t login_ack::_internal_room() const {
+  return _impl_.room_;
 }
-inline bool login_ack::has_match() const {
-  // @@protoc_insertion_point(field_get:game.login_ack.has_match)
-  return _internal_has_match();
+inline int32_t login_ack::room() const {
+  // @@protoc_insertion_point(field_get:game.login_ack.room)
+  return _internal_room();
 }
-inline void login_ack::_internal_set_has_match(bool value) {
+inline void login_ack::_internal_set_room(int32_t value) {
   
-  _impl_.has_match_ = value;
+  _impl_.room_ = value;
 }
-inline void login_ack::set_has_match(bool value) {
-  _internal_set_has_match(value);
-  // @@protoc_insertion_point(field_set:game.login_ack.has_match)
+inline void login_ack::set_room(int32_t value) {
+  _internal_set_room(value);
+  // @@protoc_insertion_point(field_set:game.login_ack.room)
 }
 
 // uint32 win_count = 4;
@@ -1740,6 +1912,115 @@ inline void login_ack::_internal_set_lose_count(uint32_t value) {
 inline void login_ack::set_lose_count(uint32_t value) {
   _internal_set_lose_count(value);
   // @@protoc_insertion_point(field_set:game.login_ack.lose_count)
+}
+
+// -------------------------------------------------------------------
+
+// match_ack
+
+// .game.ack_result result = 1;
+inline bool match_ack::_internal_has_result() const {
+  return this != internal_default_instance() && _impl_.result_ != nullptr;
+}
+inline bool match_ack::has_result() const {
+  return _internal_has_result();
+}
+inline const ::game::ack_result& match_ack::_internal_result() const {
+  const ::game::ack_result* p = _impl_.result_;
+  return p != nullptr ? *p : reinterpret_cast<const ::game::ack_result&>(
+      ::game::_ack_result_default_instance_);
+}
+inline const ::game::ack_result& match_ack::result() const {
+  // @@protoc_insertion_point(field_get:game.match_ack.result)
+  return _internal_result();
+}
+inline void match_ack::unsafe_arena_set_allocated_result(
+    ::game::ack_result* result) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.result_);
+  }
+  _impl_.result_ = result;
+  if (result) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:game.match_ack.result)
+}
+inline ::game::ack_result* match_ack::release_result() {
+  
+  ::game::ack_result* temp = _impl_.result_;
+  _impl_.result_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::game::ack_result* match_ack::unsafe_arena_release_result() {
+  // @@protoc_insertion_point(field_release:game.match_ack.result)
+  
+  ::game::ack_result* temp = _impl_.result_;
+  _impl_.result_ = nullptr;
+  return temp;
+}
+inline ::game::ack_result* match_ack::_internal_mutable_result() {
+  
+  if (_impl_.result_ == nullptr) {
+    auto* p = CreateMaybeMessage<::game::ack_result>(GetArenaForAllocation());
+    _impl_.result_ = p;
+  }
+  return _impl_.result_;
+}
+inline ::game::ack_result* match_ack::mutable_result() {
+  ::game::ack_result* _msg = _internal_mutable_result();
+  // @@protoc_insertion_point(field_mutable:game.match_ack.result)
+  return _msg;
+}
+inline void match_ack::set_allocated_result(::game::ack_result* result) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.result_);
+  }
+  if (result) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(result));
+    if (message_arena != submessage_arena) {
+      result = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, result, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.result_ = result;
+  // @@protoc_insertion_point(field_set_allocated:game.match_ack.result)
+}
+
+// int32 room = 2;
+inline void match_ack::clear_room() {
+  _impl_.room_ = 0;
+}
+inline int32_t match_ack::_internal_room() const {
+  return _impl_.room_;
+}
+inline int32_t match_ack::room() const {
+  // @@protoc_insertion_point(field_get:game.match_ack.room)
+  return _internal_room();
+}
+inline void match_ack::_internal_set_room(int32_t value) {
+  
+  _impl_.room_ = value;
+}
+inline void match_ack::set_room(int32_t value) {
+  _internal_set_room(value);
+  // @@protoc_insertion_point(field_set:game.match_ack.room)
 }
 
 // -------------------------------------------------------------------
@@ -2275,6 +2556,8 @@ inline void move_brd::set_game(::game::game_result value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

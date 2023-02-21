@@ -50,7 +50,6 @@ simple::task<> client::run() {
     auto& network = simple::network::instance();
     size_t cnt_fail = 0;
     simple::memory_buffer buffer;
-    auto timeout = []() -> simple::task<> { co_await simple::sleep_for(5s); };
     simple::cancellation_source source;
 
     for (;;) {
@@ -109,6 +108,7 @@ simple::task<> client::run() {
             network.close(socket);
             socket = 0;
             ++cnt_fail;
+            // 断网时，取消 logic 和 auto_ping 协程
             source.request_cancellation();
             source = {};
             simple::error("[{}] exception {}", name(), ERROR_CODE_MESSAGE(e.what()));
@@ -181,7 +181,7 @@ simple::task<> client::logic(const simple::websocket& ws) {
         // 注册或登录
         co_await login();
 
-        if (!has_match_) {
+        if (room_ <= 0) {
             // 匹配
             co_await match();
         }
@@ -195,7 +195,7 @@ simple::task<> client::logic(const simple::websocket& ws) {
         for (;;) {
             if (!is_my_turn_) {
                 co_await cv_turn_.wait();
-                if (!has_match_) {
+                if (room_ <= 0) {
                     co_await next_game();
                 }
             }
@@ -224,7 +224,7 @@ simple::task<> client::logic(const simple::websocket& ws) {
             move(is_black_, x, y);
             co_await move(x, y);
 
-            if (!has_match_) {
+            if (room_ <= 0) {
                 co_await next_game();
             }
         }
@@ -252,7 +252,7 @@ simple::task<> client::login() {
     }
 
     userid_ = ack.userid();
-    has_match_ = ack.has_match();
+    room_ = ack.room();
     win_count_ = ack.win_count();
     lose_count_ = ack.lose_count();
     simple::write_console(ERROR_CODE_MESSAGE("\r登录成功   \n"), stdout);
@@ -261,7 +261,7 @@ simple::task<> client::login() {
 
 simple::task<> client::match() {
     using namespace std::chrono_literals;
-    auto value = co_await (call<game::msg_common_ack>(game::id_match_req, game::msg_empty{}) || show_wait("匹配中"));
+    auto value = co_await (call<game::match_ack>(game::id_match_req, game::msg_empty{}) || show_wait("匹配中"));
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
@@ -271,9 +271,9 @@ simple::task<> client::match() {
         co_return;
     }
 
+    room_ = ack.room();
     simple::write_console(ERROR_CODE_MESSAGE("\r匹配成功   \n"), stdout);
     co_await simple::sleep_for(500ms);
-    has_match_ = true;
 }
 
 simple::task<> client::enter_room() {
@@ -418,15 +418,15 @@ void client::show_game_result(int32_t result) {
     switch (result) {
         case game::win:
             simple::write_console(ERROR_CODE_MESSAGE("------获得胜利------\n"), stdout);
-            has_match_ = false;
+            room_ = 0;
             break;
         case game::lose:
             simple::write_console(ERROR_CODE_MESSAGE("-------失败了-------\n"), stdout);
-            has_match_ = false;
+            room_ = 0;
             break;
         case game::draw:
             simple::write_console(ERROR_CODE_MESSAGE("--------平局--------\n"), stdout);
-            has_match_ = false;
+            room_ = 0;
             break;
         default:
             break;

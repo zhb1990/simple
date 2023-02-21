@@ -77,7 +77,7 @@ class parallel_task_promise : public promise_cancellation {
 
     parallel_task_promise() noexcept = default;
 
-    auto get_return_object() noexcept { return coroutine_handle_t::from_promise(*this); }
+    parallel_task<T> get_return_object() noexcept;
 
     // ReSharper disable once CppMemberFunctionMayBeStatic
     [[nodiscard]] std::suspend_always initial_suspend() const noexcept { return {}; }
@@ -152,7 +152,7 @@ class parallel_task_promise<void> : public promise_cancellation {
 
     parallel_task_promise() noexcept = default;
 
-    auto get_return_object() noexcept { return coroutine_handle_t::from_promise(*this); }
+    parallel_task<void> get_return_object() noexcept;
 
     // ReSharper disable once CppMemberFunctionMayBeStatic
     [[nodiscard]] std::suspend_always initial_suspend() noexcept { return {}; }
@@ -213,7 +213,7 @@ class parallel_task {
 
     using coroutine_handle_t = typename promise_type::coroutine_handle_t;
 
-    parallel_task(coroutine_handle_t coroutine) noexcept : coroutine_(coroutine) {}
+    explicit parallel_task(coroutine_handle_t coroutine) noexcept : coroutine_(coroutine) {}
 
     parallel_task(parallel_task&& other) noexcept : coroutine_(std::exchange(other.coroutine_, coroutine_handle_t{})) {}
 
@@ -255,6 +255,15 @@ class parallel_task {
 
     coroutine_handle_t coroutine_;
 };
+
+template <typename T>
+parallel_task<T> parallel_task_promise<T>::get_return_object() noexcept {
+    return parallel_task<T>{coroutine_handle_t::from_promise(*this)};
+}
+
+inline parallel_task<void> parallel_task_promise<void>::get_return_object() noexcept {
+    return parallel_task<void>{coroutine_handle_t::from_promise(*this)};
+}
 
 template <is_awaitable Awaitable>
 requires(!std::same_as<awaitable_result_t<Awaitable &&>, void>)

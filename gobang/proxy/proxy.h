@@ -2,7 +2,6 @@
 
 #include <simple/web/websocket.h>
 
-#include <random>
 #include <simple/application/service.hpp>
 #include <simple/containers/buffer.hpp>
 #include <unordered_set>
@@ -10,13 +9,15 @@
 
 struct socket_data {
     uint32_t socket{0};
-    mutable int64_t last_recv{0};
     // 玩家id
     mutable int32_t userid{0};
     // 分配给玩家的逻辑服务器id
     mutable uint16_t logic{0};
     // 玩家当前所在的牌局服务器
     mutable uint16_t room{0};
+	// 是否已经收到登录注册协议
+    mutable bool wait_login{false};
+    mutable int64_t last_recv{0};
 
     bool operator==(const socket_data& other) const { return socket == other.socket; }
 
@@ -34,7 +35,7 @@ struct std::hash<socket_data> {
 class gate_connector;
 
 namespace game {
-class s_service_info;
+class s_client_forward_brd;
 }
 
 class proxy final : public simple::service_base {
@@ -54,13 +55,7 @@ class proxy final : public simple::service_base {
 
     simple::task<> socket_check(uint32_t socket);
 
-    simple::task<> subscribe_login();
-
-    void update_login(const game::s_service_info& service);
-
-    uint16_t rand_login();
-
-    void forward_gate(uint32_t socket, uint64_t session, uint16_t id, const simple::memory_buffer& buffer);
+    simple::task<> on_register_to_gate();
 
     void forward_shm(uint16_t from, uint64_t session, uint16_t id, const simple::memory_buffer& buffer);
 
@@ -72,11 +67,4 @@ class proxy final : public simple::service_base {
     std::unordered_set<socket_data, std::hash<socket_data>, std::equal_to<>> sockets_;
     // 连接gate
     std::shared_ptr<gate_connector> gate_connector_;
-
-    struct login {
-        uint16_t id;
-        bool online;
-    };
-    std::vector<login> logins_;
-    std::default_random_engine engine_;
 };

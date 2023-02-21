@@ -78,4 +78,11 @@ enum message_id {
   id_s_service_subscribe_req = 0x4006;
   id_s_service_subscribe_ack = 0x5006;
   id_s_service_subscribe_brd = 0x6006;
+
+  // 客户端发来的消息包装
+  id_s_client_forward_brd = 0x6007;
+
+  // 踢掉客户端
+  id_s_kick_client_req = 0x4008;
+  id_s_kick_client_ack = 0x5008;
 }
