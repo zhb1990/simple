@@ -256,16 +256,18 @@ simple::task<websocket_opcode> websocket::read(memory_buffer& buf) const {
             throw std::logic_error("recv eof");
         }
 
-        buf.make_sure_writable(payload_len);
-        auto* write_pos = buf.begin_write();
-        if (co_await network.read_size(socket_, write_pos, payload_len) == 0) {
-            throw std::logic_error("recv eof");
-        }
+        if (payload_len > 0) {
+            buf.make_sure_writable(payload_len);
+            auto* write_pos = buf.begin_write();
+            if (co_await network.read_size(socket_, write_pos, payload_len) == 0) {
+                throw std::logic_error("recv eof");
+            }
 
-        if (mask) {
-            umask(write_pos, payload_len, masking_key);
+            if (mask) {
+                umask(write_pos, payload_len, masking_key);
+            }
+            buf.written(payload_len);
         }
-        buf.written(payload_len);
 
         if (fin) {
             if (op == websocket_opcode::continuation) {
