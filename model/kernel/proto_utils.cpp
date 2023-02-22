@@ -59,13 +59,15 @@ simple::task<> recv_net_buffer(simple::memory_buffer& buf, net_header& header, u
         throw std::logic_error(fmt::format("header len:{} > msg_len_limit", len));
     }
 
-    buf.reserve(header.len);
-    recv_len = co_await network.read_size(socket, reinterpret_cast<char*>(buf.begin_write()), header.len);
-    if (recv_len == 0) {
-        throw std::logic_error("recv eof");
-    }
+    if (header.len > 0) {
+        buf.reserve(header.len);
+        recv_len = co_await network.read_size(socket, reinterpret_cast<char*>(buf.begin_write()), header.len);
+        if (recv_len == 0) {
+            throw std::logic_error("recv eof");
+        }
 
-    buf.written(recv_len);
+        buf.written(recv_len);
+    }
 }
 
 void proc_ping(uint32_t socket, uint64_t session, const simple::memory_buffer& buffer) {
