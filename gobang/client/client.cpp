@@ -125,8 +125,9 @@ simple::task<> client::run() {
 
 simple::task<> client::ping() {
     const auto last = simple::get_system_clock_millis();
-    game::msg_empty req;
-    [[maybe_unused]] const auto ack = co_await call<game::msg_common_ack>(game::id_ping_req, req);
+    game::ping_req req;
+    req.set_t1(last);
+    [[maybe_unused]] const auto ack = co_await call<game::ping_ack>(game::id_ping_req, req);
     simple::info("[{}] ping delay:{}ms", name(), simple::get_system_clock_millis() - last);
 }
 
@@ -170,7 +171,7 @@ simple::task<> client::forward_message([[maybe_unused]] uint64_t session, uint16
 
     // 落子
     move(!is_black_, brd.x(), brd.y());
-    show_game_result(brd.game());
+    show_game_over(brd.over());
     is_my_turn_ = true;
 }
 
@@ -320,7 +321,7 @@ simple::task<> client::move(uint32_t x, uint32_t y) {
         co_return;
     }
 
-    show_game_result(ack.game());
+    show_game_over(ack.over());
     is_my_turn_ = false;
 }
 
@@ -414,7 +415,7 @@ bool client::check_pos(uint32_t x, uint32_t y) {
     return checkerboard_[x * checkerboard_size + y] == static_cast<uint8_t>(pos_state::none);
 }
 
-void client::show_game_result(int32_t result) {
+void client::show_game_over(int32_t result) {
     switch (result) {
         case game::win:
             simple::write_console(ERROR_CODE_MESSAGE("------获得胜利------\n"), stdout);

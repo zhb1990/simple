@@ -47,7 +47,7 @@ class client final : public simple::service_base {
     // 落子
     simple::task<> move(uint32_t x, uint32_t y);
 
-    void show_game_result(int32_t result);
+    void show_game_over(int32_t result);
 
     void move(bool is_black, uint32_t x, uint32_t y);
 

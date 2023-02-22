@@ -1,10 +1,13 @@
 ﻿#pragma once
 
+#include <msg_server.pb.h>
 #include <simple/web/websocket.h>
 
+#include <deque>
 #include <simple/application/service.hpp>
 #include <simple/containers/buffer.hpp>
 #include <unordered_set>
+#include <unordered_map>
 #include <vector>
 
 struct socket_data {
@@ -15,9 +18,10 @@ struct socket_data {
     mutable uint16_t logic{0};
     // 玩家当前所在的牌局服务器
     mutable uint16_t room{0};
-	// 是否已经收到登录注册协议
+    // 是否已经收到登录注册协议
     mutable bool wait_login{false};
     mutable int64_t last_recv{0};
+    mutable std::deque<game::s_client_forward_brd> cache;
 
     bool operator==(const socket_data& other) const { return socket == other.socket; }
 
@@ -33,10 +37,6 @@ struct std::hash<socket_data> {
 };
 
 class gate_connector;
-
-namespace game {
-class s_client_forward_brd;
-}
 
 class proxy final : public simple::service_base {
   public:
@@ -59,7 +59,33 @@ class proxy final : public simple::service_base {
 
     void forward_shm(uint16_t from, uint64_t session, uint16_t id, const simple::memory_buffer& buffer);
 
-    void forward_player(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+    void forward_client(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+
+    void client_register_msg(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
+
+    void client_room_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+
+    void client_other_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+
+    void send_to_service(uint16_t dest_service, uint32_t socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+
+    // 直接发给客户端
+    void send_to_client(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg);
+
+    // 内部服务发过来的 需要转发给客户端的 消息
+    void client_forward_brd(const simple::memory_buffer& buffer);
+
+    void report_client_offline(const socket_data& socket);
+
+    void kick_client(uint16_t from, uint64_t session, const simple::memory_buffer& buffer);
+
+    void client_login_ack(const socket_data& socket, const game::s_client_forward_brd& brd);
+
+    static void client_match_ack(const socket_data& socket, const game::s_client_forward_brd& brd);
+
+    static void client_move_ack(const socket_data& socket, const game::s_client_forward_brd& brd);
+
+    static void client_move_brd(const socket_data& socket, const game::s_client_forward_brd& brd);
 
     // 监听端口
     uint16_t listen_port_;
@@ -67,4 +93,10 @@ class proxy final : public simple::service_base {
     std::unordered_set<socket_data, std::hash<socket_data>, std::equal_to<>> sockets_;
     // 连接gate
     std::shared_ptr<gate_connector> gate_connector_;
+    using fn_client_msg =
+        std::function<void(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer)>;
+    std::unordered_map<uint16_t, fn_client_msg> fn_client_msgs_;
+    simple::memory_buffer temp_buffer_;
+    using fn_on_client_forward_brd = std::function<void(const socket_data& socket, const game::s_client_forward_brd& brd)>;
+    std::unordered_map<uint16_t, fn_on_client_forward_brd> fn_on_client_forward_brd_;
 };

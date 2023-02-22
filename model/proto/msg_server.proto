@@ -113,22 +113,20 @@ message s_service_subscribe_brd {
 }
 
 // id_s_ping_req
-message s_ping_req {
-  int64 t1 = 1;                             // 时间毫秒
-}
+// msg_empty
 
 // id_s_ping_ack
-message s_ping_ack {
-  int64 t1 = 1;                             // 发送时的时间毫秒
-  int64 t2 = 2;                             // 对方当前的时间毫秒
-}
+// msg_common_ack
 
 // id_s_client_forward_brd
 message s_client_forward_brd {
   uint32 gate = 1;                        // 客户端连接的gate
   uint32 socket = 2;                      // 对应gate上网络标识id（不是真正的套接字）
-  int32 userid = 3;                      // 如果已经登录过了，带上userid
-  bytes data = 4;                         // 转发的消息内容
+  int32 userid = 3;                       // 如果已经登录过了，带上userid
+  uint32 id = 4;                          // 转发的消息id
+  uint64 session = 5;                     // 转发的消息session
+  bytes data = 6;                         // 转发的消息内容
+  uint32 logic = 7;                       // 登录协议回复时，附带上逻辑服的id
 }
 
 // id_s_kick_client_req
@@ -139,3 +137,10 @@ message s_kick_client_req {
 
 // id_s_kick_client_ack
 // msg_common_ack
+
+// id_s_client_offline_brd
+message s_client_offline_brd {
+  uint32 gate = 1;                        // 客户端连接的gate
+  uint32 socket = 2;                      // 对应gate上网络标识id（不是真正的套接字）
+  int32 userid = 3;
+}

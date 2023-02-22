@@ -108,12 +108,13 @@ enum message_id : int {
   id_s_client_forward_brd = 24583,
   id_s_kick_client_req = 16392,
   id_s_kick_client_ack = 20488,
+  id_s_client_offline_brd = 24585,
   message_id_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   message_id_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 PROTO_API bool message_id_IsValid(int value);
 constexpr message_id message_id_MIN = id_none;
-constexpr message_id message_id_MAX = id_s_client_forward_brd;
+constexpr message_id message_id_MAX = id_s_client_offline_brd;
 constexpr int message_id_ARRAYSIZE = message_id_MAX + 1;
 
 PROTO_API const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* message_id_descriptor();

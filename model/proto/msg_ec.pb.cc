@@ -29,14 +29,14 @@ static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
 static constexpr ::_pb::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_msg_5fec_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\014msg_ec.proto\022\004game*_\n\nerror_code\022\016\n\nec"
+  "\n\014msg_ec.proto\022\004game*p\n\nerror_code\022\016\n\nec"
   "_success\020\000\022\016\n\nec_unknown\020\001\022\r\n\tec_system\020"
-  "\002\022\016\n\nec_timeout\020\003\022\022\n\016ec_invalid_pos\020\004b\006p"
-  "roto3"
+  "\002\022\016\n\nec_timeout\020\003\022\022\n\016ec_invalid_pos\020\004\022\017\n"
+  "\013ec_no_match\020\005b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_msg_5fec_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fec_2eproto = {
-    false, false, 125, descriptor_table_protodef_msg_5fec_2eproto,
+    false, false, 142, descriptor_table_protodef_msg_5fec_2eproto,
     "msg_ec.proto",
     &descriptor_table_msg_5fec_2eproto_once, nullptr, 0, 0,
     schemas, file_default_instances, TableStruct_msg_5fec_2eproto::offsets,
@@ -61,6 +61,7 @@ bool error_code_IsValid(int value) {
     case 2:
     case 3:
     case 4:
+    case 5:
       return true;
     default:
       return false;

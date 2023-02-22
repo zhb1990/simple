@@ -33,7 +33,7 @@ const char descriptor_table_protodef_msg_5fid_2eproto[] PROTOBUF_SECTION_VARIABL
   "\013msg_c2s_req\020\000\022\020\n\013msg_s2c_ack\020\200 \022\020\n\013msg_"
   "c2s_brd\020\200@\022\020\n\013msg_s2c_brd\020\200`\022\021\n\013msg_s2s_"
   "req\020\200\200\001\022\021\n\013msg_s2s_ack\020\200\240\001\022\021\n\013msg_s2s_br"
-  "d\020\200\300\001\022\016\n\010msg_mask\020\200\340\003*\310\005\n\nmessage_id\022\013\n\007"
+  "d\020\200\300\001\022\016\n\010msg_mask\020\200\340\003*\347\005\n\nmessage_id\022\013\n\007"
   "id_none\020\000\022\017\n\013id_ping_req\020\001\022\020\n\013id_ping_ac"
   "k\020\201 \022\020\n\014id_login_req\020\002\022\021\n\014id_login_ack\020\202"
   " \022\020\n\014id_match_req\020\003\022\021\n\014id_match_ack\020\203 \022\025"
@@ -51,11 +51,12 @@ const char descriptor_table_protodef_msg_5fid_2eproto[] PROTOBUF_SECTION_VARIABL
   "bscribe_ack\020\206\240\001\022 \n\032id_s_service_subscrib"
   "e_brd\020\206\300\001\022\035\n\027id_s_client_forward_brd\020\207\300\001"
   "\022\032\n\024id_s_kick_client_req\020\210\200\001\022\032\n\024id_s_kic"
-  "k_client_ack\020\210\240\001b\006proto3"
+  "k_client_ack\020\210\240\001\022\035\n\027id_s_client_offline_"
+  "brd\020\211\300\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_msg_5fid_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fid_2eproto = {
-    false, false, 904, descriptor_table_protodef_msg_5fid_2eproto,
+    false, false, 935, descriptor_table_protodef_msg_5fid_2eproto,
     "msg_id.proto",
     &descriptor_table_msg_5fid_2eproto_once, nullptr, 0, 0,
     schemas, file_default_instances, TableStruct_msg_5fid_2eproto::offsets,
@@ -123,6 +124,7 @@ bool message_id_IsValid(int value) {
     case 24581:
     case 24582:
     case 24583:
+    case 24585:
       return true;
     default:
       return false;

@@ -4,6 +4,18 @@ import "msg_base.proto";
 
 package game;
 
+// id_ping_req
+message ping_req {
+  int64 t1 = 1;                             // 时间毫秒
+}
+
+// id_ping_ack
+message ping_ack {
+  ack_result result = 1;
+  int64 t1 = 2;                             // 发送时的时间毫秒
+  int64 t2 = 3;                             // 对方当前的时间毫秒
+}
+
 message user_info_lite {
   string account = 1;
   int32 userid = 2;
@@ -54,7 +66,7 @@ message move_req {
   uint32 y = 2;
 }
 
-enum game_result {
+enum over_type {
   none = 0;
   win = 1;
   lose = 2;
@@ -64,13 +76,13 @@ enum game_result {
 // id_move_ack
 message move_ack {
   ack_result result = 1;
-  game_result game = 2;
+  over_type over = 2;
 }
 
 // id_move_brd
 message move_brd {
   uint32 x = 1;
   uint32 y = 2;
-  game_result game = 3;
+  over_type over = 3;
 }
 

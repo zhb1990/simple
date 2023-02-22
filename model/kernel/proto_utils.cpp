@@ -69,23 +69,19 @@ simple::task<> recv_net_buffer(simple::memory_buffer& buf, net_header& header, u
 }
 
 void proc_ping(uint32_t socket, uint64_t session, const simple::memory_buffer& buffer) {
-    game::s_ping_req req;
+    game::msg_empty req;
     if (!req.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
         return;
     }
 
-    game::s_ping_ack ack;
-    ack.set_t1(req.t1());
-    ack.set_t2(simple::get_system_clock_millis());
-    auto buf = create_net_buffer(game::id_s_ping_ack, session, ack);
+    // 不填result，即为默认的success
+    auto buf = create_net_buffer(game::id_s_ping_ack, session, game::msg_common_ack{});
     simple::network::instance().write(socket, buf);
 }
 
 simple::task<int64_t> rpc_ping(rpc_system& system, uint32_t socket) {
-    game::s_ping_req req;
     const auto last = simple::get_system_clock_millis();
-    req.set_t1(last);
-    [[maybe_unused]] const auto ack = co_await rpc_call<game::s_ping_ack>(system, socket, game::id_s_ping_req, req);
+    co_await rpc_call<game::msg_common_ack>(system, socket, game::id_s_ping_req, game::msg_empty{});
     co_return simple::get_system_clock_millis() - last;
 }
 

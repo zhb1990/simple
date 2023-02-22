@@ -14,4 +14,6 @@ enum error_code {
   ec_timeout = 3;
   // 错误的落子位置
   ec_invalid_pos = 4;
+  // 未匹配棋局
+  ec_no_match = 5;
 }

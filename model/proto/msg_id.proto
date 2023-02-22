@@ -85,4 +85,7 @@ enum message_id {
   // 踢掉客户端
   id_s_kick_client_req = 0x4008;
   id_s_kick_client_ack = 0x5008;
+
+  // 客户端网络断开
+  id_s_client_offline_brd = 0x6009;
 }

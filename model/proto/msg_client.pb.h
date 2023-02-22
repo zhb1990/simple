@@ -69,6 +69,12 @@ PROTO_API extern move_brdDefaultTypeInternal _move_brd_default_instance_;
 class move_req;
 struct move_reqDefaultTypeInternal;
 PROTO_API extern move_reqDefaultTypeInternal _move_req_default_instance_;
+class ping_ack;
+struct ping_ackDefaultTypeInternal;
+PROTO_API extern ping_ackDefaultTypeInternal _ping_ack_default_instance_;
+class ping_req;
+struct ping_reqDefaultTypeInternal;
+PROTO_API extern ping_reqDefaultTypeInternal _ping_req_default_instance_;
 class user_info_lite;
 struct user_info_liteDefaultTypeInternal;
 PROTO_API extern user_info_liteDefaultTypeInternal _user_info_lite_default_instance_;
@@ -81,38 +87,367 @@ template<> PROTO_API ::game::match_ack* Arena::CreateMaybeMessage<::game::match_
 template<> PROTO_API ::game::move_ack* Arena::CreateMaybeMessage<::game::move_ack>(Arena*);
 template<> PROTO_API ::game::move_brd* Arena::CreateMaybeMessage<::game::move_brd>(Arena*);
 template<> PROTO_API ::game::move_req* Arena::CreateMaybeMessage<::game::move_req>(Arena*);
+template<> PROTO_API ::game::ping_ack* Arena::CreateMaybeMessage<::game::ping_ack>(Arena*);
+template<> PROTO_API ::game::ping_req* Arena::CreateMaybeMessage<::game::ping_req>(Arena*);
 template<> PROTO_API ::game::user_info_lite* Arena::CreateMaybeMessage<::game::user_info_lite>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace game {
 
-enum game_result : int {
+enum over_type : int {
   none = 0,
   win = 1,
   lose = 2,
   draw = 3,
-  game_result_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
-  game_result_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
+  over_type_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
+  over_type_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
-PROTO_API bool game_result_IsValid(int value);
-constexpr game_result game_result_MIN = none;
-constexpr game_result game_result_MAX = draw;
-constexpr int game_result_ARRAYSIZE = game_result_MAX + 1;
+PROTO_API bool over_type_IsValid(int value);
+constexpr over_type over_type_MIN = none;
+constexpr over_type over_type_MAX = draw;
+constexpr int over_type_ARRAYSIZE = over_type_MAX + 1;
 
-PROTO_API const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* game_result_descriptor();
+PROTO_API const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* over_type_descriptor();
 template<typename T>
-inline const std::string& game_result_Name(T enum_t_value) {
-  static_assert(::std::is_same<T, game_result>::value ||
+inline const std::string& over_type_Name(T enum_t_value) {
+  static_assert(::std::is_same<T, over_type>::value ||
     ::std::is_integral<T>::value,
-    "Incorrect type passed to function game_result_Name.");
+    "Incorrect type passed to function over_type_Name.");
   return ::PROTOBUF_NAMESPACE_ID::internal::NameOfEnum(
-    game_result_descriptor(), enum_t_value);
+    over_type_descriptor(), enum_t_value);
 }
-inline bool game_result_Parse(
-    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, game_result* value) {
-  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<game_result>(
-    game_result_descriptor(), name, value);
+inline bool over_type_Parse(
+    ::PROTOBUF_NAMESPACE_ID::ConstStringParam name, over_type* value) {
+  return ::PROTOBUF_NAMESPACE_ID::internal::ParseNamedEnum<over_type>(
+    over_type_descriptor(), name, value);
 }
 // ===================================================================
+
+class PROTO_API ping_req final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.ping_req) */ {
+ public:
+  inline ping_req() : ping_req(nullptr) {}
+  ~ping_req() override;
+  explicit PROTOBUF_CONSTEXPR ping_req(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ping_req(const ping_req& from);
+  ping_req(ping_req&& from) noexcept
+    : ping_req() {
+    *this = ::std::move(from);
+  }
+
+  inline ping_req& operator=(const ping_req& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ping_req& operator=(ping_req&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ping_req& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ping_req* internal_default_instance() {
+    return reinterpret_cast<const ping_req*>(
+               &_ping_req_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(ping_req& a, ping_req& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ping_req* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ping_req* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ping_req* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ping_req>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ping_req& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const ping_req& from) {
+    ping_req::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ping_req* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "game.ping_req";
+  }
+  protected:
+  explicit ping_req(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kT1FieldNumber = 1,
+  };
+  // int64 t1 = 1;
+  void clear_t1();
+  int64_t t1() const;
+  void set_t1(int64_t value);
+  private:
+  int64_t _internal_t1() const;
+  void _internal_set_t1(int64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:game.ping_req)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    int64_t t1_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_msg_5fclient_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PROTO_API ping_ack final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.ping_ack) */ {
+ public:
+  inline ping_ack() : ping_ack(nullptr) {}
+  ~ping_ack() override;
+  explicit PROTOBUF_CONSTEXPR ping_ack(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  ping_ack(const ping_ack& from);
+  ping_ack(ping_ack&& from) noexcept
+    : ping_ack() {
+    *this = ::std::move(from);
+  }
+
+  inline ping_ack& operator=(const ping_ack& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ping_ack& operator=(ping_ack&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ping_ack& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ping_ack* internal_default_instance() {
+    return reinterpret_cast<const ping_ack*>(
+               &_ping_ack_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(ping_ack& a, ping_ack& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(ping_ack* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ping_ack* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ping_ack* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<ping_ack>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const ping_ack& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const ping_ack& from) {
+    ping_ack::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(ping_ack* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "game.ping_ack";
+  }
+  protected:
+  explicit ping_ack(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kResultFieldNumber = 1,
+    kT1FieldNumber = 2,
+    kT2FieldNumber = 3,
+  };
+  // .game.ack_result result = 1;
+  bool has_result() const;
+  private:
+  bool _internal_has_result() const;
+  public:
+  void clear_result();
+  const ::game::ack_result& result() const;
+  PROTOBUF_NODISCARD ::game::ack_result* release_result();
+  ::game::ack_result* mutable_result();
+  void set_allocated_result(::game::ack_result* result);
+  private:
+  const ::game::ack_result& _internal_result() const;
+  ::game::ack_result* _internal_mutable_result();
+  public:
+  void unsafe_arena_set_allocated_result(
+      ::game::ack_result* result);
+  ::game::ack_result* unsafe_arena_release_result();
+
+  // int64 t1 = 2;
+  void clear_t1();
+  int64_t t1() const;
+  void set_t1(int64_t value);
+  private:
+  int64_t _internal_t1() const;
+  void _internal_set_t1(int64_t value);
+  public:
+
+  // int64 t2 = 3;
+  void clear_t2();
+  int64_t t2() const;
+  void set_t2(int64_t value);
+  private:
+  int64_t _internal_t2() const;
+  void _internal_set_t2(int64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:game.ping_ack)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::game::ack_result* result_;
+    int64_t t1_;
+    int64_t t2_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_msg_5fclient_2eproto;
+};
+// -------------------------------------------------------------------
 
 class PROTO_API user_info_lite final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.user_info_lite) */ {
@@ -162,7 +497,7 @@ class PROTO_API user_info_lite final :
                &_user_info_lite_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    2;
 
   friend void swap(user_info_lite& a, user_info_lite& b) {
     a.Swap(&b);
@@ -326,7 +661,7 @@ class PROTO_API login_req final :
                &_login_req_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    3;
 
   friend void swap(login_req& a, login_req& b) {
     a.Swap(&b);
@@ -495,7 +830,7 @@ class PROTO_API login_ack final :
                &_login_ack_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    4;
 
   friend void swap(login_ack& a, login_ack& b) {
     a.Swap(&b);
@@ -696,7 +1031,7 @@ class PROTO_API match_ack final :
                &_match_ack_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    5;
 
   friend void swap(match_ack& a, match_ack& b) {
     a.Swap(&b);
@@ -864,7 +1199,7 @@ class PROTO_API enter_room_ack final :
                &_enter_room_ack_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
   friend void swap(enter_room_ack& a, enter_room_ack& b) {
     a.Swap(&b);
@@ -1113,7 +1448,7 @@ class PROTO_API move_req final :
                &_move_req_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    7;
 
   friend void swap(move_req& a, move_req& b) {
     a.Swap(&b);
@@ -1272,7 +1607,7 @@ class PROTO_API move_ack final :
                &_move_ack_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    8;
 
   friend void swap(move_ack& a, move_ack& b) {
     a.Swap(&b);
@@ -1346,7 +1681,7 @@ class PROTO_API move_ack final :
 
   enum : int {
     kResultFieldNumber = 1,
-    kGameFieldNumber = 2,
+    kOverFieldNumber = 2,
   };
   // .game.ack_result result = 1;
   bool has_result() const;
@@ -1366,13 +1701,13 @@ class PROTO_API move_ack final :
       ::game::ack_result* result);
   ::game::ack_result* unsafe_arena_release_result();
 
-  // .game.game_result game = 2;
-  void clear_game();
-  ::game::game_result game() const;
-  void set_game(::game::game_result value);
+  // .game.over_type over = 2;
+  void clear_over();
+  ::game::over_type over() const;
+  void set_over(::game::over_type value);
   private:
-  ::game::game_result _internal_game() const;
-  void _internal_set_game(::game::game_result value);
+  ::game::over_type _internal_over() const;
+  void _internal_set_over(::game::over_type value);
   public:
 
   // @@protoc_insertion_point(class_scope:game.move_ack)
@@ -1384,7 +1719,7 @@ class PROTO_API move_ack final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     ::game::ack_result* result_;
-    int game_;
+    int over_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1440,7 +1775,7 @@ class PROTO_API move_brd final :
                &_move_brd_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    9;
 
   friend void swap(move_brd& a, move_brd& b) {
     a.Swap(&b);
@@ -1515,7 +1850,7 @@ class PROTO_API move_brd final :
   enum : int {
     kXFieldNumber = 1,
     kYFieldNumber = 2,
-    kGameFieldNumber = 3,
+    kOverFieldNumber = 3,
   };
   // uint32 x = 1;
   void clear_x();
@@ -1535,13 +1870,13 @@ class PROTO_API move_brd final :
   void _internal_set_y(uint32_t value);
   public:
 
-  // .game.game_result game = 3;
-  void clear_game();
-  ::game::game_result game() const;
-  void set_game(::game::game_result value);
+  // .game.over_type over = 3;
+  void clear_over();
+  ::game::over_type over() const;
+  void set_over(::game::over_type value);
   private:
-  ::game::game_result _internal_game() const;
-  void _internal_set_game(::game::game_result value);
+  ::game::over_type _internal_over() const;
+  void _internal_set_over(::game::over_type value);
   public:
 
   // @@protoc_insertion_point(class_scope:game.move_brd)
@@ -1554,7 +1889,7 @@ class PROTO_API move_brd final :
   struct Impl_ {
     uint32_t x_;
     uint32_t y_;
-    int game_;
+    int over_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -1569,6 +1904,159 @@ class PROTO_API move_brd final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// ping_req
+
+// int64 t1 = 1;
+inline void ping_req::clear_t1() {
+  _impl_.t1_ = int64_t{0};
+}
+inline int64_t ping_req::_internal_t1() const {
+  return _impl_.t1_;
+}
+inline int64_t ping_req::t1() const {
+  // @@protoc_insertion_point(field_get:game.ping_req.t1)
+  return _internal_t1();
+}
+inline void ping_req::_internal_set_t1(int64_t value) {
+  
+  _impl_.t1_ = value;
+}
+inline void ping_req::set_t1(int64_t value) {
+  _internal_set_t1(value);
+  // @@protoc_insertion_point(field_set:game.ping_req.t1)
+}
+
+// -------------------------------------------------------------------
+
+// ping_ack
+
+// .game.ack_result result = 1;
+inline bool ping_ack::_internal_has_result() const {
+  return this != internal_default_instance() && _impl_.result_ != nullptr;
+}
+inline bool ping_ack::has_result() const {
+  return _internal_has_result();
+}
+inline const ::game::ack_result& ping_ack::_internal_result() const {
+  const ::game::ack_result* p = _impl_.result_;
+  return p != nullptr ? *p : reinterpret_cast<const ::game::ack_result&>(
+      ::game::_ack_result_default_instance_);
+}
+inline const ::game::ack_result& ping_ack::result() const {
+  // @@protoc_insertion_point(field_get:game.ping_ack.result)
+  return _internal_result();
+}
+inline void ping_ack::unsafe_arena_set_allocated_result(
+    ::game::ack_result* result) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.result_);
+  }
+  _impl_.result_ = result;
+  if (result) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:game.ping_ack.result)
+}
+inline ::game::ack_result* ping_ack::release_result() {
+  
+  ::game::ack_result* temp = _impl_.result_;
+  _impl_.result_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::game::ack_result* ping_ack::unsafe_arena_release_result() {
+  // @@protoc_insertion_point(field_release:game.ping_ack.result)
+  
+  ::game::ack_result* temp = _impl_.result_;
+  _impl_.result_ = nullptr;
+  return temp;
+}
+inline ::game::ack_result* ping_ack::_internal_mutable_result() {
+  
+  if (_impl_.result_ == nullptr) {
+    auto* p = CreateMaybeMessage<::game::ack_result>(GetArenaForAllocation());
+    _impl_.result_ = p;
+  }
+  return _impl_.result_;
+}
+inline ::game::ack_result* ping_ack::mutable_result() {
+  ::game::ack_result* _msg = _internal_mutable_result();
+  // @@protoc_insertion_point(field_mutable:game.ping_ack.result)
+  return _msg;
+}
+inline void ping_ack::set_allocated_result(::game::ack_result* result) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete reinterpret_cast< ::PROTOBUF_NAMESPACE_ID::MessageLite*>(_impl_.result_);
+  }
+  if (result) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(
+                reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(result));
+    if (message_arena != submessage_arena) {
+      result = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, result, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  _impl_.result_ = result;
+  // @@protoc_insertion_point(field_set_allocated:game.ping_ack.result)
+}
+
+// int64 t1 = 2;
+inline void ping_ack::clear_t1() {
+  _impl_.t1_ = int64_t{0};
+}
+inline int64_t ping_ack::_internal_t1() const {
+  return _impl_.t1_;
+}
+inline int64_t ping_ack::t1() const {
+  // @@protoc_insertion_point(field_get:game.ping_ack.t1)
+  return _internal_t1();
+}
+inline void ping_ack::_internal_set_t1(int64_t value) {
+  
+  _impl_.t1_ = value;
+}
+inline void ping_ack::set_t1(int64_t value) {
+  _internal_set_t1(value);
+  // @@protoc_insertion_point(field_set:game.ping_ack.t1)
+}
+
+// int64 t2 = 3;
+inline void ping_ack::clear_t2() {
+  _impl_.t2_ = int64_t{0};
+}
+inline int64_t ping_ack::_internal_t2() const {
+  return _impl_.t2_;
+}
+inline int64_t ping_ack::t2() const {
+  // @@protoc_insertion_point(field_get:game.ping_ack.t2)
+  return _internal_t2();
+}
+inline void ping_ack::_internal_set_t2(int64_t value) {
+  
+  _impl_.t2_ = value;
+}
+inline void ping_ack::set_t2(int64_t value) {
+  _internal_set_t2(value);
+  // @@protoc_insertion_point(field_set:game.ping_ack.t2)
+}
+
+// -------------------------------------------------------------------
+
 // user_info_lite
 
 // string account = 1;
@@ -2469,24 +2957,24 @@ inline void move_ack::set_allocated_result(::game::ack_result* result) {
   // @@protoc_insertion_point(field_set_allocated:game.move_ack.result)
 }
 
-// .game.game_result game = 2;
-inline void move_ack::clear_game() {
-  _impl_.game_ = 0;
+// .game.over_type over = 2;
+inline void move_ack::clear_over() {
+  _impl_.over_ = 0;
 }
-inline ::game::game_result move_ack::_internal_game() const {
-  return static_cast< ::game::game_result >(_impl_.game_);
+inline ::game::over_type move_ack::_internal_over() const {
+  return static_cast< ::game::over_type >(_impl_.over_);
 }
-inline ::game::game_result move_ack::game() const {
-  // @@protoc_insertion_point(field_get:game.move_ack.game)
-  return _internal_game();
+inline ::game::over_type move_ack::over() const {
+  // @@protoc_insertion_point(field_get:game.move_ack.over)
+  return _internal_over();
 }
-inline void move_ack::_internal_set_game(::game::game_result value) {
+inline void move_ack::_internal_set_over(::game::over_type value) {
   
-  _impl_.game_ = value;
+  _impl_.over_ = value;
 }
-inline void move_ack::set_game(::game::game_result value) {
-  _internal_set_game(value);
-  // @@protoc_insertion_point(field_set:game.move_ack.game)
+inline void move_ack::set_over(::game::over_type value) {
+  _internal_set_over(value);
+  // @@protoc_insertion_point(field_set:game.move_ack.over)
 }
 
 // -------------------------------------------------------------------
@@ -2533,29 +3021,33 @@ inline void move_brd::set_y(uint32_t value) {
   // @@protoc_insertion_point(field_set:game.move_brd.y)
 }
 
-// .game.game_result game = 3;
-inline void move_brd::clear_game() {
-  _impl_.game_ = 0;
+// .game.over_type over = 3;
+inline void move_brd::clear_over() {
+  _impl_.over_ = 0;
 }
-inline ::game::game_result move_brd::_internal_game() const {
-  return static_cast< ::game::game_result >(_impl_.game_);
+inline ::game::over_type move_brd::_internal_over() const {
+  return static_cast< ::game::over_type >(_impl_.over_);
 }
-inline ::game::game_result move_brd::game() const {
-  // @@protoc_insertion_point(field_get:game.move_brd.game)
-  return _internal_game();
+inline ::game::over_type move_brd::over() const {
+  // @@protoc_insertion_point(field_get:game.move_brd.over)
+  return _internal_over();
 }
-inline void move_brd::_internal_set_game(::game::game_result value) {
+inline void move_brd::_internal_set_over(::game::over_type value) {
   
-  _impl_.game_ = value;
+  _impl_.over_ = value;
 }
-inline void move_brd::set_game(::game::game_result value) {
-  _internal_set_game(value);
-  // @@protoc_insertion_point(field_set:game.move_brd.game)
+inline void move_brd::set_over(::game::over_type value) {
+  _internal_set_over(value);
+  // @@protoc_insertion_point(field_set:game.move_brd.over)
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
@@ -2577,10 +3069,10 @@ inline void move_brd::set_game(::game::game_result value) {
 
 PROTOBUF_NAMESPACE_OPEN
 
-template <> struct is_proto_enum< ::game::game_result> : ::std::true_type {};
+template <> struct is_proto_enum< ::game::over_type> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::game::game_result>() {
-  return ::game::game_result_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::game::over_type>() {
+  return ::game::over_type_descriptor();
 }
 
 PROTOBUF_NAMESPACE_CLOSE
