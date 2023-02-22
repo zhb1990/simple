@@ -61,17 +61,18 @@ listen_port = 10093
 port = 10098
 channel_size = 20971520
 
-#[[services]]
-#id = 8
-#name = "login1"
-#type = "login"
-#order = 8
-#[services.args]
-#center = 9
-#[services.args.gate]  # gate1
-#port = 10098
-#channel_size = 20971520
-#
+[[services]]
+id = 8
+name = "login1"
+type = "login"
+order = 8
+[services.args]
+center = 9
+logic_master = 11
+[services.args.gate]  # gate1
+port = 10098
+channel_size = 20971520
+
 #[[services]]
 #id = 9
 #name = "center"
@@ -85,6 +86,16 @@ channel_size = 20971520
 #id = 10
 #name = "db_proxy1"
 #type = "db_proxy"
+#order = 8
+##db的配置文件
+#[services.args.gate]  # gate1
+#port = 10098
+#channel_size = 20971520
+#
+#[[services]]
+#id = 11
+#name = "logic_master"
+#type = "logic_master"
 #order = 8
 #[services.args.gate]  # gate1
 #port = 10098
