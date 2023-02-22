@@ -109,6 +109,12 @@ enum message_id : int {
   id_s_kick_client_req = 16392,
   id_s_kick_client_ack = 20488,
   id_s_client_offline_brd = 24585,
+  id_s_login_req = 16394,
+  id_s_login_ack = 20490,
+  id_s_login_logic_req = 16395,
+  id_s_login_logic_ack = 20491,
+  id_s_get_logic_req = 16396,
+  id_s_get_logic_ack = 20492,
   message_id_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   message_id_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };

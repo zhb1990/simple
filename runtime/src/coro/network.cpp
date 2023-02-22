@@ -115,7 +115,6 @@ network_awaiter network::create_start_awaiter(uint32_t socket_id, const std::str
     } else {
         ptr->remote = to_address_string(host, service);
     }
-    ptr->local = to_address_string(host, service);
     sockets_.emplace(socket_id, ptr);
 
     return network_awaiter(std::move(ptr));

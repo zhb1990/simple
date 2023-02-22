@@ -18,7 +18,9 @@ golang或者rust也不错。c++的协程库还有 [async_simple](https://github.
 服务的动态库，需要导出两个函数分别为 `xxx_create` 和 `xxx_release`, `xxx` 为服务的类型名字与配置文件中的`type`对应。  
 可以参看`config/test.toml`
 
-框架根据配置文件加载服务，所有的服务与协程调度器运行在同一个单线程中
+框架根据配置文件加载服务，所有的服务与协程调度器运行在同一个单线程中  
+
+linux 和 mac 目前还没测试过
 
 ## 编译需要
 ```
@@ -49,4 +51,9 @@ cd bin\Debug
 启动五子棋服务器（未完成）
 ```
 .\executor.exe ..\..\config\server.toml
+```
+
+测试五子棋协议
+```
+.\executor.exe ..\..\config\client.toml
 ```

@@ -32,7 +32,7 @@ proxy::proxy(const simple::toml_value_t* value) {
                 return forward_shm(from, session, id, buffer);
             });
     } else {
-        throw std::logic_error("proxy need listen port");
+        throw std::logic_error("proxy need gate config");
     }
 
     fn_client_msgs_.emplace(game::id_login_req,

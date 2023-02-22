@@ -56,7 +56,7 @@ class client final : public simple::service_base {
 
     void back(uint32_t x, uint32_t y);
 
-    void show();
+    void show_game();
 
     static simple::task<> show_wait(std::string_view info);
 

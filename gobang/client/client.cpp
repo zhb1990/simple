@@ -241,6 +241,7 @@ simple::task<> client::login() {
     using namespace std::chrono_literals;
     game::login_req req;
     req.set_account(account_);
+    // 密码直接明文了，可以换成wss，或者单独对密码进行加密传输
     req.set_password(password_);
     auto value = co_await (call<game::login_ack>(game::id_login_req, req) || show_wait("登录中"));
     const auto& ack = std::get<0>(value);
@@ -302,7 +303,7 @@ simple::task<> client::enter_room() {
 
     simple::write_console(ERROR_CODE_MESSAGE("\r加载棋局完毕   \n"), stdout);
     co_await simple::sleep_for(500ms);
-    show();
+    show_game();
 }
 
 simple::task<> client::move(uint32_t x, uint32_t y) {
@@ -325,7 +326,7 @@ simple::task<> client::move(uint32_t x, uint32_t y) {
     is_my_turn_ = false;
 }
 
-void client::show() {
+void client::show_game() {
     // 控制台显示
     simple::memory_buffer temp;
     {
@@ -398,13 +399,13 @@ simple::task<> client::next_game() {
 void client::move(bool is_black, uint32_t x, uint32_t y) {
     // 落子
     checkerboard_[x * checkerboard_size + y] = static_cast<uint8_t>(is_black ? pos_state::black : pos_state::white);
-    show();
+    show_game();
 }
 
 void client::back(uint32_t x, uint32_t y) {
     // 回退操作
     checkerboard_[x * checkerboard_size + y] = static_cast<uint8_t>(pos_state::none);
-    show();
+    show_game();
 }
 
 bool client::check_pos(uint32_t x, uint32_t y) {

@@ -36,6 +36,8 @@ enum message_id {
   id_login_req = 0x0002;
   id_login_ack = 0x1002;
 
+  // 先不加重连协议
+
   // 匹配
   id_match_req = 0x0003;
   id_match_ack = 0x1003;
@@ -88,4 +90,16 @@ enum message_id {
 
   // 客户端网络断开
   id_s_client_offline_brd = 0x6009;
+
+  // 服务器内部账号登录协议
+  id_s_login_req = 0x400a;
+  id_s_login_ack = 0x500a;
+
+  // 玩家登录逻辑服协议
+  id_s_login_logic_req = 0x400b;
+  id_s_login_logic_ack = 0x500b;
+
+  // 给玩家分配逻辑服
+  id_s_get_logic_req = 0x400c;
+  id_s_get_logic_ack = 0x500c;
 }
