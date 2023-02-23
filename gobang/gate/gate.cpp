@@ -199,10 +199,10 @@ const service_data* gate::add_local_service(const game::s_service_register_req& 
 
     channel->auto_write();
 
-    simple::co_start([&channel, this]() -> simple::task<> {
+    simple::co_start([ptr = channel.get(), this]() -> simple::task<> {
         simple::memory_buffer buf;
         for (;;) {
-            co_await channel->channel.read(buf);
+            co_await ptr->channel.read(buf);
             forward(std::string_view(buf));
         }
     });

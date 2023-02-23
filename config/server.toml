@@ -45,21 +45,20 @@ type = "proxy"
 order = 2
 [services.args]
 listen_port = 10094
-test_proxy = 7
 [services.args.gate]  # gate2
 port = 10096
 channel_size = 20971520
 
-[[services]]
-id = 7
-name = "proxy2"
-type = "proxy"
-order = 2
-[services.args]
-listen_port = 10093
-[services.args.gate]  # gate1
-port = 10098
-channel_size = 20971520
+#[[services]]
+#id = 7
+#name = "proxy2"
+#type = "proxy"
+#order = 2
+#[services.args]
+#listen_port = 10093
+#[services.args.gate]  # gate1
+#port = 10098
+#channel_size = 20971520
 
 [[services]]
 id = 8
