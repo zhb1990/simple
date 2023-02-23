@@ -24,6 +24,13 @@ class login final : public simple::service_base {
 
     simple::task<> client_login(uint16_t from, uint32_t socket, uint64_t session, const game::login_req& req);
 
+    // 内部登录，注册或者校验密码，返回玩家userid
+    simple::task<int32_t> internal_login(const std::string& account, const std::string& password, game::ack_result& result);
+
+	simple::task<uint16_t> internal_get_logic(int32_t userid, game::ack_result& result);
+
+    simple::task<> internal_login_logic(int32_t userid, uint16_t logic, uint16_t gate, uint32_t socket, game::login_ack& ack);
+
     // 连接gate
     std::shared_ptr<gate_connector> gate_connector_;
     uint16_t center_;

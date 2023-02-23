@@ -73,91 +73,29 @@ void login::forward_shm(uint16_t from, uint64_t session, uint16_t id, const simp
     });
 }
 
+static auto rpc_timeout = []() -> simple::task<> { co_await simple::sleep_for(std::chrono::seconds{10}); };
+
 simple::task<> login::client_login(uint16_t from, uint32_t socket, uint64_t session, const game::login_req& req) {
     game::login_ack ack;
+    auto& result = *ack.mutable_result();
     uint16_t logic = 0;
     try {
         do {
-            auto timeout = []() -> simple::task<> { co_await simple::sleep_for(std::chrono::seconds{10}); };
             // 不存在sdk，这里直接向center创建下账号或者验证下密码
-            int32_t userid;
-            // 先写一起，后面分开下
-            {
-                game::s_login_req internal_req;
-                internal_req.set_account(req.account());
-                internal_req.set_password(req.password());
-                auto value = co_await (gate_connector_->call<game::s_login_ack>(center_, game::id_s_login_req, internal_req) ||
-                                       timeout());
-                if (value.index() != 0) {
-                    // 超时了
-                    simple::error("[{}] gate:{} socket:{} id_s_login_req timeout", name(), from, socket);
-                    ack.mutable_result()->set_ec(game::ec_timeout);
-                    break;
-                }
-
-                const auto& internal_ack = std::get<0>(value);
-                if (const auto ec = internal_ack.result().ec(); ec != game::ec_success) {
-                    simple::warn("[{}] gate:{} socket:{} id_s_login_req ec:{}", name(), from, socket, ec);
-                    ack.mutable_result()->set_ec(ec);
-                    break;
-                }
-
-                userid = internal_ack.userid();
+            int32_t userid = co_await internal_login(req.account(), req.password(), result);
+            if (result.ec() != game::ec_success) {
+                break;
             }
+            ack.set_userid(userid);
 
             // 校验完后向 逻辑管理服去请求 逻辑服id
-            {
-                game::s_get_logic_req internal_req;
-                internal_req.set_userid(userid);
-                auto value = co_await (
-                    gate_connector_->call<game::s_get_logic_ack>(logic_master_, game::id_s_get_logic_req, internal_req) ||
-                    timeout());
-                if (value.index() != 0) {
-                    // 超时了
-                    simple::error("[{}] gate:{} socket:{} id_s_get_logic_req timeout", name(), from, socket);
-                    ack.mutable_result()->set_ec(game::ec_timeout);
-                    break;
-                }
-
-                const auto& internal_ack = std::get<0>(value);
-                if (const auto ec = internal_ack.result().ec(); ec != game::ec_success) {
-                    simple::warn("[{}] gate:{} socket:{} id_s_login_req ec:{}", name(), from, socket, ec);
-                    ack.mutable_result()->set_ec(ec);
-                    break;
-                }
-
-                logic = internal_ack.logic();
+            logic = co_await internal_get_logic(userid, result);
+            if (result.ec() != game::ec_success) {
+                break;
             }
 
             // 向逻辑服请求玩家的数据
-            {
-                game::s_login_logic_req internal_req;
-                internal_req.set_userid(userid);
-                internal_req.set_gate(from);
-                internal_req.set_socket(socket);
-                auto value =
-                    co_await (gate_connector_->call<game::s_login_logic_ack>(logic, game::id_s_login_logic_req, internal_req) ||
-                              timeout());
-                if (value.index() != 0) {
-                    // 超时了
-                    simple::error("[{}] gate:{} socket:{} id_s_login_logic_req timeout", name(), from, socket);
-                    ack.mutable_result()->set_ec(game::ec_timeout);
-                    break;
-                }
-
-                const auto& internal_ack = std::get<0>(value);
-                if (const auto ec = internal_ack.result().ec(); ec != game::ec_success) {
-                    simple::warn("[{}] gate:{} socket:{} id_s_login_logic_req ec:{}", name(), from, socket, ec);
-                    ack.mutable_result()->set_ec(ec);
-                    break;
-                }
-
-                ack.set_room(internal_ack.room());
-                ack.set_win_count(internal_ack.win_count());
-                ack.set_lose_count(internal_ack.lose_count());
-            }
-
-            ack.set_userid(userid);
+            co_await internal_login_logic(userid, logic, from, socket, ack);
         } while (false);
     } catch (std::exception& e) {
         simple::error("[{}] gate:{} socket:{} login exception {}", name(), from, socket, ERROR_CODE_MESSAGE(e.what()));
@@ -177,6 +115,77 @@ simple::task<> login::client_login(uint16_t from, uint32_t socket, uint64_t sess
     temp_buffer_.written(len);
     brd.set_data(temp_buffer_.begin_read(), temp_buffer_.readable());
     gate_connector_->write(from, 0, game::id_s_client_forward_brd, brd);
+}
+
+simple::task<int32_t> login::internal_login(const std::string& account, const std::string& password, game::ack_result& result) {
+    game::s_login_req req;
+    req.set_account(account);
+    req.set_password(req.password());
+    auto value = co_await (gate_connector_->call<game::s_login_ack>(center_, game::id_s_login_req, req) || rpc_timeout());
+    if (value.index() != 0) {
+        // 超时了
+        simple::error("[{}] internal_login {}, {} timeout", name(), account, password);
+        result.set_ec(game::ec_timeout);
+        co_return 0;
+    }
+
+    const auto& ack = std::get<0>(value);
+    if (const auto ec = ack.result().ec(); ec != game::ec_success) {
+        simple::warn("[{}] internal_login {}, {}, ec:{}", name(), account, password, ec);
+        result.set_ec(ec);
+        co_return 0;
+    }
+
+    co_return ack.userid();
+}
+
+simple::task<uint16_t> login::internal_get_logic(int32_t userid, game::ack_result& result) {
+    game::s_get_logic_req req;
+    req.set_userid(userid);
+    auto value =
+        co_await (gate_connector_->call<game::s_get_logic_ack>(logic_master_, game::id_s_get_logic_req, req) || rpc_timeout());
+    if (value.index() != 0) {
+        // 超时了
+        simple::error("[{}] userid:{} get logic timeout", name(), userid);
+        result.set_ec(game::ec_timeout);
+        co_return 0;
+    }
+
+    const auto& ack = std::get<0>(value);
+    if (const auto ec = ack.result().ec(); ec != game::ec_success) {
+        simple::warn("[{}] userid:{} get logic ec:{}", name(), userid, ec);
+        result.set_ec(ec);
+        co_return 0;
+    }
+
+    co_return ack.logic();
+}
+
+simple::task<> login::internal_login_logic(int32_t userid, uint16_t logic, uint16_t gate, uint32_t socket,
+                                           game::login_ack& ack) {
+    game::s_login_logic_req internal_req;
+    internal_req.set_userid(userid);
+    internal_req.set_gate(gate);
+    internal_req.set_socket(socket);
+    auto value = co_await (gate_connector_->call<game::s_login_logic_ack>(logic, game::id_s_login_logic_req, internal_req) ||
+                           rpc_timeout());
+    if (value.index() != 0) {
+        // 超时了
+        simple::error("[{}] userid:{} gate:{} socket:{} login logic {} timeout", name(), userid, gate, socket, logic);
+        ack.mutable_result()->set_ec(game::ec_timeout);
+        co_return;
+    }
+
+    const auto& internal_ack = std::get<0>(value);
+    if (const auto ec = internal_ack.result().ec(); ec != game::ec_success) {
+        simple::warn("[{}] userid:{} gate:{} socket:{} login logic {} ec:{}", name(), userid, gate, socket, logic, ec);
+        ack.mutable_result()->set_ec(ec);
+        co_return;
+    }
+
+    ack.set_room(internal_ack.room());
+    ack.set_win_count(internal_ack.win_count());
+    ack.set_lose_count(internal_ack.lose_count());
 }
 
 SIMPLE_SERVICE_API simple::service_base* login_create(const simple::toml_value_t* value) { return new login(value); }
