@@ -250,7 +250,7 @@ simple::task<> client::login() {
         simple::error("[{}] login ec:{} {}", name(), ec, result.msg());
         // 登录失败退出
         simple::application::stop();
-        co_return;
+        throw std::logic_error("login fail");
     }
 
     userid_ = ack.userid();
@@ -270,7 +270,7 @@ simple::task<> client::match() {
         simple::error("[{}] match ec:{} {}", name(), ec, result.msg());
         // 匹配失败退出
         simple::application::stop();
-        co_return;
+        throw std::logic_error("match fail");
     }
 
     room_ = ack.room();
@@ -284,10 +284,10 @@ simple::task<> client::enter_room() {
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
-        simple::error("[{}] match ec:{} {}", name(), ec, result.msg());
+        simple::error("[{}] enter_room ec:{} {}", name(), ec, result.msg());
         // 匹配失败退出
         simple::application::stop();
-        co_return;
+        throw std::logic_error("enter_room fail");
     }
 
     is_my_turn_ = ack.is_my_turn();

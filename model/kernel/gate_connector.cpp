@@ -89,6 +89,7 @@ simple::task<> gate_connector::subscribe(uint16_t tp) {
                 continue;
             }
 
+            simple::error("[{}] subscribe {} ec_success", service_.name(), tp);
             for (auto& s : ack.services()) {
                 update_subscribe(s);
             }
@@ -312,7 +313,7 @@ void gate_connector::forward_gate(uint16_t id, const simple::memory_buffer& buff
 
     std::string log_str;
     google::protobuf::util::MessageToJsonString(brd, &log_str);
-    simple::info("[{}] subscribe brd:{}", service_.name(), log_str);
+    simple::warn("[{}] subscribe brd:{}", service_.name(), log_str);
 
     for (auto& s : brd.services()) {
         update_subscribe(s);

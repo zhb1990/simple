@@ -1,6 +1,7 @@
 ﻿#include "proxy.h"
 
 #include <gate_connector.h>
+#include <google/protobuf/util/json_util.h>
 #include <msg_client.pb.h>
 #include <msg_ec.pb.h>
 #include <msg_id.pb.h>
@@ -253,6 +254,9 @@ void proxy::client_forward_brd(const simple::memory_buffer& buffer) {
     if (!brd.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
         return;
     }
+    std::string log_str;
+    google::protobuf::util::MessageToJsonString(brd, &log_str);
+    simple::info("[{}] client forward brd:{}", name(), log_str);
 
     const auto socket = brd.socket();
     // 找到对应的

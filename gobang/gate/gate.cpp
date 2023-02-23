@@ -255,7 +255,7 @@ const service_data* gate::add_remote_service(const remote_gate& remote, const ga
     auto it_service = services_.find(service);
     if (it_service != services_.end()) {
         // 之前已经注册过了，这里只改变下在线状态
-        it_service->online = false;
+        it_service->online = info.online();
         return &*it_service;
     }
 
@@ -265,6 +265,7 @@ const service_data* gate::add_remote_service(const remote_gate& remote, const ga
     temp.id = service;
     temp.tp = tp;
     temp.remote = &remote;
+    temp.online = info.online();
     std::tie(it_service, std::ignore) = services_.emplace(temp);
     auto* service_ptr = &*it_service;
     remote.services.emplace_back(service_ptr);

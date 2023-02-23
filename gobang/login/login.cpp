@@ -68,10 +68,12 @@ void login::forward_shm(uint16_t from, uint64_t session, uint16_t id, const simp
         return;
     }
 
-    simple::co_start([this, from, socket = brd.socket(), req = std::move(req)] { return client_login(from, socket, req); });
+    simple::co_start([this, from, socket = brd.socket(), req = std::move(req), session = brd.session()] {
+        return client_login(from, socket, session, req);
+    });
 }
 
-simple::task<> login::client_login(uint16_t from, uint32_t socket, const game::login_req& req) {
+simple::task<> login::client_login(uint16_t from, uint32_t socket, uint64_t session, const game::login_req& req) {
     game::login_ack ack;
     uint16_t logic = 0;
     try {
@@ -166,7 +168,7 @@ simple::task<> login::client_login(uint16_t from, uint32_t socket, const game::l
     brd.set_gate(from);
     brd.set_socket(socket);
     brd.set_id(game::id_login_ack);
-    brd.set_session(0);
+    brd.set_session(session);
     brd.set_logic(logic);
     temp_buffer_.clear();
     const auto len = ack.ByteSizeLong();
