@@ -102,4 +102,32 @@ enum message_id {
   // 给玩家分配逻辑服
   id_s_get_logic_req = 0x400c;
   id_s_get_logic_ack = 0x500c;
+
+  // 创建玩家数据
+  id_s_db_create_user_req = 0x400d;
+  id_s_db_create_user_ack = 0x500d;
+
+  // 查询玩家数据
+  id_s_db_query_user_req = 0x400e;
+  id_s_db_query_user_ack = 0x500e;
+
+  // 更新玩家数据，因为数据可能会分批完成，因此不定义成请求回复的模式
+  // db_proxy 收到的是要写入db的数据，logic 收到的是写入成功的数据
+  // 如果要区分，可以定义成2个协议id
+  id_s_db_update_user_brd = 0x600f;
+
+  // 查询账号数据（账号 密码）
+  id_s_db_query_account_req = 0x4010;
+  id_s_db_query_account_ack = 0x5010;
+
+  // 更新账号数据（同 id_s_db_update_user_brd）
+  id_s_db_update_account_brd = 0x6011;
+
+  // 查询最大的userid
+  id_s_db_query_max_userid_req = 0x4012;
+  id_s_db_query_max_userid_ack = 0x5012;
+
+  // 查询所有的ai
+  id_s_db_query_ai_req = 0x4013;
+  id_s_db_query_ai_ack = 0x5013;
 }

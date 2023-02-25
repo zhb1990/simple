@@ -162,14 +162,15 @@ message s_login_logic_req {
   uint32 gate = 1;                        // 客户端连接的gate
   uint32 socket = 2;                      // 对应gate上网络标识id（不是真正的套接字）
   int32 userid = 3;
+  string account = 4;
 }
 
 // id_s_login_logic_ack
 message s_login_logic_ack {
   ack_result result = 1;                   // 结果
   int32 room = 2;
-  uint32 win_count = 3;
-  uint32 lose_count = 4;
+  int32 win_count = 3;
+  int32 lose_count = 4;
 }
 
 // id_s_get_logic_req
@@ -182,4 +183,89 @@ message s_get_logic_ack {
   ack_result result = 1;                   // 结果
   uint32 logic = 2;
 }
+
+// id_s_db_create_user_req
+message s_db_create_user_req {
+  int32 userid = 1;
+  string account = 2;
+  string password = 3;
+  int32 win_count = 4;
+  int32 lose_count = 5;
+  bool is_ai = 6;
+}
+
+// id_s_db_create_user_ack
+// msg_common_ack
+
+// id_s_db_query_user_req
+message s_db_query_user_req {
+  int32 userid = 1;
+}
+
+// id_s_db_query_user_ack
+message s_db_query_user_ack {
+  ack_result result = 1;                   // 结果
+  int32 userid = 2;
+  int32 win_count = 3;
+  int32 lose_count = 4;
+  bool is_ai = 5;
+}
+
+message s_db_user_info {
+  int32 userid = 1;
+  uint32 version = 2;
+  int32 win_count = 3;
+  int32 lose_count = 4;
+}
+
+// id_s_db_update_user_brd
+message s_db_update_user_brd {
+  repeated s_db_user_info infos = 1;
+}
+
+// id_s_db_query_account_req
+// account 有效时表示根据账号名获取 否则为 根据userid获取
+message s_db_query_account_req {
+  string account = 1;
+  int32 userid = 2;
+}
+
+// id_s_db_query_account_ack
+message s_db_query_account_ack {
+  ack_result result = 1;                   // 结果
+  string account = 2;
+  int32 userid = 3;
+  string password = 4;
+}
+
+message s_db_account_info {
+  int32 userid = 1;
+  uint32 version = 2;
+  string account = 3;
+  string password = 4;
+}
+
+// id_s_db_update_account_brd
+message s_db_update_account_brd {
+  repeated s_db_account_info infos = 1;
+}
+
+// id_s_db_query_max_userid_req
+// msg_empty
+
+// id_s_db_query_max_userid_ack
+message s_db_query_max_userid_ack {
+  ack_result result = 1;                   // 结果
+  int32 max_userid = 2;
+}
+
+// id_s_db_query_ai_req
+// msg_empty
+
+// id_s_db_query_ai_ack
+message s_db_query_ai_ack {
+  ack_result result = 1;                   // 结果
+  repeated int32 ai_list = 2;
+}
+
 

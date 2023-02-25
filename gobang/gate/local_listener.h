@@ -39,7 +39,7 @@ class local_listener {
 
     simple::task<> socket_start(const socket_data_ptr& ptr);
 
-    simple::task<> socket_check(const socket_data_ptr& ptr);
+    [[nodiscard]] simple::task<> socket_check(const socket_data_ptr& ptr) const;
 
     void forward_message(const socket_data_ptr& ptr, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
 
@@ -47,7 +47,7 @@ class local_listener {
 
     simple::task<> service_register(const socket_data_ptr& ptr, uint64_t session, const game::s_service_register_req& req);
 
-    void service_subscribe(const socket_data_ptr& ptr, uint64_t session, const simple::memory_buffer& buffer);
+    void service_subscribe(const socket_data_ptr& ptr, uint64_t session, const simple::memory_buffer& buffer) const;
 
     static void send(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg);
 

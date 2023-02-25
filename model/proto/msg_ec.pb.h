@@ -55,12 +55,13 @@ enum error_code : int {
   ec_timeout = 3,
   ec_invalid_pos = 4,
   ec_no_match = 5,
+  ec_no_data = 6,
   error_code_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   error_code_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 PROTO_API bool error_code_IsValid(int value);
 constexpr error_code error_code_MIN = ec_success;
-constexpr error_code error_code_MAX = ec_no_match;
+constexpr error_code error_code_MAX = ec_no_data;
 constexpr int error_code_ARRAYSIZE = error_code_MAX + 1;
 
 PROTO_API const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* error_code_descriptor();

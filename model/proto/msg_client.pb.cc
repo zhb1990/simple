@@ -82,8 +82,8 @@ PROTOBUF_CONSTEXPR login_ack::login_ack(
     /*decltype(_impl_.result_)*/nullptr
   , /*decltype(_impl_.userid_)*/0
   , /*decltype(_impl_.room_)*/0
-  , /*decltype(_impl_.win_count_)*/0u
-  , /*decltype(_impl_.lose_count_)*/0u
+  , /*decltype(_impl_.win_count_)*/0
+  , /*decltype(_impl_.lose_count_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct login_ackDefaultTypeInternal {
   PROTOBUF_CONSTEXPR login_ackDefaultTypeInternal()
@@ -301,7 +301,7 @@ const char descriptor_table_protodef_msg_5fclient_2eproto[] PROTOBUF_SECTION_VAR
   "\n\007account\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"r\n\tlog"
   "in_ack\022 \n\006result\030\001 \001(\0132\020.game.ack_result"
   "\022\016\n\006userid\030\002 \001(\005\022\014\n\004room\030\003 \001(\005\022\021\n\twin_co"
-  "unt\030\004 \001(\r\022\022\n\nlose_count\030\005 \001(\r\";\n\tmatch_a"
+  "unt\030\004 \001(\005\022\022\n\nlose_count\030\005 \001(\005\";\n\tmatch_a"
   "ck\022 \n\006result\030\001 \001(\0132\020.game.ack_result\022\014\n\004"
   "room\030\002 \001(\005\"\236\001\n\016enter_room_ack\022 \n\006result\030"
   "\001 \001(\0132\020.game.ack_result\022\020\n\010is_black\030\002 \001("
@@ -1322,8 +1322,8 @@ inline void login_ack::SharedCtor(
       decltype(_impl_.result_){nullptr}
     , decltype(_impl_.userid_){0}
     , decltype(_impl_.room_){0}
-    , decltype(_impl_.win_count_){0u}
-    , decltype(_impl_.lose_count_){0u}
+    , decltype(_impl_.win_count_){0}
+    , decltype(_impl_.lose_count_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
 }
@@ -1392,7 +1392,7 @@ const char* login_ack::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx
         } else
           goto handle_unusual;
         continue;
-      // uint32 win_count = 4;
+      // int32 win_count = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
           _impl_.win_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
@@ -1400,7 +1400,7 @@ const char* login_ack::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx
         } else
           goto handle_unusual;
         continue;
-      // uint32 lose_count = 5;
+      // int32 lose_count = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
           _impl_.lose_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
@@ -1456,16 +1456,16 @@ uint8_t* login_ack::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_room(), target);
   }
 
-  // uint32 win_count = 4;
+  // int32 win_count = 4;
   if (this->_internal_win_count() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(4, this->_internal_win_count(), target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(4, this->_internal_win_count(), target);
   }
 
-  // uint32 lose_count = 5;
+  // int32 lose_count = 5;
   if (this->_internal_lose_count() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(5, this->_internal_lose_count(), target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_lose_count(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1501,14 +1501,14 @@ size_t login_ack::ByteSizeLong() const {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_room());
   }
 
-  // uint32 win_count = 4;
+  // int32 win_count = 4;
   if (this->_internal_win_count() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_win_count());
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_win_count());
   }
 
-  // uint32 lose_count = 5;
+  // int32 lose_count = 5;
   if (this->_internal_lose_count() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_lose_count());
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_lose_count());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);

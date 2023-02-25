@@ -81,9 +81,9 @@ class gate_master final : public simple::service_base {
 
     simple::task<> socket_check(uint32_t socket);
 
-    void gate_disconnect(const gate_data* gate);
+    void gate_disconnect(const gate_data* gate) const;
 
-    void publish(const gate_data* gate);
+    void publish(const gate_data* gate) const;
 
     static void send(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg);
 

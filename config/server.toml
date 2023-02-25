@@ -9,7 +9,7 @@ frame_interval = 100                                       # 游戏帧间隔时�
 ## 为了方便调试，一个进程启动所有的服务
 
 [[services]]
-id = 3
+id = 1
 name = "gate_master"
 type = "gate_master"
 order = 1
@@ -17,7 +17,7 @@ order = 1
 listen_port = 10099
 
 [[services]]
-id = 4
+id = 2
 name = "gate1"
 type = "gate"
 order = 2
@@ -28,7 +28,7 @@ remote_port = 10097 #远程监听端口，其他gate访问
 remote_hosts = ["127.0.0.1"] #其他gate访问的ip地址或域名
 
 [[services]]
-id = 5
+id = 3
 name = "gate2"
 type = "gate"
 order = 2
@@ -39,63 +39,73 @@ remote_port = 10095 #远程监听端口，其他gate访问
 remote_hosts = ["127.0.0.1"] #其他gate访问的ip地址或域名
 
 [[services]]
-id = 6
-name = "proxy1"
-type = "proxy"
-order = 2
-[services.args]
-listen_port = 10094
-[services.args.gate]  # gate2
-port = 10096
-channel_size = 20971520
-
-#[[services]]
-#id = 7
-#name = "proxy2"
-#type = "proxy"
-#order = 2
-#[services.args]
-#listen_port = 10093
-#[services.args.gate]  # gate1
-#port = 10098
-#channel_size = 20971520
-
-[[services]]
-id = 8
-name = "login1"
-type = "login"
-order = 8
-[services.args]
-center = 9
-logic_master = 11
+id = 4
+name = "db_proxy1"
+type = "db_proxy"
+order = 3
+#db的配置文件
 [services.args.gate]  # gate1
 port = 10098
 channel_size = 20971520
 
 #[[services]]
-#id = 9
-#name = "center"
-#type = "center"
-#order = 8
-#[services.args.gate]  # gate1
-#port = 10098
-#channel_size = 20971520
-#
-#[[services]]
-#id = 10
-#name = "db_proxy1"
-#type = "db_proxy"
-#order = 8
-##db的配置文件
-#[services.args.gate]  # gate1
-#port = 10098
-#channel_size = 20971520
-#
-#[[services]]
-#id = 11
+#id = 5
 #name = "logic_master"
 #type = "logic_master"
-#order = 8
+#order = 4
 #[services.args.gate]  # gate1
 #port = 10098
 #channel_size = 20971520
+
+#[[services]]
+#id = 6
+#name = "center"
+#type = "center"
+#order = 6
+#[services.args.gate]  # gate2
+#port = 10096
+#channel_size = 20971520
+
+#[[services]]
+#id = 7
+#name = "logic1"
+#type = "logic"
+#order = 5
+#[services.args]
+#center = 6
+#logic_master = 5
+#[services.args.gate]  # gate1
+#port = 10098
+#channel_size = 20971520
+
+#[[services]]
+#id = 8
+#name = "match"
+#type = "match"
+#order = 7
+#[services.args.gate]  # gate2
+#port = 10096
+#channel_size = 20971520
+
+[[services]]
+id = 9
+name = "login1"
+type = "login"
+order = 8
+[services.args]
+center = 6
+logic_master = 5
+[services.args.gate]  # gate1
+port = 10098
+channel_size = 20971520
+
+[[services]]
+id = 10
+name = "proxy1"
+type = "proxy"
+order = 9
+[services.args]
+listen_port = 10094
+[services.args.gate]  # gate2
+port = 10096
+channel_size = 20971520

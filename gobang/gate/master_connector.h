@@ -34,7 +34,7 @@ class master_connector {
 
     simple::task<> ping_to_master(uint32_t socket);
 
-    void forward_message(uint16_t id, const simple::memory_buffer& buffer);
+    void forward_message(uint16_t id, const simple::memory_buffer& buffer) const;
 
     gate& gate_;
     uint32_t socket_{0};

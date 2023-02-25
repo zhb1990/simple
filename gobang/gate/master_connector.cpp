@@ -175,7 +175,7 @@ simple::task<> master_connector::ping_to_master(uint32_t socket) {
     simple::info("[{}] ping delay:{}ms", gate_.name(), ping);
 }
 
-void master_connector::forward_message(uint16_t id, const simple::memory_buffer& buffer) {
+void master_connector::forward_message(uint16_t id, const simple::memory_buffer& buffer) const {
     // 目前只需要处理master发来的其他gate信息广播，直接if判断下
     if (id != game::id_s_gate_register_brd) {
         return;

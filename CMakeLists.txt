@@ -70,6 +70,10 @@ SET_PROPERTY(TARGET proxy PROPERTY FOLDER "gobang")
 add_subdirectory(gobang/login)
 SET_PROPERTY(TARGET login PROPERTY FOLDER "gobang")
 
+## db_proxy
+add_subdirectory(gobang/db_proxy)
+SET_PROPERTY(TARGET db_proxy PROPERTY FOLDER "gobang")
+
 ## client
 add_subdirectory(gobang/client)
 SET_PROPERTY(TARGET client PROPERTY FOLDER "gobang")

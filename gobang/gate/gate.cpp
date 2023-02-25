@@ -72,11 +72,10 @@ void gate::forward(game::s_gate_forward_brd brd) {
     }
 
     if (it->gate != this->id()) {
-        auto ptr = create_net_buffer(game::id_s_gate_forward_brd, 0, brd);
-        it->remote->connector->send(ptr);
+        it->remote->connector->send(create_net_buffer(game::id_s_gate_forward_brd, 0, brd));
     } else {
         simple::memory_buffer temp;
-        shm_header header{static_cast<uint16_t>(brd.from()), dest, static_cast<uint16_t>(brd.id()), 0, brd.session()};
+        const shm_header header{static_cast<uint16_t>(brd.from()), dest, static_cast<uint16_t>(brd.id()), 0, brd.session()};
         const auto& data = brd.data();
         temp.reserve(sizeof(header) + data.size());
         temp.append(&header, sizeof(header));
@@ -116,8 +115,7 @@ void gate::forward(const std::string_view& message) {
 
     if (it->gate != id()) {
         const auto data = message.substr(sizeof(header));
-        auto ptr = create_forward_buffer(header, data);
-        it->remote->connector->send(ptr);
+        it->remote->connector->send(create_forward_buffer(header, data));
     } else {
         it->local->write(message.data(), static_cast<uint32_t>(message.size()));
     }
@@ -131,8 +129,7 @@ void gate::forward(const service_data* dest) {
 
     for (auto& brd : it->second) {
         if (dest->gate != this->id()) {
-            auto ptr = create_net_buffer(game::id_s_gate_forward_brd, 0, *brd);
-            dest->remote->connector->send(ptr);
+            dest->remote->connector->send(create_net_buffer(game::id_s_gate_forward_brd, 0, *brd));
         } else {
             simple::memory_buffer temp;
             shm_header header{static_cast<uint16_t>(brd->from()), dest->id, static_cast<uint16_t>(brd->id()), 0,
@@ -159,18 +156,19 @@ void gate::delay_forward(uint16_t dest, game::s_gate_forward_brd brd) {
 
 service_type_info& gate::get_service_type_info(uint16_t tp) { return service_type_infos_[tp]; }
 
-simple::task<int32_t> gate::upload_to_master(const game::s_service_info& info) {
+simple::task<int32_t> gate::upload_to_master(const game::s_service_info& info) const {
     return master_connector_->upload_to_master(info);
 }
 
-const service_data* gate::add_local_service(const game::s_service_register_req& req) {
+std::pair<const service_data*, bool> gate::add_local_service(const game::s_service_register_req& req) {
     auto& info = req.info();
     const auto service = static_cast<uint16_t>(info.id());
     auto it_service = services_.find(service);
     if (it_service != services_.end()) {
         // 之前已经注册过了，这里只改变下在线状态
+        const auto changed = it_service->online;
         it_service->online = false;
-        return &*it_service;
+        return {&*it_service, changed};
     }
 
     const auto tp = static_cast<uint16_t>(info.tp());
@@ -178,7 +176,7 @@ const service_data* gate::add_local_service(const game::s_service_register_req& 
     temp.gate = id();
     temp.id = service;
     temp.tp = tp;
-    auto& channel = local_channels_.emplace_back(
+    const auto& channel = local_channels_.emplace_back(
         std::make_unique<channel_cached>(std::to_string(temp.gate), std::to_string(service), req.channel_size()));
     temp.local = channel.get();
     std::tie(it_service, std::ignore) = services_.emplace(temp);
@@ -207,11 +205,11 @@ const service_data* gate::add_local_service(const game::s_service_register_req& 
         }
     });
 
-    return service_ptr;
+    return {service_ptr, true};
 }
 
 simple::task<> gate::local_service_online_changed(uint16_t service, bool online) {
-    auto it_service = services_.find(service);
+    const auto it_service = services_.find(service);
     if (it_service == services_.end()) {
         // 不可能走到这里
         co_return;
@@ -226,14 +224,15 @@ simple::task<> gate::local_service_online_changed(uint16_t service, bool online)
 }
 
 void gate::add_remote_gate(const game::s_gate_info& gate_info) {
-    const auto gate_id = gate_info.id();
+    const auto gate_id = static_cast<uint16_t>(gate_info.id());
+    bool need_start = false;
     auto it_remote = remote_gates_.find(gate_id);
     if (it_remote == remote_gates_.end()) {
         remote_gate temp;
         temp.id = gate_id;
         std::tie(it_remote, std::ignore) = remote_gates_.emplace(temp);
         it_remote->connector = std::make_shared<remote_connector>(&*it_remote, *this);
-        it_remote->connector->start();
+        need_start = true;
     }
 
     it_remote->addresses.clear();
@@ -244,19 +243,26 @@ void gate::add_remote_gate(const game::s_gate_info& gate_info) {
         str.append(address.port());
     }
 
+    if (need_start) {
+        it_remote->connector->start();
+    }
+
     for (auto& s : gate_info.services()) {
-        auto* data = add_remote_service(*it_remote, s);
-        local_listener_->publish(data);
+        auto [data, changed] = add_remote_service(*it_remote, s);
+        if (changed) {
+            local_listener_->publish(data);
+        }
     }
 }
 
-const service_data* gate::add_remote_service(const remote_gate& remote, const game::s_service_info& info) {
+std::pair<const service_data*, bool> gate::add_remote_service(const remote_gate& remote, const game::s_service_info& info) {
     const auto service = static_cast<uint16_t>(info.id());
     auto it_service = services_.find(service);
     if (it_service != services_.end()) {
+        const auto changed = it_service->online != info.online();
         // 之前已经注册过了，这里只改变下在线状态
         it_service->online = info.online();
-        return &*it_service;
+        return {&*it_service, changed};
     }
 
     const auto tp = static_cast<uint16_t>(info.tp());
@@ -275,7 +281,7 @@ const service_data* gate::add_remote_service(const remote_gate& remote, const ga
 
     forward(service_ptr);
 
-    return service_ptr;
+    return {service_ptr, true};
 }
 
 void service_data::to_proto(game::s_service_info& info) const noexcept {

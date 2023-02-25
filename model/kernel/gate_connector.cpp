@@ -321,7 +321,7 @@ void gate_connector::forward_gate(uint16_t id, const simple::memory_buffer& buff
 }
 
 void gate_connector::update_subscribe(const game::s_service_info& service) {
-    auto& subscribe = subscribes_[service.tp()];
+    auto& subscribe = subscribes_[static_cast<uint16_t>(service.tp())];
 
     const auto id = static_cast<uint16_t>(service.id());
     for (auto& s : subscribe) {

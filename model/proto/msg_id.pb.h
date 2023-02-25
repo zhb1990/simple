@@ -115,12 +115,24 @@ enum message_id : int {
   id_s_login_logic_ack = 20491,
   id_s_get_logic_req = 16396,
   id_s_get_logic_ack = 20492,
+  id_s_db_create_user_req = 16397,
+  id_s_db_create_user_ack = 20493,
+  id_s_db_query_user_req = 16398,
+  id_s_db_query_user_ack = 20494,
+  id_s_db_update_user_brd = 24591,
+  id_s_db_query_account_req = 16400,
+  id_s_db_query_account_ack = 20496,
+  id_s_db_update_account_brd = 24593,
+  id_s_db_query_max_userid_req = 16402,
+  id_s_db_query_max_userid_ack = 20498,
+  id_s_db_query_ai_req = 16403,
+  id_s_db_query_ai_ack = 20499,
   message_id_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::min(),
   message_id_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<int32_t>::max()
 };
 PROTO_API bool message_id_IsValid(int value);
 constexpr message_id message_id_MIN = id_none;
-constexpr message_id message_id_MAX = id_s_client_offline_brd;
+constexpr message_id message_id_MAX = id_s_db_update_account_brd;
 constexpr int message_id_ARRAYSIZE = message_id_MAX + 1;
 
 PROTO_API const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* message_id_descriptor();

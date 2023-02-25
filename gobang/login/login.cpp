@@ -8,7 +8,6 @@
 #include <simple/coro/timed_awaiter.h>
 #include <simple/log/log.h>
 #include <simple/utils/os.h>
-#include <simple/utils/time.h>
 
 #include <simple/coro/co_start.hpp>
 #include <simple/coro/task_operators.hpp>
@@ -95,10 +94,13 @@ simple::task<> login::client_login(uint16_t from, uint32_t socket, uint64_t sess
             }
 
             // 向逻辑服请求玩家的数据
-            co_await internal_login_logic(userid, logic, from, socket, ack);
+            co_await internal_login_logic(req.account(), userid, logic, from, socket, ack);
         } while (false);
     } catch (std::exception& e) {
         simple::error("[{}] gate:{} socket:{} login exception {}", name(), from, socket, ERROR_CODE_MESSAGE(e.what()));
+        ack.mutable_result()->set_ec(game::ec_system);
+    } catch (...) {
+        simple::error("[{}] gate:{} socket:{} login unknown exception", name(), from, socket);
         ack.mutable_result()->set_ec(game::ec_system);
     }
 
@@ -161,12 +163,13 @@ simple::task<uint16_t> login::internal_get_logic(int32_t userid, game::ack_resul
     co_return ack.logic();
 }
 
-simple::task<> login::internal_login_logic(int32_t userid, uint16_t logic, uint16_t gate, uint32_t socket,
-                                           game::login_ack& ack) {
+simple::task<> login::internal_login_logic(const std::string& account, int32_t userid, uint16_t logic, uint16_t gate,
+                                           uint32_t socket, game::login_ack& ack) {
     game::s_login_logic_req internal_req;
     internal_req.set_userid(userid);
     internal_req.set_gate(gate);
     internal_req.set_socket(socket);
+    internal_req.set_account(account);
     auto value = co_await (gate_connector_->call<game::s_login_logic_ack>(logic, game::id_s_login_logic_req, internal_req) ||
                            rpc_timeout());
     if (value.index() != 0) {
@@ -183,6 +186,7 @@ simple::task<> login::internal_login_logic(int32_t userid, uint16_t logic, uint1
         co_return;
     }
 
+    ack.mutable_result()->set_ec(game::ec_success);
     ack.set_room(internal_ack.room());
     ack.set_win_count(internal_ack.win_count());
     ack.set_lose_count(internal_ack.lose_count());

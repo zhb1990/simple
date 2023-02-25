@@ -33,7 +33,7 @@ const char descriptor_table_protodef_msg_5fid_2eproto[] PROTOBUF_SECTION_VARIABL
   "\013msg_c2s_req\020\000\022\020\n\013msg_s2c_ack\020\200 \022\020\n\013msg_"
   "c2s_brd\020\200@\022\020\n\013msg_s2c_brd\020\200`\022\021\n\013msg_s2s_"
   "req\020\200\200\001\022\021\n\013msg_s2s_ack\020\200\240\001\022\021\n\013msg_s2s_br"
-  "d\020\200\300\001\022\016\n\010msg_mask\020\200\340\003*\377\006\n\nmessage_id\022\013\n\007"
+  "d\020\200\300\001\022\016\n\010msg_mask\020\200\340\003*\374\t\n\nmessage_id\022\013\n\007"
   "id_none\020\000\022\017\n\013id_ping_req\020\001\022\020\n\013id_ping_ac"
   "k\020\201 \022\020\n\014id_login_req\020\002\022\021\n\014id_login_ack\020\202"
   " \022\020\n\014id_match_req\020\003\022\021\n\014id_match_ack\020\203 \022\025"
@@ -55,12 +55,21 @@ const char descriptor_table_protodef_msg_5fid_2eproto[] PROTOBUF_SECTION_VARIABL
   "brd\020\211\300\001\022\024\n\016id_s_login_req\020\212\200\001\022\024\n\016id_s_lo"
   "gin_ack\020\212\240\001\022\032\n\024id_s_login_logic_req\020\213\200\001\022"
   "\032\n\024id_s_login_logic_ack\020\213\240\001\022\030\n\022id_s_get_"
-  "logic_req\020\214\200\001\022\030\n\022id_s_get_logic_ack\020\214\240\001b"
-  "\006proto3"
+  "logic_req\020\214\200\001\022\030\n\022id_s_get_logic_ack\020\214\240\001\022"
+  "\035\n\027id_s_db_create_user_req\020\215\200\001\022\035\n\027id_s_d"
+  "b_create_user_ack\020\215\240\001\022\034\n\026id_s_db_query_u"
+  "ser_req\020\216\200\001\022\034\n\026id_s_db_query_user_ack\020\216\240"
+  "\001\022\035\n\027id_s_db_update_user_brd\020\217\300\001\022\037\n\031id_s"
+  "_db_query_account_req\020\220\200\001\022\037\n\031id_s_db_que"
+  "ry_account_ack\020\220\240\001\022 \n\032id_s_db_update_acc"
+  "ount_brd\020\221\300\001\022\"\n\034id_s_db_query_max_userid"
+  "_req\020\222\200\001\022\"\n\034id_s_db_query_max_userid_ack"
+  "\020\222\240\001\022\032\n\024id_s_db_query_ai_req\020\223\200\001\022\032\n\024id_s"
+  "_db_query_ai_ack\020\223\240\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_msg_5fid_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fid_2eproto = {
-    false, false, 1087, descriptor_table_protodef_msg_5fid_2eproto,
+    false, false, 1468, descriptor_table_protodef_msg_5fid_2eproto,
     "msg_id.proto",
     &descriptor_table_msg_5fid_2eproto_once, nullptr, 0, 0,
     schemas, file_default_instances, TableStruct_msg_5fid_2eproto::offsets,
@@ -121,6 +130,11 @@ bool message_id_IsValid(int value) {
     case 16394:
     case 16395:
     case 16396:
+    case 16397:
+    case 16398:
+    case 16400:
+    case 16402:
+    case 16403:
     case 20481:
     case 20482:
     case 20483:
@@ -130,11 +144,18 @@ bool message_id_IsValid(int value) {
     case 20490:
     case 20491:
     case 20492:
+    case 20493:
+    case 20494:
+    case 20496:
+    case 20498:
+    case 20499:
     case 24578:
     case 24581:
     case 24582:
     case 24583:
     case 24585:
+    case 24591:
+    case 24593:
       return true;
     default:
       return false;

@@ -945,22 +945,22 @@ class PROTO_API login_ack final :
   void _internal_set_room(int32_t value);
   public:
 
-  // uint32 win_count = 4;
+  // int32 win_count = 4;
   void clear_win_count();
-  uint32_t win_count() const;
-  void set_win_count(uint32_t value);
+  int32_t win_count() const;
+  void set_win_count(int32_t value);
   private:
-  uint32_t _internal_win_count() const;
-  void _internal_set_win_count(uint32_t value);
+  int32_t _internal_win_count() const;
+  void _internal_set_win_count(int32_t value);
   public:
 
-  // uint32 lose_count = 5;
+  // int32 lose_count = 5;
   void clear_lose_count();
-  uint32_t lose_count() const;
-  void set_lose_count(uint32_t value);
+  int32_t lose_count() const;
+  void set_lose_count(int32_t value);
   private:
-  uint32_t _internal_lose_count() const;
-  void _internal_set_lose_count(uint32_t value);
+  int32_t _internal_lose_count() const;
+  void _internal_set_lose_count(int32_t value);
   public:
 
   // @@protoc_insertion_point(class_scope:game.login_ack)
@@ -974,8 +974,8 @@ class PROTO_API login_ack final :
     ::game::ack_result* result_;
     int32_t userid_;
     int32_t room_;
-    uint32_t win_count_;
-    uint32_t lose_count_;
+    int32_t win_count_;
+    int32_t lose_count_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -2362,42 +2362,42 @@ inline void login_ack::set_room(int32_t value) {
   // @@protoc_insertion_point(field_set:game.login_ack.room)
 }
 
-// uint32 win_count = 4;
+// int32 win_count = 4;
 inline void login_ack::clear_win_count() {
-  _impl_.win_count_ = 0u;
+  _impl_.win_count_ = 0;
 }
-inline uint32_t login_ack::_internal_win_count() const {
+inline int32_t login_ack::_internal_win_count() const {
   return _impl_.win_count_;
 }
-inline uint32_t login_ack::win_count() const {
+inline int32_t login_ack::win_count() const {
   // @@protoc_insertion_point(field_get:game.login_ack.win_count)
   return _internal_win_count();
 }
-inline void login_ack::_internal_set_win_count(uint32_t value) {
+inline void login_ack::_internal_set_win_count(int32_t value) {
   
   _impl_.win_count_ = value;
 }
-inline void login_ack::set_win_count(uint32_t value) {
+inline void login_ack::set_win_count(int32_t value) {
   _internal_set_win_count(value);
   // @@protoc_insertion_point(field_set:game.login_ack.win_count)
 }
 
-// uint32 lose_count = 5;
+// int32 lose_count = 5;
 inline void login_ack::clear_lose_count() {
-  _impl_.lose_count_ = 0u;
+  _impl_.lose_count_ = 0;
 }
-inline uint32_t login_ack::_internal_lose_count() const {
+inline int32_t login_ack::_internal_lose_count() const {
   return _impl_.lose_count_;
 }
-inline uint32_t login_ack::lose_count() const {
+inline int32_t login_ack::lose_count() const {
   // @@protoc_insertion_point(field_get:game.login_ack.lose_count)
   return _internal_lose_count();
 }
-inline void login_ack::_internal_set_lose_count(uint32_t value) {
+inline void login_ack::_internal_set_lose_count(int32_t value) {
   
   _impl_.lose_count_ = value;
 }
-inline void login_ack::set_lose_count(uint32_t value) {
+inline void login_ack::set_lose_count(int32_t value) {
   _internal_set_lose_count(value);
   // @@protoc_insertion_point(field_set:game.login_ack.lose_count)
 }

@@ -7,7 +7,6 @@
 #include <simple/coro/timed_awaiter.h>
 #include <simple/log/log.h>
 #include <simple/utils/os.h>
-#include <simple/utils/time.h>
 
 #include <algorithm>
 #include <ctime>
@@ -94,7 +93,7 @@ simple::task<> gate_master::socket_check(uint32_t socket) {
     }
 }
 
-void gate_master::gate_disconnect(const gate_data* gate) {
+void gate_master::gate_disconnect(const gate_data* gate) const {
     gate->socket = 0;
 
     for (const auto* s : gate->services) {
@@ -117,7 +116,7 @@ static void add_gate_info(google::protobuf::RepeatedPtrField<game::s_gate_info>*
     }
 }
 
-void gate_master::publish(const gate_data* gate) {
+void gate_master::publish(const gate_data* gate) const {
     auto& network = simple::network::instance();
     game::s_gate_register_brd brd;
     auto* gates = brd.mutable_gates();
@@ -134,7 +133,7 @@ void gate_master::publish(const gate_data* gate) {
 }
 
 void gate_master::send(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg) {
-    auto buf = create_net_buffer(id, session, msg);
+    const auto buf = create_net_buffer(id, session, msg);
     auto& network = simple::network::instance();
     network.write(socket, buf);
 }
@@ -190,8 +189,8 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
     } else {
         // 新增一个gate
         gate_data temp{.id = id};
-        auto it = gates_.emplace(temp);
-        gate = &*it.first;
+        const auto [fst, snd] = gates_.emplace(temp);
+        gate = &*fst;
         socket.data = gate;
     }
 
@@ -248,7 +247,8 @@ bool gate_master::check_services(const google::protobuf::RepeatedPtrField<game::
     });
 }
 
-void gate_master::add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, const gate_data* gate) {
+void gate_master::add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services,
+                               const gate_data* gate) {
     for (const auto& s : services) {
         const auto it = services_.find(s.id());
         if (it != services_.end()) {

@@ -127,13 +127,13 @@ class gate final : public simple::service_base {
 
     simple::task<> local_service_online_changed(uint16_t service, bool online);
 
-    simple::task<int32_t> upload_to_master(const game::s_service_info& info);
+    [[nodiscard]] simple::task<int32_t> upload_to_master(const game::s_service_info& info) const;
 
-    const service_data* add_local_service(const game::s_service_register_req& req);
+    std::pair<const service_data*, bool> add_local_service(const game::s_service_register_req& req);
 
     void add_remote_gate(const game::s_gate_info& gate_info);
 
-    const service_data* add_remote_service(const remote_gate& remote, const game::s_service_info& info);
+    std::pair<const service_data*, bool> add_remote_service(const remote_gate& remote, const game::s_service_info& info);
 
   private:
     // 连接gate master的地址

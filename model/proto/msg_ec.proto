@@ -16,4 +16,6 @@ enum error_code {
   ec_invalid_pos = 4;
   // 未匹配棋局
   ec_no_match = 5;
+  // 未找到数据
+  ec_no_data = 6;
 }

@@ -47,6 +47,9 @@ struct PROTO_API TableStruct_msg_5fbase_2eproto {
 };
 PROTO_API extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_msg_5fbase_2eproto;
 namespace game {
+class account_info;
+struct account_infoDefaultTypeInternal;
+PROTO_API extern account_infoDefaultTypeInternal _account_info_default_instance_;
 class ack_result;
 struct ack_resultDefaultTypeInternal;
 PROTO_API extern ack_resultDefaultTypeInternal _ack_result_default_instance_;
@@ -56,11 +59,16 @@ PROTO_API extern msg_common_ackDefaultTypeInternal _msg_common_ack_default_insta
 class msg_empty;
 struct msg_emptyDefaultTypeInternal;
 PROTO_API extern msg_emptyDefaultTypeInternal _msg_empty_default_instance_;
+class user_info;
+struct user_infoDefaultTypeInternal;
+PROTO_API extern user_infoDefaultTypeInternal _user_info_default_instance_;
 }  // namespace game
 PROTOBUF_NAMESPACE_OPEN
+template<> PROTO_API ::game::account_info* Arena::CreateMaybeMessage<::game::account_info>(Arena*);
 template<> PROTO_API ::game::ack_result* Arena::CreateMaybeMessage<::game::ack_result>(Arena*);
 template<> PROTO_API ::game::msg_common_ack* Arena::CreateMaybeMessage<::game::msg_common_ack>(Arena*);
 template<> PROTO_API ::game::msg_empty* Arena::CreateMaybeMessage<::game::msg_empty>(Arena*);
+template<> PROTO_API ::game::user_info* Arena::CreateMaybeMessage<::game::user_info>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace game {
 
@@ -503,6 +511,356 @@ class PROTO_API msg_common_ack final :
   union { Impl_ _impl_; };
   friend struct ::TableStruct_msg_5fbase_2eproto;
 };
+// -------------------------------------------------------------------
+
+class PROTO_API user_info final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.user_info) */ {
+ public:
+  inline user_info() : user_info(nullptr) {}
+  ~user_info() override;
+  explicit PROTOBUF_CONSTEXPR user_info(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  user_info(const user_info& from);
+  user_info(user_info&& from) noexcept
+    : user_info() {
+    *this = ::std::move(from);
+  }
+
+  inline user_info& operator=(const user_info& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline user_info& operator=(user_info&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const user_info& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const user_info* internal_default_instance() {
+    return reinterpret_cast<const user_info*>(
+               &_user_info_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(user_info& a, user_info& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(user_info* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(user_info* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  user_info* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<user_info>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const user_info& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const user_info& from) {
+    user_info::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(user_info* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "game.user_info";
+  }
+  protected:
+  explicit user_info(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kUseridFieldNumber = 1,
+    kWinCountFieldNumber = 2,
+    kLoseCountFieldNumber = 3,
+  };
+  // int32 userid = 1;
+  void clear_userid();
+  int32_t userid() const;
+  void set_userid(int32_t value);
+  private:
+  int32_t _internal_userid() const;
+  void _internal_set_userid(int32_t value);
+  public:
+
+  // uint32 win_count = 2;
+  void clear_win_count();
+  uint32_t win_count() const;
+  void set_win_count(uint32_t value);
+  private:
+  uint32_t _internal_win_count() const;
+  void _internal_set_win_count(uint32_t value);
+  public:
+
+  // uint32 lose_count = 3;
+  void clear_lose_count();
+  uint32_t lose_count() const;
+  void set_lose_count(uint32_t value);
+  private:
+  uint32_t _internal_lose_count() const;
+  void _internal_set_lose_count(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:game.user_info)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    int32_t userid_;
+    uint32_t win_count_;
+    uint32_t lose_count_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_msg_5fbase_2eproto;
+};
+// -------------------------------------------------------------------
+
+class PROTO_API account_info final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:game.account_info) */ {
+ public:
+  inline account_info() : account_info(nullptr) {}
+  ~account_info() override;
+  explicit PROTOBUF_CONSTEXPR account_info(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  account_info(const account_info& from);
+  account_info(account_info&& from) noexcept
+    : account_info() {
+    *this = ::std::move(from);
+  }
+
+  inline account_info& operator=(const account_info& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline account_info& operator=(account_info&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const account_info& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const account_info* internal_default_instance() {
+    return reinterpret_cast<const account_info*>(
+               &_account_info_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(account_info& a, account_info& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(account_info* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(account_info* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  account_info* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<account_info>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const account_info& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const account_info& from) {
+    account_info::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(account_info* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "game.account_info";
+  }
+  protected:
+  explicit account_info(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kAccountFieldNumber = 2,
+    kPasswordFieldNumber = 3,
+    kUseridFieldNumber = 1,
+  };
+  // string account = 2;
+  void clear_account();
+  const std::string& account() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_account(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_account();
+  PROTOBUF_NODISCARD std::string* release_account();
+  void set_allocated_account(std::string* account);
+  private:
+  const std::string& _internal_account() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_account(const std::string& value);
+  std::string* _internal_mutable_account();
+  public:
+
+  // string password = 3;
+  void clear_password();
+  const std::string& password() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_password(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_password();
+  PROTOBUF_NODISCARD std::string* release_password();
+  void set_allocated_password(std::string* password);
+  private:
+  const std::string& _internal_password() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_password(const std::string& value);
+  std::string* _internal_mutable_password();
+  public:
+
+  // int32 userid = 1;
+  void clear_userid();
+  int32_t userid() const;
+  void set_userid(int32_t value);
+  private:
+  int32_t _internal_userid() const;
+  void _internal_set_userid(int32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:game.account_info)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr account_;
+    ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr password_;
+    int32_t userid_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_msg_5fbase_2eproto;
+};
 // ===================================================================
 
 
@@ -682,9 +1040,201 @@ inline void msg_common_ack::set_allocated_result(::game::ack_result* result) {
   // @@protoc_insertion_point(field_set_allocated:game.msg_common_ack.result)
 }
 
+// -------------------------------------------------------------------
+
+// user_info
+
+// int32 userid = 1;
+inline void user_info::clear_userid() {
+  _impl_.userid_ = 0;
+}
+inline int32_t user_info::_internal_userid() const {
+  return _impl_.userid_;
+}
+inline int32_t user_info::userid() const {
+  // @@protoc_insertion_point(field_get:game.user_info.userid)
+  return _internal_userid();
+}
+inline void user_info::_internal_set_userid(int32_t value) {
+  
+  _impl_.userid_ = value;
+}
+inline void user_info::set_userid(int32_t value) {
+  _internal_set_userid(value);
+  // @@protoc_insertion_point(field_set:game.user_info.userid)
+}
+
+// uint32 win_count = 2;
+inline void user_info::clear_win_count() {
+  _impl_.win_count_ = 0u;
+}
+inline uint32_t user_info::_internal_win_count() const {
+  return _impl_.win_count_;
+}
+inline uint32_t user_info::win_count() const {
+  // @@protoc_insertion_point(field_get:game.user_info.win_count)
+  return _internal_win_count();
+}
+inline void user_info::_internal_set_win_count(uint32_t value) {
+  
+  _impl_.win_count_ = value;
+}
+inline void user_info::set_win_count(uint32_t value) {
+  _internal_set_win_count(value);
+  // @@protoc_insertion_point(field_set:game.user_info.win_count)
+}
+
+// uint32 lose_count = 3;
+inline void user_info::clear_lose_count() {
+  _impl_.lose_count_ = 0u;
+}
+inline uint32_t user_info::_internal_lose_count() const {
+  return _impl_.lose_count_;
+}
+inline uint32_t user_info::lose_count() const {
+  // @@protoc_insertion_point(field_get:game.user_info.lose_count)
+  return _internal_lose_count();
+}
+inline void user_info::_internal_set_lose_count(uint32_t value) {
+  
+  _impl_.lose_count_ = value;
+}
+inline void user_info::set_lose_count(uint32_t value) {
+  _internal_set_lose_count(value);
+  // @@protoc_insertion_point(field_set:game.user_info.lose_count)
+}
+
+// -------------------------------------------------------------------
+
+// account_info
+
+// int32 userid = 1;
+inline void account_info::clear_userid() {
+  _impl_.userid_ = 0;
+}
+inline int32_t account_info::_internal_userid() const {
+  return _impl_.userid_;
+}
+inline int32_t account_info::userid() const {
+  // @@protoc_insertion_point(field_get:game.account_info.userid)
+  return _internal_userid();
+}
+inline void account_info::_internal_set_userid(int32_t value) {
+  
+  _impl_.userid_ = value;
+}
+inline void account_info::set_userid(int32_t value) {
+  _internal_set_userid(value);
+  // @@protoc_insertion_point(field_set:game.account_info.userid)
+}
+
+// string account = 2;
+inline void account_info::clear_account() {
+  _impl_.account_.ClearToEmpty();
+}
+inline const std::string& account_info::account() const {
+  // @@protoc_insertion_point(field_get:game.account_info.account)
+  return _internal_account();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void account_info::set_account(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.account_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:game.account_info.account)
+}
+inline std::string* account_info::mutable_account() {
+  std::string* _s = _internal_mutable_account();
+  // @@protoc_insertion_point(field_mutable:game.account_info.account)
+  return _s;
+}
+inline const std::string& account_info::_internal_account() const {
+  return _impl_.account_.Get();
+}
+inline void account_info::_internal_set_account(const std::string& value) {
+  
+  _impl_.account_.Set(value, GetArenaForAllocation());
+}
+inline std::string* account_info::_internal_mutable_account() {
+  
+  return _impl_.account_.Mutable(GetArenaForAllocation());
+}
+inline std::string* account_info::release_account() {
+  // @@protoc_insertion_point(field_release:game.account_info.account)
+  return _impl_.account_.Release();
+}
+inline void account_info::set_allocated_account(std::string* account) {
+  if (account != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.account_.SetAllocated(account, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.account_.IsDefault()) {
+    _impl_.account_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:game.account_info.account)
+}
+
+// string password = 3;
+inline void account_info::clear_password() {
+  _impl_.password_.ClearToEmpty();
+}
+inline const std::string& account_info::password() const {
+  // @@protoc_insertion_point(field_get:game.account_info.password)
+  return _internal_password();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void account_info::set_password(ArgT0&& arg0, ArgT... args) {
+ 
+ _impl_.password_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:game.account_info.password)
+}
+inline std::string* account_info::mutable_password() {
+  std::string* _s = _internal_mutable_password();
+  // @@protoc_insertion_point(field_mutable:game.account_info.password)
+  return _s;
+}
+inline const std::string& account_info::_internal_password() const {
+  return _impl_.password_.Get();
+}
+inline void account_info::_internal_set_password(const std::string& value) {
+  
+  _impl_.password_.Set(value, GetArenaForAllocation());
+}
+inline std::string* account_info::_internal_mutable_password() {
+  
+  return _impl_.password_.Mutable(GetArenaForAllocation());
+}
+inline std::string* account_info::release_password() {
+  // @@protoc_insertion_point(field_release:game.account_info.password)
+  return _impl_.password_.Release();
+}
+inline void account_info::set_allocated_password(std::string* password) {
+  if (password != nullptr) {
+    
+  } else {
+    
+  }
+  _impl_.password_.SetAllocated(password, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (_impl_.password_.IsDefault()) {
+    _impl_.password_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:game.account_info.password)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

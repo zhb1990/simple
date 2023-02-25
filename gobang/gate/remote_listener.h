@@ -27,11 +27,11 @@ class remote_listener {
 
     simple::task<> socket_start(const socket_data_ptr& ptr);
 
-    simple::task<> socket_check(const socket_data_ptr& ptr);
+    [[nodiscard]] simple::task<> socket_check(const socket_data_ptr& ptr) const;
 
-    void forward_message(uint32_t socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+    void forward_message(uint32_t socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) const;
 
-    void gate_forward(uint32_t socket, const simple::memory_buffer& buffer);
+    void gate_forward(uint32_t socket, const simple::memory_buffer& buffer) const;
 
     gate& gate_;
 };

@@ -28,7 +28,7 @@ void init_shm_buffer(simple::memory_buffer& buf, const shm_header& header, const
 }
 
 void init_client_buffer(simple::memory_buffer& buf, uint16_t id, uint64_t session, const google::protobuf::Message& msg) {
-    ws_header header{flag_valid, {}, id, session};
+    const ws_header header{flag_valid, {}, id, session};
     const auto len = static_cast<uint32_t>(msg.ByteSizeLong());
     buf.reserve(sizeof(header) + len);
     buf.append(&header, sizeof(header));
@@ -53,8 +53,7 @@ simple::task<> recv_net_buffer(simple::memory_buffer& buf, net_header& header, u
         throw std::logic_error(fmt::format("header flag:{} is invalid", flag));
     }
 
-    const auto len = header.len;
-    if (len > msg_len_limit) {
+    if (const auto len = header.len; len > msg_len_limit) {
         network.close(socket);
         throw std::logic_error(fmt::format("header len:{} > msg_len_limit", len));
     }
@@ -77,7 +76,7 @@ void proc_ping(uint32_t socket, uint64_t session, const simple::memory_buffer& b
     }
 
     // 不填result，即为默认的success
-    auto buf = create_net_buffer(game::id_s_ping_ack, session, game::msg_common_ack{});
+    const auto buf = create_net_buffer(game::id_s_ping_ack, session, game::msg_common_ack{});
     simple::network::instance().write(socket, buf);
 }
 

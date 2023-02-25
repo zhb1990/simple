@@ -5,6 +5,7 @@
 #include <msg_client.pb.h>
 #include <msg_ec.pb.h>
 #include <msg_id.pb.h>
+#include <msg_server.pb.h>
 #include <simple/coro/timed_awaiter.h>
 #include <simple/log/log.h>
 #include <simple/utils/os.h>
@@ -210,28 +211,31 @@ static void init_client_forward_brd(game::s_client_forward_brd& brd, uint16_t se
 }
 
 void proxy::client_other_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
-    // 其他的发给逻辑服
-    if (socket.wait_login) {
-        if (id == game::id_ping_req) {
-            // ping包直接回复
-            game::ping_req req;
-            if (!req.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
-                return;
-            }
-
-            game::ping_ack ack;
-            ack.set_t1(req.t1());
-            ack.set_t2(simple::get_system_clock_millis());
-            return send_to_client(socket.socket, game::id_ping_ack, session, ack);
+    if (id == game::id_ping_req && (socket.wait_login || socket.userid <= 0)) {
+        // 没有登录完成的ping包直接回复
+        game::ping_req req;
+        if (!req.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
+            return;
         }
 
+        game::ping_ack ack;
+        ack.set_t1(req.t1());
+        ack.set_t2(simple::get_system_clock_millis());
+        return send_to_client(socket.socket, game::id_ping_ack, session, ack);
+    }
+
+    if (socket.wait_login) {
         // 还没登录完可以缓存下来等登录成功
         game::s_client_forward_brd brd;
         init_client_forward_brd(brd, this->id(), socket.socket, id, session, buffer);
         socket.cache.emplace_back(std::move(brd));
         return;
+    } else if (socket.userid <= 0) {
+        // 没发过登录协议的直接抛弃掉
+        return;
     }
 
+    // 其他的发给逻辑服
     return send_to_service(socket.logic, socket.socket, id, session, buffer);
 }
 

@@ -52,7 +52,7 @@ class client final : public simple::service_base {
     void move(bool is_black, uint32_t x, uint32_t y);
 
     // 本地校验下落子的坐标
-    bool check_pos(uint32_t x, uint32_t y);
+    bool check_pos(uint32_t x, uint32_t y) const;
 
     void back(uint32_t x, uint32_t y);
 
@@ -65,8 +65,8 @@ class client final : public simple::service_base {
     std::string account_;
     std::string password_;
     std::string opponent_;
-    uint32_t win_count_{0};
-    uint32_t lose_count_{0};
+    int32_t win_count_{0};
+    int32_t lose_count_{0};
     int32_t userid_{0};
     int32_t room_{0};
     bool is_my_turn_{false};

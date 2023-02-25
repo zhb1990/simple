@@ -15,4 +15,16 @@ message msg_common_ack {
   ack_result result = 1;
 }
 
+// 玩家数据
+message user_info {
+  int32 userid = 1;
+  uint32 win_count = 2;
+  uint32 lose_count = 3;
+}
 
+// 账号数据
+message account_info {
+  int32 userid = 1;
+  string account = 2;
+  string password  = 3;
+}

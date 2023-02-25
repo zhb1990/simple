@@ -190,7 +190,6 @@ simple::task<> client::logic(const simple::websocket& ws) {
         // 进入棋局
         co_await enter_room();
 
-        std::string line;
         int32_t x;
         int32_t y;
         for (;;) {
@@ -202,7 +201,7 @@ simple::task<> client::logic(const simple::websocket& ws) {
             }
 
             simple::write_console(ERROR_CODE_MESSAGE("请输入落子的坐标(x,y):"), stdout);
-            line = co_await cin();
+            std::string line = co_await cin();
             std::string_view temp = line;
             const auto pos = temp.find(',');
             if (pos == std::string_view::npos || pos + 1 == temp.size()) {
@@ -243,7 +242,7 @@ simple::task<> client::login() {
     req.set_account(account_);
     // 密码直接明文了，可以换成wss，或者单独对密码进行加密传输
     req.set_password(password_);
-    auto value = co_await (call<game::login_ack>(game::id_login_req, req) || show_wait("登录中"));
+    const auto value = co_await (call<game::login_ack>(game::id_login_req, req) || show_wait("登录中"));
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
@@ -263,7 +262,7 @@ simple::task<> client::login() {
 
 simple::task<> client::match() {
     using namespace std::chrono_literals;
-    auto value = co_await (call<game::match_ack>(game::id_match_req, game::msg_empty{}) || show_wait("匹配中"));
+    const auto value = co_await (call<game::match_ack>(game::id_match_req, game::msg_empty{}) || show_wait("匹配中"));
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
@@ -280,7 +279,8 @@ simple::task<> client::match() {
 
 simple::task<> client::enter_room() {
     using namespace std::chrono_literals;
-    auto value = co_await (call<game::enter_room_ack>(game::id_enter_room_req, game::msg_empty{}) || show_wait("加载棋局中"));
+    const auto value =
+        co_await (call<game::enter_room_ack>(game::id_enter_room_req, game::msg_empty{}) || show_wait("加载棋局中"));
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
@@ -294,10 +294,10 @@ simple::task<> client::enter_room() {
     is_black_ = ack.is_black();
     opponent_ = ack.opponent().account();
     // 还原棋局
-    for (auto idx : ack.white()) {
+    for (const auto idx : ack.white()) {
         checkerboard_[idx] = static_cast<uint8_t>(pos_state::white);
     }
-    for (auto idx : ack.black()) {
+    for (const auto idx : ack.black()) {
         checkerboard_[idx] = static_cast<uint8_t>(pos_state::black);
     }
 
@@ -377,15 +377,14 @@ void client::show_game() {
         }
     }
     temp.append("\n", 1);
-    system("clear");
+    system("clear");  // NOLINT(concurrency-mt-unsafe)
     simple::write_console(std::string_view(temp), stdout);
 }
 
 simple::task<> client::next_game() {
     simple::write_console(ERROR_CODE_MESSAGE("是否继续(y/n):"), stdout);
-    const auto line = co_await cin();
-    if (!line.empty() && line[0] == 'y') {
-        system("clear");
+    if (const auto line = co_await cin(); !line.empty() && line[0] == 'y') {
+        system("clear");  // NOLINT(concurrency-mt-unsafe)
         // 匹配
         co_await match();
         // 进入棋局
@@ -408,7 +407,7 @@ void client::back(uint32_t x, uint32_t y) {
     show_game();
 }
 
-bool client::check_pos(uint32_t x, uint32_t y) {
+bool client::check_pos(uint32_t x, uint32_t y) const {
     if (x >= checkerboard_size || y >= checkerboard_size) {
         return false;
     }

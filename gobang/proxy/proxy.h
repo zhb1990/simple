@@ -6,8 +6,8 @@
 #include <deque>
 #include <simple/application/service.hpp>
 #include <simple/containers/buffer.hpp>
-#include <unordered_set>
 #include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 struct socket_data {
@@ -67,7 +67,8 @@ class proxy final : public simple::service_base {
 
     void client_other_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
 
-    void send_to_service(uint16_t dest_service, uint32_t socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+    void send_to_service(uint16_t dest_service, uint32_t socket, uint16_t id, uint64_t session,
+                         const simple::memory_buffer& buffer);
 
     // 直接发给客户端
     void send_to_client(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg);
@@ -93,10 +94,9 @@ class proxy final : public simple::service_base {
     std::unordered_set<socket_data, std::hash<socket_data>, std::equal_to<>> sockets_;
     // 连接gate
     std::shared_ptr<gate_connector> gate_connector_;
-    using fn_client_msg =
-        std::function<void(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer)>;
+    using fn_client_msg = std::function<void(const socket_data&, uint64_t, const simple::memory_buffer&)>;
     std::unordered_map<uint16_t, fn_client_msg> fn_client_msgs_;
     simple::memory_buffer temp_buffer_;
-    using fn_on_client_forward_brd = std::function<void(const socket_data& socket, const game::s_client_forward_brd& brd)>;
+    using fn_on_client_forward_brd = std::function<void(const socket_data&, const game::s_client_forward_brd&)>;
     std::unordered_map<uint16_t, fn_on_client_forward_brd> fn_on_client_forward_brd_;
 };

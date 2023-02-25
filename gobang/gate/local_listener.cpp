@@ -28,7 +28,7 @@ simple::task<> local_listener::start() {
 }
 
 void local_listener::publish(const service_data* data) {
-    auto& info = gate_.get_service_type_info(data->tp);
+    const auto& info = gate_.get_service_type_info(data->tp);
     if (info.subscribe.empty()) {
         return;
     }
@@ -36,7 +36,7 @@ void local_listener::publish(const service_data* data) {
     auto& network = simple::network::instance();
     game::s_service_subscribe_brd brd;
     data->to_proto(*brd.add_services());
-    auto buf = create_net_buffer(game::id_s_service_subscribe_brd, 0, brd);
+    const auto buf = create_net_buffer(game::id_s_service_subscribe_brd, 0, brd);
     for (auto s : info.subscribe) {
         if (const auto it = service_sockets_.find(s); it != service_sockets_.end()) {
             network.write(it->second->socket, buf);
@@ -57,7 +57,7 @@ simple::task<> local_listener::accept(uint32_t server) {
     }
 }
 
-simple::task<> local_listener::socket_start(const local_listener::socket_data_ptr& ptr) {
+simple::task<> local_listener::socket_start(const socket_data_ptr& ptr) {
     try {
         simple::memory_buffer buffer;
         net_header header{};
@@ -81,7 +81,7 @@ simple::task<> local_listener::socket_start(const local_listener::socket_data_pt
     }
 }
 
-simple::task<> local_listener::socket_check(const local_listener::socket_data_ptr& ptr) {
+simple::task<> local_listener::socket_check(const socket_data_ptr& ptr) const {
     constexpr int64_t auto_close_session = 180;
     std::random_device device;
     std::default_random_engine engine(device());
@@ -181,10 +181,10 @@ simple::task<> local_listener::service_register(const local_listener::socket_dat
     }
 
     // 注册服务
-    auto* service_ptr = gate_.add_local_service(req);
+    auto [service_ptr, changed] = gate_.add_local_service(req);
 
     if (const auto it = service_sockets_.find(service); it != service_sockets_.end() && it->second != ptr) {
-        auto last = it->second;
+        const auto last = std::move(it->second);
         last->service = 0;
         service_sockets_.erase(it);
         simple::network::instance().close(last->socket);
@@ -194,7 +194,9 @@ simple::task<> local_listener::service_register(const local_listener::socket_dat
 
     if (ptr->socket == 0) {
         // 发布服务状态给订阅的
-        publish(service_ptr);
+        if (changed) {
+            publish(service_ptr);
+        }
         co_return;
     }
 
@@ -207,8 +209,8 @@ simple::task<> local_listener::service_register(const local_listener::socket_dat
     co_await gate_.local_service_online_changed(service, true);
 }
 
-void local_listener::service_subscribe(const local_listener::socket_data_ptr& ptr, uint64_t session,
-                                       const simple::memory_buffer& buffer) {
+void local_listener::service_subscribe(const socket_data_ptr& ptr, uint64_t session,
+                                       const simple::memory_buffer& buffer) const {
     game::s_service_subscribe_req req;
     if (!req.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
         simple::warn("local_listener socket {} parse s_service_subscribe_req fail", ptr->socket);
@@ -224,12 +226,12 @@ void local_listener::service_subscribe(const local_listener::socket_data_ptr& pt
     }
 
     // 订阅特定类型的所有服务在线状态
-    auto& info = gate_.get_service_type_info(req.tp());
-    if (const auto it = std::ranges::find(info.subscribe, ptr->service); it == info.subscribe.end()) {
-        info.subscribe.emplace_back(ptr->service);
+    auto& [services, subscribe] = gate_.get_service_type_info(static_cast<uint16_t>(req.tp()));
+    if (const auto it = std::ranges::find(subscribe, ptr->service); it == subscribe.end()) {
+        subscribe.emplace_back(ptr->service);
     }
 
-    for (auto* s : info.services) {
+    for (auto* s : services) {
         s->to_proto(*ack.add_services());
     }
 
@@ -238,7 +240,7 @@ void local_listener::service_subscribe(const local_listener::socket_data_ptr& pt
 }
 
 void local_listener::send(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg) {
-    auto buf = create_net_buffer(id, session, msg);
+    const auto buf = create_net_buffer(id, session, msg);
     auto& network = simple::network::instance();
     network.write(socket, buf);
 }
