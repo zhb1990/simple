@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <msg_client.pb.h>
-#include <simple/web/websocket.h>
 
 #include <simple/application/service.hpp>
 #include <simple/containers/buffer.hpp>

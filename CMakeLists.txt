@@ -35,12 +35,12 @@ add_test(NAME ut WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/$<CONFIGURATION> CO
 # model
 
 ## kernel
-add_subdirectory(model/kernel)
-SET_PROPERTY(TARGET libkernel PROPERTY FOLDER "model")
+add_subdirectory(module/kernel)
+SET_PROPERTY(TARGET libkernel PROPERTY FOLDER "module")
 
 ## proto
-add_subdirectory(model/proto)
-SET_PROPERTY(TARGET libproto PROPERTY FOLDER "model")
+add_subdirectory(module/proto)
+SET_PROPERTY(TARGET libproto PROPERTY FOLDER "module")
 
 # example
 
@@ -69,6 +69,10 @@ SET_PROPERTY(TARGET proxy PROPERTY FOLDER "gobang")
 ## login
 add_subdirectory(gobang/login)
 SET_PROPERTY(TARGET login PROPERTY FOLDER "gobang")
+
+## center
+add_subdirectory(gobang/center)
+SET_PROPERTY(TARGET center PROPERTY FOLDER "gobang")
 
 ## db_proxy
 add_subdirectory(gobang/db_proxy)
