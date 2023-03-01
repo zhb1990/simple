@@ -45,6 +45,7 @@ file(GLOB
         "include/simple/utils/toml_types.hpp"
         "include/simple/utils/multiple_exceptions.hpp"
         "include/simple/utils/crypt.h"
+        "include/simple/utils/trie_ac.h"
 
         # net
         "include/simple/net/socket_types.h"
@@ -120,6 +121,7 @@ file(GLOB
         src/utils/os.cpp
         src/utils/time.cpp
         src/utils/crypt.cpp
+        src/utils/trie_ac.cpp
 
         # net
         "src/net/socket_system.cpp"

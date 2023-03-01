@@ -32,16 +32,6 @@ SET_PROPERTY(TARGET unit_test PROPERTY FOLDER "test")
 enable_testing()
 add_test(NAME ut WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/bin/$<CONFIGURATION> COMMAND unit_test)
 
-# model
-
-## kernel
-add_subdirectory(module/kernel)
-SET_PROPERTY(TARGET libkernel PROPERTY FOLDER "module")
-
-## proto
-add_subdirectory(module/proto)
-SET_PROPERTY(TARGET libproto PROPERTY FOLDER "module")
-
 # example
 
 ## test1
@@ -53,6 +43,14 @@ add_subdirectory(example/test2)
 SET_PROPERTY(TARGET test2 PROPERTY FOLDER "gobang")
 
 # gobang
+
+## kernel
+add_subdirectory(gobang/kernel)
+SET_PROPERTY(TARGET libkernel PROPERTY FOLDER "module")
+
+## proto
+add_subdirectory(gobang/proto)
+SET_PROPERTY(TARGET libproto PROPERTY FOLDER "module")
 
 ## gate_master
 add_subdirectory(gobang/gate_master)
