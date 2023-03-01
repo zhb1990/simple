@@ -145,10 +145,8 @@ void trie_ac::init(bool ignore_case) {
         reserve_->goto_t.reserve(trie_ac_size_default);
         reserve_->output_t.reserve(trie_ac_size_default);
     }
-    reserve_->goto_t.resize(1);
-    reserve_->goto_t[0].clear();
-    reserve_->output_t.resize(1);
-    reserve_->output_t[0] = 0;
+    reserve_->goto_t.resize(1, {});
+    reserve_->output_t.resize(1, 0);
     reserve_->ignore_case = ignore_case;
     if (fail_table_.capacity() == 0) {
         fail_table_.reserve(trie_ac_size_default);
