@@ -38,7 +38,7 @@ class trie_ac {
 
     SIMPLE_NON_COPYABLE(trie_ac)
 
-    SIMPLE_API bool is_taboo(std::string_view strv);
+    SIMPLE_API bool in_trie(std::string_view strv);
 
     SIMPLE_API void replace(std::string& str);
 

@@ -56,7 +56,7 @@ static size_t cnt_utf8(const char *str, size_t len) noexcept {
     return cnt;
 }
 
-bool trie_ac::is_taboo(std::string_view strv) {
+bool trie_ac::in_trie(std::string_view strv) {
     auto data = get_data();
     if (!data || data->goto_t.empty()) return false;
 
