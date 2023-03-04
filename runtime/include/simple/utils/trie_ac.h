@@ -7,10 +7,12 @@
 // mutex
 #include <mutex>
 #include <vector>
+#include <unordered_set>
 
 namespace simple {
 
 /// <summary>
+/// https://www.cnblogs.com/zzqcn/p/3525636.html
 /// simple::trie_ac ac;
 /// ac.init();
 /// ac.update("ra");
@@ -20,7 +22,7 @@ namespace simple {
 /// ac.update("hello");
 /// ac.final();
 /// std::string s1 = "hello raarrata";
-/// ac.is_taboo(s1); // true
+/// ac.in_trie(s1); // true
 /// ac.replace(s1); // ***** ********
 ///
 /// ac.init(true);
@@ -29,8 +31,6 @@ namespace simple {
 /// std::string s2 = "hello raarrata";
 /// ac.replace(s2); // hello **ar**ta
 /// </summary>
-
-
 class trie_ac {
   public:
     ~trie_ac() noexcept = default;
@@ -50,9 +50,21 @@ class trie_ac {
     struct node {
         uint8_t character;
         int32_t next;
-        bool operator<(const node& other) const { return character < other.character; }
+
+        bool operator==(const node& other) const noexcept { return character == other.character; }
+
+        bool operator==(const uint8_t& ch) const noexcept { return character == ch; }
     };
-    using goto_table = std::vector<std::vector<node>>;
+
+    struct node_hash {
+        using is_transparent [[maybe_unused]] = int;
+
+        [[nodiscard]] size_t operator()(const uint8_t& ch) const noexcept { return std::hash<uint8_t>()(ch); }
+        [[nodiscard]] size_t operator()(const node& data) const noexcept { return std::hash<uint8_t>()(data.character); }
+    };
+
+    using node_set = std::unordered_set<node, node_hash, std::equal_to<>>;
+    using goto_table = std::vector<node_set>;
     using output_table = std::vector<size_t>;
 
     struct ac_dfa {

@@ -156,24 +156,16 @@ void trie_ac::init(bool ignore_case) {
 
 void trie_ac::update(std::string_view strv) {
     auto now = 0;
-    node temp{};
-    auto insert_node = [&](std::vector<node> &nodes) {
-        auto it = std::upper_bound(nodes.begin(), nodes.end(), temp);
-        nodes.insert(it, temp);
-    };
-
     for (auto ch : strv) {
         if (reserve_->ignore_case) {
             ch = static_cast<char>(tolower(ch));
         }
-        auto next = next_state(reserve_->goto_t, now, ch);
+        const auto next = next_state(reserve_->goto_t, now, ch);
         if (next <= 0) {
-            temp.character = ch;
-            temp.next = ++state_;
-            insert_node(reserve_->goto_t[now]);
+            reserve_->goto_t[now].emplace(ch, ++state_);
             reserve_->goto_t.emplace_back();
             reserve_->output_t.emplace_back();
-            now = temp.next;
+            now = state_;
         } else {
             now = next;
         }
@@ -205,9 +197,8 @@ int32_t trie_ac::next_state(goto_table &table, int32_t state, uint8_t ch) {
     }
 
     auto &item = table[state];
-    node temp{ch, 0};
-    auto it = std::lower_bound(item.begin(), item.end(), temp);
-    if (it == item.end() || it->character != ch) {
+    const auto it = item.find(ch);
+    if (it == item.end()) {
         if (state == 0) {
             return 0;
         }
@@ -264,31 +255,27 @@ void trie_ac::convert_to_dfa() {
     }
 
     std::queue<int32_t> q;
-    for (auto &it : reserve_->goto_t[0]) {
-        q.push(it.next);
+    for (const auto & [character, next] : reserve_->goto_t[0]) {
+        q.push(next);
     }
 
-    node temp{};
-    auto insert_node = [&](std::vector<node> &nodes) {
-        auto it = std::upper_bound(nodes.begin(), nodes.end(), temp);
-        nodes.insert(it, temp);
-    };
-
     while (!q.empty()) {
-        auto state = q.front();
+        const auto state = q.front();
         q.pop();
 
-        for (auto ch = 0; ch <= 0xFF; ++ch) {
-            auto next = next_state(reserve_->goto_t, state, static_cast<uint8_t>(ch));
+        for (uint8_t ch = 0; ; ++ch) {
+            auto next = next_state(reserve_->goto_t, state, ch);
             if (next > 0) {
                 q.push(next);
             } else {
-                next = next_state(reserve_->goto_t, fail_table_[state], static_cast<uint8_t>(ch));
+                next = next_state(reserve_->goto_t, fail_table_[state], ch);
                 if (next > 0) {
-                    temp.character = static_cast<uint8_t>(ch);
-                    temp.next = next;
-                    insert_node(reserve_->goto_t[state]);
+                    reserve_->goto_t[state].emplace(ch, next);
                 }
+            }
+
+            if (ch == 0xFF) {
+                break;
             }
         }
     }
