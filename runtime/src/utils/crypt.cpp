@@ -1,5 +1,7 @@
 ﻿#include <simple/utils/crypt.h>
 
+#include <cstring>
+
 namespace simple {
 
 /****** base64 ********/

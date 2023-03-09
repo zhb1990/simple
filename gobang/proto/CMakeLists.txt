@@ -42,4 +42,5 @@ if (NOT Protobuf_FOUND)
     message(WARNING "protobuf not found.")
 endif ()
 
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 target_link_libraries(${PROJECT_NAME} PUBLIC protobuf::libprotobuf)

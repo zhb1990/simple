@@ -7,4 +7,4 @@ project(gate_master)
 add_library(gate_master SHARED "gate_master.cpp")
 add_dependencies(gate_master libkernel)
 target_link_libraries(gate_master PRIVATE libkernel)
-
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

@@ -171,7 +171,7 @@ union uint64_helper {
     uint64_t v;
 };
 
-static uint64_t htonll(uint64_t val) {
+static uint64_t ws_htonll(uint64_t val) {
     uint64_helper h;  // NOLINT
     h.v = val;
     h.s.low = htonl(h.s.low);
@@ -184,7 +184,7 @@ static uint64_t htonll(uint64_t val) {
     return h.v;
 }
 
-static uint64_t ntohll(uint64_t val) {
+static uint64_t ws_ntohll(uint64_t val) {
     uint64_helper h;  // NOLINT
     h.v = val;
     h.s.low = ntohl(h.s.low);
@@ -248,7 +248,7 @@ simple::task<websocket_opcode> websocket::read(memory_buffer& buf) const {
                 throw std::logic_error("recv eof");
             }
 
-            payload_len = ntohll(len_64);
+            payload_len = ws_ntohll(len_64);
         }
 
         char masking_key[4];
@@ -340,7 +340,7 @@ void websocket::encode_header(memory_buffer& buf, websocket_opcode op, size_t si
     } else {
         val |= static_cast<uint8_t>(0x7F);
         buf.append(&val, sizeof(val));
-        auto val_64 = htonll(size);
+        auto val_64 = ws_htonll(size);
         buf.append(&val_64, sizeof(val_64));
     }
 }

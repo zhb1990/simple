@@ -4,6 +4,7 @@
 #include <coroutine>
 #include <functional>
 #include <simple/containers/buffer.hpp>
+#include <simple/coro/hash.hpp>
 #include <simple/coro/task.hpp>
 #include <simple/utils/toml_types.hpp>
 #include <string>
@@ -99,7 +100,7 @@ class application {
     std::vector<service_base*> service_sort_;
     std::chrono::milliseconds frame_interval_{0};
     uint64_t frame_{0};
-    using wait_coroutine_set = std::unordered_set<std::coroutine_handle<>>;
+    using wait_coroutine_set = std::unordered_set<std::coroutine_handle<>, hash>;
     // 每帧上的等待协程
     std::unordered_map<uint64_t, wait_coroutine_set> frame_coroutine_;
     toml_table_t config_;

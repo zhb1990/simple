@@ -17,5 +17,7 @@ if (NOT mongocxx_FOUND)
     message(WARNING "mongocxx not found.")
 endif ()
 
-target_link_libraries(db_proxy PRIVATE libkernel mongo::mongocxx_shared)
+set_target_properties(db_proxy PROPERTIES PREFIX "")
+target_link_libraries(db_proxy PRIVATE libkernel
+        $<IF:$<TARGET_EXISTS:mongo::mongocxx_static>,mongo::mongocxx_static,mongo::mongocxx_shared>)
 

@@ -25,4 +25,4 @@ file(GLOB
 add_library(gate SHARED ${GATE_HEADS} ${GATE_SOURCES})
 add_dependencies(gate libkernel)
 target_link_libraries(gate PRIVATE libkernel)
-
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <simple/config.h>
 
+#include <atomic>
 #include <chrono>
 #include <memory>
 #include <simple/containers/buffer.hpp>

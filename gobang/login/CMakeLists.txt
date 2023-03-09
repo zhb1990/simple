@@ -7,4 +7,4 @@ project(login)
 add_library(login SHARED "login.cpp")
 add_dependencies(login libkernel)
 target_link_libraries(login PRIVATE libkernel)
-
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

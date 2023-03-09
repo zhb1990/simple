@@ -63,7 +63,7 @@ using service_release_t = std::add_pointer_t<void(const service_base*)>;
 #if defined(_WIN32)
 #define SIMPLE_SERVICE_API extern "C" __declspec(dllexport)
 #elif defined(__GNUC__) && (__GNUC__ >= 4)
-#define SIMPLE_SERVICE_API __attribute__((visibility("default")))
+#define SIMPLE_SERVICE_API extern "C" __attribute__((visibility("default")))
 #else
-#define SIMPLE_SERVICE_API
+#define SIMPLE_SERVICE_API extern "C"
 #endif

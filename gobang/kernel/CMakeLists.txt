@@ -34,5 +34,6 @@ target_include_directories(${PROJECT_NAME}
         PUBLIC ${PROJECT_SOURCE_DIR}
         )
 
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
 add_dependencies(${PROJECT_NAME} libruntime libproto)
 target_link_libraries(${PROJECT_NAME} PUBLIC libruntime libproto)

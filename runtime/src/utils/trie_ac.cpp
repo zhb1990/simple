@@ -1,6 +1,7 @@
 ﻿#include <simple/utils/trie_ac.h>
 
 #include <cctype>
+#include <cstring>
 #include <queue>
 
 namespace simple {
@@ -255,7 +256,7 @@ void trie_ac::convert_to_dfa() {
     }
 
     std::queue<int32_t> q;
-    for (const auto & [character, next] : reserve_->goto_t[0]) {
+    for (const auto &[character, next] : reserve_->goto_t[0]) {
         q.push(next);
     }
 
@@ -263,7 +264,7 @@ void trie_ac::convert_to_dfa() {
         const auto state = q.front();
         q.pop();
 
-        for (uint8_t ch = 0; ; ++ch) {
+        for (uint8_t ch = 0;; ++ch) {
             auto next = next_state(reserve_->goto_t, state, ch);
             if (next > 0) {
                 q.push(next);

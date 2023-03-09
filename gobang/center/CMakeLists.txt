@@ -7,4 +7,4 @@ project(center)
 add_library(center SHARED "center.cpp")
 add_dependencies(center libkernel)
 target_link_libraries(center PRIVATE libkernel)
-
+set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")

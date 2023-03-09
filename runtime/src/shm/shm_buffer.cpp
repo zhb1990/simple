@@ -1,5 +1,7 @@
 ﻿#include <simple/shm/shm_buffer.h>
 
+#include <cstring>
+
 namespace simple {
 
 shm_buffer::shm_buffer(std::string_view name, size_t size) : shm_(name, size + sizeof(size_t) * 4), size_(size) {

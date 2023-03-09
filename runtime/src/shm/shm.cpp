@@ -50,24 +50,6 @@ shm::~shm() noexcept {
     delete impl_;
 }
 
-shm::shm(shm&& other) noexcept : impl_(other.impl_), data_(other.data_), size_(other.size_), is_create_(other.is_create_) {
-    other.impl_ = nullptr;
-    other.data_ = nullptr;
-    other.size_ = 0;
-    other.is_create_ = false;
-}
-
-shm& shm::operator=(shm&& other) noexcept {
-    if (this != &other) {
-        shm temp(std::move(*this));
-        std::swap(impl_, other.impl_);
-        std::swap(data_, other.data_);
-        std::swap(size_, other.size_);
-        std::swap(is_create_, other.is_create_);
-    }
-    return *this;
-}
-
 // ReSharper disable once CppMemberFunctionMayBeStatic
 std::error_code shm::get_error_code() {  // NOLINT(readability-convert-member-functions-to-static)
     return {static_cast<int>(GetLastError()), std::system_category()};
@@ -83,7 +65,7 @@ struct shm_impl {
 shm::shm(std::string_view name, size_t size) {
     impl_ = new shm_impl;
 
-    std::filesystem::path p = "/tmp"sv;
+    std::filesystem::path p = "/tmp";
     p /= name;
     std::filesystem::create_directory(p);
     impl_->key = ftok(p.c_str(), 0);
@@ -124,4 +106,23 @@ shm::~shm() noexcept {
 std::error_code shm::get_error_code() { return {errno, std::generic_category()}; }
 
 #endif
+
+shm::shm(shm&& other) noexcept : impl_(other.impl_), data_(other.data_), size_(other.size_), is_create_(other.is_create_) {
+    other.impl_ = nullptr;
+    other.data_ = nullptr;
+    other.size_ = 0;
+    other.is_create_ = false;
+}
+
+shm& shm::operator=(shm&& other) noexcept {
+    if (this != &other) {
+        shm temp(std::move(*this));
+        std::swap(impl_, other.impl_);
+        std::swap(data_, other.data_);
+        std::swap(size_, other.size_);
+        std::swap(is_create_, other.is_create_);
+    }
+    return *this;
+}
+
 }  // namespace simple

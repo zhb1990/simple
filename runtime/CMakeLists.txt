@@ -243,6 +243,7 @@ if (WIN32)
             toml11::toml11
             )
 else ()
+    set_target_properties(${PROJECT_NAME} PROPERTIES PREFIX "")
     target_link_libraries(${PROJECT_NAME}
             PRIVATE
             lz4::lz4
