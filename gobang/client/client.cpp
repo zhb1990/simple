@@ -340,7 +340,8 @@ void client::show_game() {
                        "      胜率:{}% 我方执:",
                        account_, opponent_, rate);
         const auto str = ERROR_CODE_MESSAGE(std::string_view(temp1));
-        temp.append(str.c_str(), str.size());
+        std::string_view strv = str;
+        temp.append(strv.data(), str.size());
     }
 
     constexpr std::u8string_view strv_vertex = u8" ㊣";
