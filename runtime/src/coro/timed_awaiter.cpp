@@ -3,11 +3,11 @@
 
 namespace simple {
 
-timed_awaiter::timed_awaiter(time_point point) { node.point = point; }
+timed_awaiter::timed_awaiter(time_point point) { this->point = point; }
 
 timed_awaiter::timed_awaiter(duration dur) : timed_awaiter(clock::now() + dur) {}
 
-timed_awaiter::timed_awaiter(timed_awaiter&& other) noexcept { node.point = other.node.point; }
+timed_awaiter::timed_awaiter(timed_awaiter&& other) noexcept { point = other.point; }
 
 void timed_awaiter::await_resume() {
     registration_.reset();

@@ -3,23 +3,23 @@
 
 #include <atomic>
 #include <mutex>
-#include <simple/utils/type_traits.hpp>
 
 // grpc/src/core/lib/gprpp/mpscq.cc
 
 namespace simple {
 
-class mpsc_queue_base {
+class mpsc_queue {
   public:
     struct node {
         std::atomic<node*> next;
+        virtual ~node() noexcept = default;
     };
 
-    SIMPLE_API mpsc_queue_base();
+    SIMPLE_API mpsc_queue();
 
-    SIMPLE_NON_COPYABLE(mpsc_queue_base)
+    SIMPLE_NON_COPYABLE(mpsc_queue)
 
-    SIMPLE_API ~mpsc_queue_base() noexcept;
+    SIMPLE_API ~mpsc_queue() noexcept;
 
     // Push a node
     // Thread safe - can be called from multiple threads concurrently
@@ -49,9 +49,9 @@ class mpsc_queue_base {
     std::atomic_size_t size_;
 };
 
-class mpmc_queue_base {
+class mpmc_queue {
   public:
-    using node = mpsc_queue_base::node;
+    using node = mpsc_queue::node;
 
     // Push a node
     // Thread safe - can be called from multiple threads concurrently
@@ -71,64 +71,8 @@ class mpmc_queue_base {
     [[nodiscard]] SIMPLE_API size_t size() const;
 
   private:
-    mpsc_queue_base queue_;
+    mpsc_queue queue_;
     std::mutex mtx_;
-};
-
-template <typename Field>
-concept has_mpsc_node = requires(Field t) {
-                            requires class_field_type<Field>;
-                            requires std::same_as<field_type<Field>, mpsc_queue_base::node>;
-                        };
-
-template <has_mpsc_node Field>
-class mpsc_queue {
-  public:
-    using class_type = typename class_traits<Field>::class_type;
-    using traits_type = class_traits<Field>;
-
-    explicit mpsc_queue(Field field) : field_(field) {}
-
-    SIMPLE_NON_COPYABLE(mpsc_queue)
-
-    ~mpsc_queue() noexcept = default;
-
-    bool push(class_type* t) { return queue_.push(&(t->*field_)); }
-
-    class_type* pop() { return traits_type::from_field(queue_.pop()); }
-
-    class_type* pop_and_check_end(bool* empty) { return traits_type::from_field(queue_.pop_and_check_end(empty)); }
-
-    [[nodiscard]] size_t size() const noexcept { return queue_.size(); }
-
-  private:
-    Field field_;
-    mpsc_queue_base queue_;
-};
-
-template <has_mpsc_node Field>
-class mpmc_queue {
-  public:
-    using class_type = typename class_traits<Field>::class_type;
-    using traits_type = class_traits<Field>;
-
-    explicit mpmc_queue(Field field) : field_(field) {}
-
-    SIMPLE_NON_COPYABLE(mpmc_queue)
-
-    ~mpmc_queue() noexcept = default;
-
-    bool push(class_type* t) { return queue_.push(&(t->*field_)); }
-
-    class_type* pop() { return traits_type ::from_field(queue_.pop()); }
-
-    class_type* try_pop() { return traits_type ::from_field(queue_.try_pop()); }
-
-    [[nodiscard]] size_t size() const noexcept { return queue_.size(); }
-
-  private:
-    Field field_;
-    mpmc_queue_base queue_;
 };
 
 }  // namespace simple

@@ -34,26 +34,6 @@ template <typename Class, typename Field>
 struct class_traits<Field Class::*> {
     using class_type = Class;
     using field_type = Field;
-
-    static class_type* from_field(field_type* ptr, Field Class::*field) noexcept {
-        if (!ptr) {
-            return nullptr;
-        }
-
-        return reinterpret_cast<class_type*>(
-            reinterpret_cast<char*>(ptr) -
-            reinterpret_cast<size_t>(&reinterpret_cast<char const volatile&>((reinterpret_cast<class_type*>(0)->*field))));
-    }
-
-    static const class_type* from_field(const field_type* ptr, Field Class::*field) noexcept {
-        if (!ptr) {
-            return nullptr;
-        }
-
-        return reinterpret_cast<const class_type*>(reinterpret_cast<const char*>(ptr) -
-                                                   reinterpret_cast<size_t>(&reinterpret_cast<char const volatile&>(
-                                                       (reinterpret_cast<const class_type*>(0)->*field))));
-    }
 };
 
 template <typename T>

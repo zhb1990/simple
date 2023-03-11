@@ -66,7 +66,7 @@ class log_system {
 
     void lz4_run(const std::stop_token& token);
 
-    pool<decltype(&log_message::node), 1024> pool_;
+    pool<log_message, 1024> pool_;
 
     std::mutex loggers_mutex_;
     std::unordered_map<std::string, logger_ptr> loggers_;
@@ -78,7 +78,7 @@ class log_system {
     // 写日志的线程
     std::jthread writer_thread_;
     // 仅一个log线程，选择单消费者队列
-    mpsc_queue_base writer_queue_;
+    mpsc_queue writer_queue_;
     std::mutex writer_mutex_;
     std::condition_variable writer_cv_;
     std::atomic_int64_t flush_interval_{0};

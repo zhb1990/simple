@@ -4,19 +4,19 @@
 
 namespace simple {
 
-mpsc_queue_base::mpsc_queue_base() : head_{&stub_}, tail_(&stub_) {}
+mpsc_queue::mpsc_queue() : head_{&stub_}, tail_(&stub_) {}
 
-mpsc_queue_base::~mpsc_queue_base() noexcept {
+mpsc_queue::~mpsc_queue() noexcept {
     assert(head_.load(std::memory_order::relaxed) == &stub_);
     assert(tail_ == &stub_);
 }
 
-bool mpsc_queue_base::push(node* n) {
+bool mpsc_queue::push(node* n) {
     size_.fetch_add(1, std::memory_order::relaxed);
     return push_base(n);
 }
 
-mpsc_queue_base::node* mpsc_queue_base::pop() {
+mpsc_queue::node* mpsc_queue::pop() {
     bool empty = false;
     node* n;
     do {
@@ -29,7 +29,7 @@ mpsc_queue_base::node* mpsc_queue_base::pop() {
     return n;
 }
 
-mpsc_queue_base::node* mpsc_queue_base::pop_and_check_end(bool* empty) {
+mpsc_queue::node* mpsc_queue::pop_and_check_end(bool* empty) {
     auto* n = pop_and_check_end_base(empty);
     if (n) {
         size_.fetch_sub(1, std::memory_order::relaxed);
@@ -37,16 +37,16 @@ mpsc_queue_base::node* mpsc_queue_base::pop_and_check_end(bool* empty) {
     return n;
 }
 
-size_t mpsc_queue_base::size() const noexcept { return size_.load(std::memory_order::relaxed); }
+size_t mpsc_queue::size() const noexcept { return size_.load(std::memory_order::relaxed); }
 
-bool mpsc_queue_base::push_base(node* n) {
+bool mpsc_queue::push_base(node* n) {
     n->next.store(nullptr, std::memory_order::relaxed);
     node* prev = head_.exchange(n, std::memory_order::acq_rel);
     prev->next.store(n, std::memory_order::release);
     return prev == &stub_;
 }
 
-mpsc_queue_base::node* mpsc_queue_base::pop_and_check_end_base(bool* empty) {
+mpsc_queue::node* mpsc_queue::pop_and_check_end_base(bool* empty) {
     node* tail = tail_;
     node* next = tail_->next.load(std::memory_order::acquire);
     if (tail == &stub_) {
@@ -85,14 +85,14 @@ mpsc_queue_base::node* mpsc_queue_base::pop_and_check_end_base(bool* empty) {
     return nullptr;
 }
 
-bool mpmc_queue_base::push(node* n) { return queue_.push(n); }
+bool mpmc_queue::push(node* n) { return queue_.push(n); }
 
-mpmc_queue_base::node* mpmc_queue_base::pop() {
+mpmc_queue::node* mpmc_queue::pop() {
     std::unique_lock lock(mtx_);
     return queue_.pop();
 }
 
-mpmc_queue_base::node* mpmc_queue_base::try_pop() {
+mpmc_queue::node* mpmc_queue::try_pop() {
     if (mtx_.try_lock()) {
         auto* n = queue_.pop();
         mtx_.unlock();
@@ -101,6 +101,6 @@ mpmc_queue_base::node* mpmc_queue_base::try_pop() {
     return nullptr;
 }
 
-size_t mpmc_queue_base::size() const { return queue_.size(); }
+size_t mpmc_queue::size() const { return queue_.size(); }
 
 }  // namespace simple

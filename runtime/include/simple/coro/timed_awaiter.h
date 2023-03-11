@@ -11,7 +11,7 @@
 
 namespace simple {
 
-class timed_awaiter {
+class timed_awaiter : public timer_queue::node {
   public:
     using clock = timer_queue::clock;
     using time_point = timer_queue::time_point;
@@ -39,7 +39,7 @@ class timed_awaiter {
         handle_ = handle;
         token_ = handle.promise().get_cancellation_token();
 
-        if (token_.is_cancellation_requested() || clock::now() >= node.point) {
+        if (token_.is_cancellation_requested() || clock::now() >= point) {
             return false;
         }
 
@@ -47,13 +47,13 @@ class timed_awaiter {
         auto& queue = scheduler.get_timer_queue();
         if (token_.can_be_cancelled()) {
             registration_.emplace(token_, [this, &scheduler, &queue]() {
-                if (queue.remove(&node)) {
+                if (queue.remove(this)) {
                     scheduler.wake_up_coroutine(handle_);
                 }
             });
         }
 
-        queue.enqueue(&node);
+        queue.enqueue(this);
 
         return true;
     }
@@ -61,8 +61,6 @@ class timed_awaiter {
     SIMPLE_API void await_resume();
 
     void wake_up() const;
-
-    timer_queue::node node;
 
   private:
     cancellation_token token_;

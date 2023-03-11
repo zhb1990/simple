@@ -8,7 +8,7 @@ namespace simple {
 
 inline constexpr size_t log_data_default_size = 256;
 
-struct log_message {  // NOLINT(cppcoreguidelines-pro-type-member-init)
+struct log_message : mpsc_queue::node {  // NOLINT(cppcoreguidelines-pro-type-member-init)
     const_logger_ptr ptr;
 
     enum message_type { log, flush };
@@ -21,8 +21,6 @@ struct log_message {  // NOLINT(cppcoreguidelines-pro-type-member-init)
 
     mutable size_t color_start{0};
     mutable size_t color_stop{0};
-
-    mpsc_queue_base::node node;
 };
 
 }  // namespace simple

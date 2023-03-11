@@ -18,6 +18,8 @@ class timer_queue {
     struct node {
         size_t index{std::numeric_limits<size_t>::max()};
         time_point point;
+
+        virtual ~node() noexcept = default;
     };
 
     SIMPLE_API bool remove(node* n);

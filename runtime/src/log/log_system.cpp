@@ -28,7 +28,7 @@ struct log_system::lz4_data {  // NOLINT(cppcoreguidelines-special-member-functi
 
 constexpr int64_t flush_interval_default = 5;
 
-log_system::log_system() : pool_(&log_message::node), flush_interval_(flush_interval_default) {
+log_system::log_system() : flush_interval_(flush_interval_default) {
 #if defined(_WIN32)
     // windows启用虚拟终端，开启与linux一样的打印带颜色的log
     os::open_virtual_terminal();
@@ -63,7 +63,7 @@ log_system::~log_system() noexcept {
     while (true) {
         auto* n = writer_queue_.pop();
         if (!n) break;
-        release_message(SIMPLE_CONVERT(n, log_message, node));
+        release_message(dynamic_cast<log_message*>(n));
     }
 }
 
@@ -192,7 +192,7 @@ void log_system::release_message(log_message* msg) {
 }
 
 void log_system::send(log_message* msg) {
-    writer_queue_.push(&msg->node);
+    writer_queue_.push(msg);
     // 由于log一般会比较频繁，且会有定时刷新，这里就不加锁了
     writer_cv_.notify_one();
 }
@@ -239,7 +239,7 @@ log_message* log_system::recv(const interval_t& dur) {
         }
     }
 
-    return SIMPLE_CONVERT(n, log_message, node);
+    return dynamic_cast<log_message*>(n);
 }
 
 void log_system::backend_flush() {

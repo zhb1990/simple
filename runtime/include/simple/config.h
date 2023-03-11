@@ -20,17 +20,6 @@ inline constexpr auto simple_cache_line_bytes = 64;
 #endif
 }  // namespace simple
 
-// clang-format off
-
-#define SIMPLE_CONVERT(ptr, type, member) \
-    ((ptr) != nullptr ? reinterpret_cast<type*>(reinterpret_cast<char*>(ptr) - offsetof(type, member)) : nullptr) /*NOLINT(bugprone-macro-parentheses)*/
-
-
-#define SIMPLE_CONVERT_C(ptr, type, member) \
-    ((ptr) != nullptr ? reinterpret_cast<const type*>(reinterpret_cast<const char*>(ptr) - offsetof(type, member)) : nullptr)
-
-// clang-format on
-
 #define SIMPLE_NON_COPYABLE(type)                                                 \
     type(const type&) = delete;                                                   \
     type(type&&) = delete;                 /*NOLINT(bugprone-macro-parentheses)*/ \

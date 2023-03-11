@@ -40,7 +40,7 @@ void scheduler::wake_up_coroutine(std::coroutine_handle<> handle) noexcept {
         return;
     }
 
-    post([handle, this]() { handle.resume(); });
+    post([handle]() { handle.resume(); });
 }
 
 void scheduler::run(const std::stop_token& token) {
@@ -64,7 +64,7 @@ void scheduler::run(const std::stop_token& token) {
         now = timer_queue::clock::now();
         const auto nodes = timer_queue_.get_ready_timers(now);
         for (auto* ptr : nodes) {
-            if (const auto* timed = SIMPLE_CONVERT(ptr, timed_awaiter, node)) {
+            if (const auto* timed = dynamic_cast<timed_awaiter*>(ptr)) {
                 timed->wake_up();
             }
         }
