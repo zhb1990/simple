@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 project(unit_test)
 
 # test
-add_executable(unit_test test_task.cpp test_network.cpp test_shm.cpp main.cpp)
+add_executable(unit_test test_task.cpp test_network.cpp test_shm.cpp test_event.cpp main.cpp)
 
 find_package(GTest CONFIG REQUIRED)
 if (NOT GTest_FOUND)
