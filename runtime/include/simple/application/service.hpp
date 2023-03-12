@@ -2,6 +2,7 @@
 #include <simple/config.h>
 
 #include <cstdint>
+#include <simple/application/event_system.hpp>
 #include <simple/coro/task.hpp>
 #include <simple/utils/toml_types.hpp>
 #include <string>
@@ -44,6 +45,8 @@ class service_base {
 
     [[nodiscard]] uint16_t id() const noexcept { return id_; }
 
+    auto& events() noexcept { return events_; }
+
   private:
     friend class application;
     std::string name_;
@@ -52,6 +55,8 @@ class service_base {
     uint16_t id_{0};
     uint64_t current_{0};
     uint64_t interval_{0};
+
+    event_system events_;
 };
 
 using service_create_t = std::add_pointer_t<service_base*(const toml_value_t*)>;

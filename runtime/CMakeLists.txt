@@ -86,6 +86,7 @@ file(GLOB
         "src/application/service_loader.h"
         "include/simple/application/application.h"
         "include/simple/application/frame_awaiter.h"
+        "include/simple/application/event_system.hpp"
 
         # shm
         "include/simple/shm/shm.h"
