@@ -2,9 +2,7 @@
 
 #include <simple/config.h>
 
-#include <cstdint>
 #include <functional>
-#include <string_view>
 #include <typeindex>
 #include <typeinfo>
 #include <unordered_map>

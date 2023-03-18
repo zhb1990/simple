@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include <any>
 #include <system_error>
 #include <type_traits>
 #include <variant>
@@ -96,5 +97,116 @@ struct is_normal_func_help<Ret (*)(Args...)> : std::true_type {};
 
 template <typename Func>
 concept is_normal_func = is_normal_func_help<Func>::value;
+
+class bad_lvalue_cast final : public std::exception {
+  public:
+    [[nodiscard]] char const* what() const override { return "lvalue reference cast fail"; }
+};
+
+constexpr uint32_t reference_attributes_none = 0;
+constexpr uint32_t reference_attributes_const = 1;
+constexpr uint32_t reference_attributes_point_const = 2;
+constexpr uint32_t reference_attributes_array = 4;
+
+struct lvalue_reference {
+    void* value{nullptr};
+    const std::type_info* raw{nullptr};
+    const std::type_info* remove_point{nullptr};
+
+    uint32_t attributes{reference_attributes_none};
+
+    template <typename T>
+    requires(!std::is_array_v<std::remove_cvref_t<T>> || (std::is_reference_v<T> && !std::is_rvalue_reference_v<T>))
+    T cast() {
+        if (typeid(T) == *raw) {
+            if constexpr (!std::is_const_v<T>) {
+                if (attributes & reference_attributes_const) {
+                    throw bad_lvalue_cast{};
+                }
+            }
+
+            return static_cast<T>(*static_cast<std::add_pointer_t<T>>(value));
+        }
+
+        using remove_cvref_t = std::remove_cvref_t<T>;
+        if constexpr (std::is_pointer_v<remove_cvref_t>) {
+            using remove_point_t = std::remove_pointer_t<remove_cvref_t>;
+            if (!remove_point || *remove_point != typeid(remove_point_t)) {
+                throw bad_lvalue_cast{};
+            }
+
+            if constexpr (!std::is_const_v<remove_point_t>) {
+                if (attributes & reference_attributes_point_const) {
+                    throw bad_lvalue_cast{};
+                }
+            }
+
+            if (attributes & reference_attributes_array) {
+                if constexpr (!std::is_reference_v<T>) {
+                    return static_cast<T>(value);
+                } else {
+                    throw bad_lvalue_cast{};
+                }
+            }
+
+            return static_cast<T>(*static_cast<std::add_pointer_t<T>>(value));
+        } else {
+            throw bad_lvalue_cast{};
+        }
+    }
+};
+
+template <typename T>
+lvalue_reference make_reference(T& t) {
+    using decay_t = std::decay_t<T>;
+    lvalue_reference lr{.raw = &typeid(std::remove_cvref_t<T>)};
+
+    if constexpr (std::is_const_v<std::remove_reference_t<T>>) {
+        lr.attributes += reference_attributes_const;
+        lr.value = const_cast<void*>(static_cast<const void*>(&t));
+    } else {
+        lr.value = &t;
+    }
+
+    if constexpr (std::is_pointer_v<decay_t>) {
+        using remove_point_t = std::remove_pointer_t<decay_t>;
+        lr.remove_point = &typeid(std::remove_cvref_t<remove_point_t>);
+        if constexpr (std::is_const_v<remove_point_t>) {
+            lr.attributes += reference_attributes_point_const;
+        }
+
+        if constexpr (std::is_array_v<std::remove_cvref_t<T>>) {
+            lr.attributes += reference_attributes_array;
+        }
+    }
+
+    return lr;
+}
+
+struct param {
+    std::variant<std::monostate, lvalue_reference, std::any> value;
+
+    template <typename T>
+    remove_rvalue_reference_t<T> cast() {
+        if (std::holds_alternative<std::any>(value)) {
+            if constexpr (std::is_rvalue_reference_v<T>) {
+                return std::any_cast<T>(std::get<std::any>(std::move(value)));
+            } else {
+                return std::any_cast<T>(std::get<std::any>(value));
+            }
+        } else {
+            return std::get<lvalue_reference>(value).template cast<T>();
+        }
+    }
+};
+
+template <typename T>
+[[nodiscard]] param make_param(T&& t) {
+    if constexpr (std::is_reference_v<T&&> && !std::is_rvalue_reference_v<T&&>) {
+        return {.value{std::in_place_index<1>, make_reference(t)}};
+    } else {
+        return {.value{std::in_place_index<2>, std::any(t)}};
+    }
+}
 
 }  // namespace simple

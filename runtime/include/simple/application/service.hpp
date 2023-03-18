@@ -2,6 +2,7 @@
 #include <simple/config.h>
 
 #include <cstdint>
+#include <simple/application/call_router.hpp>
 #include <simple/application/event_system.hpp>
 #include <simple/coro/task.hpp>
 #include <simple/utils/toml_types.hpp>
@@ -47,6 +48,8 @@ class service_base {
 
     auto& events() noexcept { return events_; }
 
+    auto& router() noexcept { return router_; }
+
   private:
     friend class application;
     std::string name_;
@@ -57,6 +60,7 @@ class service_base {
     uint64_t interval_{0};
 
     event_system events_;
+    call_router router_;
 };
 
 using service_create_t = std::add_pointer_t<service_base*(const toml_value_t*)>;
