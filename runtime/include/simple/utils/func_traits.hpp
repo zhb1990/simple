@@ -8,7 +8,7 @@ namespace simple {
 
 class bad_params final : public std::exception {
   public:
-    [[nodiscard]] char const* what() const override { return "params num is invalid"; }
+    const char* what() const noexcept override { return "params num is invalid"; }
 };
 
 template <typename T>

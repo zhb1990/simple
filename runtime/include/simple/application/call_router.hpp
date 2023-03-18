@@ -30,7 +30,7 @@ class call_router {
     void register_call(std::string_view name, Func func) {
         call_map_[name] = [fn = std::forward<Func>(func)](std::vector<param>& args) -> param {
             using traits = call_traits<Func>;
-            using return_t = traits::return_type;
+            using return_t = typename traits::return_type;
 
             if constexpr (traits::arity == 0) {
                 if constexpr (std::same_as<return_t, void>) {
@@ -54,7 +54,8 @@ class call_router {
     void register_call(std::string_view name, Func Class::*func, Class* self) {
         call_map_[name] = [func, self](std::vector<param>& args) -> param {
             using traits = call_traits<Func Class::*>;
-            using return_t = traits::return_type;
+            using return_t = typename traits::return_type;
+            using args_t = typename traits::args_tuple;
 
             if constexpr (traits::arity == 0) {
                 if constexpr (std::same_as<return_t, void>) {
@@ -64,8 +65,8 @@ class call_router {
                     return make_param((self->*func)());
                 }
             } else {
-                auto apply = [&]<std::size_t... Is>(traits::args_tuple&& t, std::index_sequence<Is...>) -> return_t {
-                    return (self->*func)(std::get<Is>(std::forward<traits::args_tuple>(t))...);
+                auto apply = [&]<std::size_t... Is>(args_t&& t, std::index_sequence<Is...>) -> return_t {
+                    return (self->*func)(std::get<Is>(std::forward<args_t>(t))...);
                 };
                 if constexpr (std::same_as<return_t, void>) {
                     apply(traits::forward_as_tuple(args), std::make_index_sequence<traits::arity>{});
