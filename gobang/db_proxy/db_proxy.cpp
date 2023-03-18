@@ -555,6 +555,6 @@ simple::task<> db_proxy::query_ai(uint16_t from, uint64_t session) {
     gate_connector_->write(from, session, game::id_s_db_query_ai_ack, ack);
 }
 
-SIMPLE_SERVICE_API simple::service_base* db_proxy_create(const simple::toml_value_t* value) { return new db_proxy(value); }
+SIMPLE_SERVICE_API simple::service* db_proxy_create(const simple::toml_value_t* value) { return new db_proxy(value); }
 
-SIMPLE_SERVICE_API void db_proxy_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void db_proxy_release(const simple::service* t) { delete t; }

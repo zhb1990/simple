@@ -314,6 +314,6 @@ void channel_cached::auto_write() {
     });
 }
 
-SIMPLE_SERVICE_API simple::service_base* gate_create(const simple::toml_value_t* value) { return new gate(value); }
+SIMPLE_SERVICE_API simple::service* gate_create(const simple::toml_value_t* value) { return new gate(value); }
 
-SIMPLE_SERVICE_API void gate_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void gate_release(const simple::service* t) { delete t; }

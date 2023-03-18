@@ -25,9 +25,9 @@ struct ws_header {
 };
 
 struct shm_header {
-    // 来源serverid
+    // 来源server id
     uint16_t from;
-    // 目标serverid
+    // 目标server id
     uint16_t to;
     // 消息id
     uint16_t id;
@@ -36,3 +36,6 @@ struct shm_header {
     // 消息会话id
     uint64_t session;
 };
+
+
+

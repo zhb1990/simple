@@ -64,7 +64,7 @@ struct std::hash<socket_data> {
     [[nodiscard]] size_t operator()(const socket_data& data) const noexcept { return std::hash<uint32_t>()(data.socket); }
 };
 
-class gate_master final : public simple::service_base {
+class gate_master final : public simple::service {
   public:
     explicit gate_master(const simple::toml_value_t* value);
 

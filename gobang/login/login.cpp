@@ -192,6 +192,6 @@ simple::task<> login::internal_login_logic(const std::string& account, int32_t u
     ack.set_lose_count(internal_ack.lose_count());
 }
 
-SIMPLE_SERVICE_API simple::service_base* login_create(const simple::toml_value_t* value) { return new login(value); }
+SIMPLE_SERVICE_API simple::service* login_create(const simple::toml_value_t* value) { return new login(value); }
 
-SIMPLE_SERVICE_API void login_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void login_release(const simple::service* t) { delete t; }

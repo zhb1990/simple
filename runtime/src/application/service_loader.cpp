@@ -56,9 +56,9 @@ service_dll::~service_dll() noexcept {
     }
 }
 
-service_base* service_dll::create(const toml_value_t* args) const { return create_(args); }
+service* service_dll::create(const toml_value_t* args) const { return create_(args); }
 
-void service_dll::release(const service_base* service) const { return release_(service); }
+void service_dll::release(const service* service) const { return release_(service); }
 
 service_loader& service_loader::instance() {
     static service_loader loader;

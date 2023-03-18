@@ -33,7 +33,7 @@ struct account_info {
     char password[64];
 };
 
-class center final : public simple::service_base {
+class center final : public simple::service {
   public:
     explicit center(const simple::toml_value_t* value);
 

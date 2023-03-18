@@ -38,7 +38,7 @@ struct std::hash<socket_data> {
 
 class gate_connector;
 
-class proxy final : public simple::service_base {
+class proxy final : public simple::service {
   public:
     explicit proxy(const simple::toml_value_t* value);
 

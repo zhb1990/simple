@@ -262,8 +262,8 @@ void gate_master::add_services(const google::protobuf::RepeatedPtrField<game::s_
     }
 }
 
-SIMPLE_SERVICE_API simple::service_base* gate_master_create(const simple::toml_value_t* value) {
+SIMPLE_SERVICE_API simple::service* gate_master_create(const simple::toml_value_t* value) {
     return new gate_master(value);
 }
 
-SIMPLE_SERVICE_API void gate_master_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void gate_master_release(const simple::service* t) { delete t; }

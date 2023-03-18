@@ -10,7 +10,7 @@
 
 constexpr uint32_t checkerboard_size = 15;
 
-class client final : public simple::service_base {
+class client final : public simple::service {
   public:
     simple::task<> awake() override;
 

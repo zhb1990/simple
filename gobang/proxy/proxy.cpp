@@ -393,6 +393,6 @@ void proxy::client_move_ack(const socket_data& socket, const game::s_client_forw
     }
 }
 
-SIMPLE_SERVICE_API simple::service_base* proxy_create(const simple::toml_value_t* value) { return new proxy(value); }
+SIMPLE_SERVICE_API simple::service* proxy_create(const simple::toml_value_t* value) { return new proxy(value); }
 
-SIMPLE_SERVICE_API void proxy_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void proxy_release(const simple::service* t) { delete t; }

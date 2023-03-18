@@ -139,6 +139,6 @@ simple::task<> center::clear_not_found() {
     }
 }
 
-SIMPLE_SERVICE_API simple::service_base* center_create(const simple::toml_value_t* value) { return new center(value); }
+SIMPLE_SERVICE_API simple::service* center_create(const simple::toml_value_t* value) { return new center(value); }
 
-SIMPLE_SERVICE_API void center_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void center_release(const simple::service* t) { delete t; }

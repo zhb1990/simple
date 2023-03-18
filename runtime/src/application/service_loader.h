@@ -7,7 +7,7 @@
 
 namespace simple {
 
-class service_base;
+class service;
 
 class service_dll {
   public:
@@ -35,9 +35,9 @@ class service_dll {
         std::swap(handle_, other.handle_);
     }
 
-    service_base* create(const toml_value_t*) const;
+    service* create(const toml_value_t*) const;
 
-    void release(const service_base*) const;
+    void release(const service*) const;
 
   private:
     friend class service_loader;

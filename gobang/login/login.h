@@ -7,7 +7,7 @@
 
 class gate_connector;
 
-class login final : public simple::service_base {
+class login final : public simple::service {
   public:
     explicit login(const simple::toml_value_t* value);
 

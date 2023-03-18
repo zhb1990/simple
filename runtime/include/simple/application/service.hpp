@@ -13,13 +13,13 @@ namespace simple {
 
 class application;
 
-class service_base {
+class service {
   public:
-    service_base() = default;
+    service() = default;
 
-    SIMPLE_NON_COPYABLE(service_base)
+    SIMPLE_NON_COPYABLE(service)
 
-    virtual ~service_base() noexcept = default;
+    virtual ~service() noexcept = default;
 
     virtual task<> awake() = 0;
 
@@ -63,9 +63,9 @@ class service_base {
     call_router router_;
 };
 
-using service_create_t = std::add_pointer_t<service_base*(const toml_value_t*)>;
+using service_create_t = std::add_pointer_t<service*(const toml_value_t*)>;
 
-using service_release_t = std::add_pointer_t<void(const service_base*)>;
+using service_release_t = std::add_pointer_t<void(const service*)>;
 
 }  // namespace simple
 

@@ -60,7 +60,7 @@ struct std::hash<user_info> {
     [[nodiscard]] size_t operator()(const user_info& data) const noexcept { return std::hash<int32_t>()(data.userid); }
 };
 
-class db_proxy final : public simple::service_base {
+class db_proxy final : public simple::service {
   public:
     explicit db_proxy(const simple::toml_value_t* value);
 

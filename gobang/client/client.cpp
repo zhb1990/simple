@@ -461,6 +461,6 @@ simple::task<> client::show_wait(std::string_view info) {
     }
 }
 
-SIMPLE_SERVICE_API simple::service_base* client_create(const simple::toml_value_t* value) { return new client(); }
+SIMPLE_SERVICE_API simple::service* client_create(const simple::toml_value_t* value) { return new client(); }
 
-SIMPLE_SERVICE_API void client_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void client_release(const simple::service* t) { delete t; }

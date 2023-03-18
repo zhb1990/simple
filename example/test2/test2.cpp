@@ -7,7 +7,7 @@
 #include "simple/utils/toml_types.hpp"
 #include "simple/web/websocket.h"
 
-class test2 final : public simple::service_base {
+class test2 final : public simple::service {
   public:
     simple::task<> awake() override;
     simple::task<> update() override;
@@ -16,9 +16,9 @@ class test2 final : public simple::service_base {
     uint32_t client_{0};
 };
 
-SIMPLE_SERVICE_API simple::service_base* test2_create(const simple::toml_value_t&) { return new test2(); }
+SIMPLE_SERVICE_API simple::service* test2_create(const simple::toml_value_t&) { return new test2(); }
 
-SIMPLE_SERVICE_API void test2_release(const simple::service_base* t) { delete t; }
+SIMPLE_SERVICE_API void test2_release(const simple::service* t) { delete t; }
 
 simple::task<> test2::awake() {
     simple::error("test2::awake()");

@@ -124,12 +124,12 @@ void application::stop() {
 
 bool application::contains_service(uint16_t id) const { return service_map_.contains(id); }
 
-void application::register_message_callback(uint32_t id, const service_base* service, message_callback callback) {
+void application::register_message_callback(uint32_t id, const service* service, message_callback callback) {
     auto& callbacks = message_callbacks_[id];
     callbacks.emplace(service, std::move(callback));
 }
 
-void application::deregister_message_callback(uint32_t id, const service_base* service) {
+void application::deregister_message_callback(uint32_t id, const service* service) {
     const auto it_message = message_callbacks_.find(id);
     if (it_message == message_callbacks_.end()) {
         return;
@@ -218,7 +218,7 @@ void application::load_services() {
 
         std::string type = it_type->second.as_string();
         auto* dll = loader.query(type);
-        service_base* service;
+        service* service;
         if (const auto it = config.find("args"); it != config.end()) {
             service = dll->create(&it->second);
         } else {
@@ -242,7 +242,7 @@ void application::load_services() {
     }
 
     // 加载完后按优先级排下序
-    std::ranges::sort(service_sort_, [](const service_base* a, const service_base* b) { return a->order() < b->order(); });
+    std::ranges::sort(service_sort_, [](const service* a, const service* b) { return a->order() < b->order(); });
 }
 
 // ReSharper disable once CppMemberFunctionMayBeConst
@@ -293,7 +293,7 @@ void application::update_frame() {
         try {
             std::vector<task<>> tasks;
             tasks.reserve(service_sort_.size());
-            std::vector<service_base*> update_services;
+            std::vector<service*> update_services;
             update_services.reserve(service_sort_.size());
             auto current_time = timer_queue::clock::now();
             for (;;) {

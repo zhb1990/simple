@@ -31,7 +31,7 @@ class gate_connector {
 
     using shm_infos = std::vector<std::pair<std::string, uint32_t>>;
 
-    KERNEL_API explicit gate_connector(simple::service_base& service, const simple::toml_value_t* value, int32_t service_type,
+    KERNEL_API explicit gate_connector(simple::service& service, const simple::toml_value_t* value, int32_t service_type,
                                        fn_on_register on_register, fn_forward forward, shm_infos infos = {});
 
     SIMPLE_NON_COPYABLE(gate_connector)
@@ -79,7 +79,7 @@ class gate_connector {
 
     void update_subscribe(const game::s_service_info& service);
 
-    simple::service_base& service_;
+    simple::service& service_;
     int32_t service_type_;
     uint16_t port_;
     uint32_t channel_size_;

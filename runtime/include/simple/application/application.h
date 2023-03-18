@@ -14,7 +14,7 @@
 
 namespace simple {
 
-class service_base;
+class service;
 
 class application {
     application() = default;
@@ -52,14 +52,14 @@ class application {
      * \param service 服务类指针
      * \param callback 回调函数
      */
-    SIMPLE_API void register_message_callback(uint32_t id, const service_base* service, message_callback callback);
+    SIMPLE_API void register_message_callback(uint32_t id, const service* service, message_callback callback);
 
     /**
      * \brief 取消注册消息的回调函数
      * \param id 消息id
      * \param service 服务类指针
      */
-    SIMPLE_API void deregister_message_callback(uint32_t id, const service_base* service);
+    SIMPLE_API void deregister_message_callback(uint32_t id, const service* service);
 
     /**
      * \brief 分发消息
@@ -96,8 +96,8 @@ class application {
 
     void wake_up_frame();
 
-    std::unordered_map<uint16_t, service_base*> service_map_;
-    std::vector<service_base*> service_sort_;
+    std::unordered_map<uint16_t, service*> service_map_;
+    std::vector<service*> service_sort_;
     std::chrono::milliseconds frame_interval_{0};
     uint64_t frame_{0};
     using wait_coroutine_set = std::unordered_set<std::coroutine_handle<>, hash>;
@@ -106,7 +106,7 @@ class application {
     toml_table_t config_;
 
     // 消息分发
-    std::unordered_map<uint32_t, std::unordered_map<const service_base*, message_callback>> message_callbacks_;
+    std::unordered_map<uint32_t, std::unordered_map<const service*, message_callback>> message_callbacks_;
 };
 
 }  // namespace simple

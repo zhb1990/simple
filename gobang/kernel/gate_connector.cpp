@@ -13,7 +13,7 @@
 #include <simple/coro/task_operators.hpp>
 #include <stdexcept>
 
-gate_connector::gate_connector(simple::service_base& service, const simple::toml_value_t* value, int32_t service_type,
+gate_connector::gate_connector(simple::service& service, const simple::toml_value_t* value, int32_t service_type,
                                fn_on_register on_register, fn_forward forward, shm_infos infos)
     : service_(service),
       service_type_(service_type),
