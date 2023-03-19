@@ -11,7 +11,10 @@
 
 KERNEL_API simple::memory_buffer_ptr create_net_buffer(uint16_t id, uint64_t session, const google::protobuf::Message& msg);
 
-KERNEL_API void init_shm_buffer(simple::memory_buffer& buf, const shm_header& header, const google::protobuf::Message& msg);
+KERNEL_API void init_forward_buffer(simple::memory_buffer& buf, const forward_part& part, const google::protobuf::Message& msg);
+
+KERNEL_API void init_forward_buffer(simple::memory_buffer& buf, uint16_t from, uint16_t to, uint64_t session,
+                                    const client_part& client, const google::protobuf::Message& msg);
 
 KERNEL_API void init_client_buffer(simple::memory_buffer& buf, uint16_t id, uint64_t session,
                                    const google::protobuf::Message& msg);
@@ -37,7 +40,7 @@ simple::task<Message> rpc_call(rpc_system& system, simple::shm_channel& channel,
                                const google::protobuf::Message& req) {
     const auto session = system.create_session();
     simple::memory_buffer buf;
-    init_shm_buffer(buf, {from, to, id, 0, session}, req);
+    init_forward_buffer(buf, {from, to, id, 0, session}, req);
     co_await channel.write(buf.begin_read(), buf.readable());
     co_return co_await system.get_awaiter<Message>(session);
 }

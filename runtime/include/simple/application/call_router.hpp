@@ -79,7 +79,7 @@ class call_router {
     }
 
     template <typename ReturnType = void, typename... Args>
-    ReturnType call(std::string_view name, Args&&... args) {
+    remove_rvalue_reference_t<ReturnType> call(std::string_view name, Args&&... args) {
         const auto it = call_map_.find(name);
         if (it == call_map_.end()) {
             throw call_exception(name);

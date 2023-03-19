@@ -100,7 +100,7 @@ concept is_normal_func = is_normal_func_help<Func>::value;
 
 class bad_lvalue_cast final : public std::exception {
   public:
-    const char* what() const noexcept override { return "lvalue reference cast fail"; }
+    [[nodiscard]] const char* what() const noexcept override { return "lvalue reference cast fail"; }
 };
 
 constexpr uint32_t reference_attributes_none = 0;
@@ -119,7 +119,7 @@ struct lvalue_reference {
     requires(!std::is_array_v<std::remove_cvref_t<T>> || (std::is_reference_v<T> && !std::is_rvalue_reference_v<T>))
     T cast() {
         if (typeid(T) == *raw) {
-            if constexpr (!std::is_const_v<T>) {
+            if constexpr (!std::is_const_v<T> && std::is_reference_v<T>) {
                 if (attributes & reference_attributes_const) {
                     throw bad_lvalue_cast{};
                 }
@@ -184,6 +184,7 @@ lvalue_reference make_reference(T& t) {
 }
 
 struct param {
+    // 临时先用std::any
     using value_t = std::variant<std::monostate, lvalue_reference, std::any>;
     value_t value;
 
@@ -204,9 +205,9 @@ struct param {
 template <typename T>
 [[nodiscard]] param make_param(T&& t) {
     if constexpr (std::is_reference_v<T&&> && !std::is_rvalue_reference_v<T&&>) {
-        return {param::value_t{std::in_place_index<1>, make_reference(t)}};
+        return {param::value_t{std::in_place_index<1>, make_reference(std::forward<T>(t))}};
     } else {
-        return {param::value_t{std::in_place_index<2>, std::any(t)}};
+        return {param::value_t{std::in_place_index<2>, std::any(std::forward<T>(t))}};
     }
 }
 

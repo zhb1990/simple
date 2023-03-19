@@ -42,6 +42,13 @@ class gate_connector {
 
     KERNEL_API void write(uint16_t to, uint64_t session, uint16_t id, const google::protobuf::Message& msg);
 
+    KERNEL_API void write(uint16_t to, uint64_t session, const client_part& client, const google::protobuf::Message& msg);
+
+    KERNEL_API void write(simple::memory_buffer& msg);
+
+    template <std::invocable<simple::memory_buffer&> Init>
+    void write(Init&& init);
+
     template <std::derived_from<google::protobuf::Message> Message>
     simple::task<Message> call_gate(uint16_t id, const google::protobuf::Message& req) {
         return rpc_call<Message>(system_, socket_, id, req);

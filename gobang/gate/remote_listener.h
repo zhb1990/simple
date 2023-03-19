@@ -2,12 +2,13 @@
 
 #include <simple/containers/buffer.hpp>
 #include <simple/coro/task.hpp>
+#include <simple/utils/toml_types.hpp>
 
-class gate;
+#include "service_info.h"
 
 class remote_listener {
   public:
-    explicit remote_listener(gate& g);
+    remote_listener(simple::service& s, const simple::toml_table_t& table);
 
     SIMPLE_NON_COPYABLE(remote_listener)
 
@@ -23,15 +24,16 @@ class remote_listener {
         int64_t last_recv{0};
     };
 
-    using socket_data_ptr = std::shared_ptr<socket_data>;
+    using socket_ptr = std::shared_ptr<socket_data>;
 
-    simple::task<> socket_start(const socket_data_ptr& ptr);
+    simple::task<> socket_start(const socket_ptr& ptr);
 
-    [[nodiscard]] simple::task<> socket_check(const socket_data_ptr& ptr) const;
+    [[nodiscard]] simple::task<> socket_check(const socket_ptr& ptr) const;
 
     void forward_message(uint32_t socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) const;
 
-    void gate_forward(uint32_t socket, const simple::memory_buffer& buffer) const;
+    void gate_forward(const simple::memory_buffer& buffer) const;
 
-    gate& gate_;
+    simple::service& service_;
+    uint16_t remote_port_{0};
 };

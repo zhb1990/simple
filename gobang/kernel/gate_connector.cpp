@@ -43,23 +43,36 @@ void gate_connector::start() {
     simple::co_start([this]() { return run(); });
 }
 
-void gate_connector::write(uint16_t to, uint64_t session, uint16_t id, const google::protobuf::Message& msg) {
+template <std::invocable<simple::memory_buffer&> Init>
+void gate_connector::write(Init&& init) {
     if (!channel_ || !send_queue_.empty()) {
         // 通道还未建立，或者发送队列中有消息没发完，直接放入发送队列
         auto ptr = std::make_shared<simple::memory_buffer>();
-        init_shm_buffer(*ptr, {service_.id(), to, id, 0, session}, msg);
+        init(*ptr);
         send_queue_.emplace_back(ptr);
         cv_send_queue_.notify_all();
         return;
     }
 
     simple::memory_buffer buf;
-    init_shm_buffer(buf, {service_.id(), to, id, 0, session}, msg);
+    init(buf);
     if (!channel_->try_write(buf.begin_read(), static_cast<uint32_t>(buf.readable()))) {
         // 写入失败说明共享内存写满了，先放入发送队列
         send_queue_.emplace_back(std::make_shared<simple::memory_buffer>(std::move(buf)));
         cv_send_queue_.notify_all();
     }
+}
+
+void gate_connector::write(uint16_t to, uint64_t session, uint16_t id, const google::protobuf::Message& msg) {
+    write([&](simple::memory_buffer& buf) { init_forward_buffer(buf, {service_.id(), to, id, 0, session}, msg); });
+}
+
+void gate_connector::write(uint16_t to, uint64_t session, const client_part& client, const google::protobuf::Message& msg) {
+    write([&](simple::memory_buffer& buf) { init_forward_buffer(buf, service_.id(), to, session, client, msg); });
+}
+
+void gate_connector::write(simple::memory_buffer& msg) {
+    write([&](simple::memory_buffer& buf) { buf = std::move(msg); });
 }
 
 simple::task<> gate_connector::subscribe(uint16_t tp) {
@@ -276,12 +289,12 @@ simple::task<> gate_connector::channel_read() {
     simple::memory_buffer buf;
     for (;;) {
         co_await channel_->read(buf);
-        const shm_header& header = *reinterpret_cast<const shm_header*>(buf.begin_read());
-        buf.read(sizeof(header));
-        if ((header.id & game::msg_mask) != game::msg_s2s_ack || header.session == 0 ||
-            (!system_.wake_up_session(header.session, std::string_view(buf)))) {
+        const forward_part& part = *reinterpret_cast<const forward_part*>(buf.begin_read());
+        buf.read(sizeof(part));
+        if ((part.id & game::msg_mask) != game::msg_s2s_ack || part.session == 0 ||
+            (!system_.wake_up_session(part.session, std::string_view(buf)))) {
             // 不是rpc调用，分发消息
-            forward_(header.from, header.session, header.id, buf);
+            forward_(part.from, part.session, part.id, buf);
         }
     }
 }

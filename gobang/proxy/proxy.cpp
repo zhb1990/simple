@@ -1,7 +1,6 @@
 ﻿#include "proxy.h"
 
 #include <gate_connector.h>
-#include <google/protobuf/util/json_util.h>
 #include <msg_client.pb.h>
 #include <msg_ec.pb.h>
 #include <msg_id.pb.h>
@@ -50,12 +49,20 @@ proxy::proxy(const simple::toml_value_t* value) {
                                 return client_room_msg(socket, game::id_move_req, session, buffer);
                             });
 
-    fn_on_client_forward_brd_.emplace(
-        game::id_login_ack,
-        [this](const socket_data& socket, const game::s_client_forward_brd& brd) { return client_login_ack(socket, brd); });
-    fn_on_client_forward_brd_.emplace(game::id_match_ack, proxy::client_match_ack);
-    fn_on_client_forward_brd_.emplace(game::id_move_ack, proxy::client_move_ack);
-    fn_on_client_forward_brd_.emplace(game::id_move_brd, proxy::client_move_brd);
+    on_forward_map_.emplace(game::id_login_ack,
+                            [this](const socket_data& socket, uint16_t logic, const std::string_view& strv) {
+                                return client_login_ack(socket, logic, strv);
+                            });
+
+    on_forward_map_.emplace(game::id_match_ack, [](const socket_data& socket, uint16_t, const std::string_view& strv) {
+        proxy::client_match_ack(socket, strv);
+    });
+    on_forward_map_.emplace(game::id_move_ack, [](const socket_data& socket, uint16_t, const std::string_view& strv) {
+        proxy::client_move_ack(socket, strv);
+    });
+    on_forward_map_.emplace(game::id_move_brd, [](const socket_data& socket, uint16_t, const std::string_view& strv) {
+        proxy::client_move_brd(socket, strv);
+    });
 }
 
 simple::task<> proxy::awake() {
@@ -112,7 +119,6 @@ simple::task<> proxy::socket_start(uint32_t socket) {
             const ws_header& header = *reinterpret_cast<ws_header*>(buffer.begin_read());
             buffer.read(sizeof(header));
             simple::info("[{}] socket:{} recv id:{} session:{}", name(), socket, header.id, header.session);
-
             forward_client(*it, header.id, header.session, buffer);
         }
     } catch (std::exception& e) {
@@ -157,7 +163,7 @@ void proxy::forward_shm(uint16_t from, uint64_t session, uint16_t id, const simp
     }
 
     if (id == game::id_s_client_forward_brd) {
-        return client_forward_brd(buffer);
+        return client_forward_brd(session, buffer);
     }
 }
 
@@ -182,7 +188,7 @@ void proxy::client_register_msg(const socket_data& socket, uint64_t session, con
     socket.wait_login = true;
     // 随机一个login去处理
     const auto dest_service = gate_connector_->rand_subscribe(game::st_login);
-    send_to_service(dest_service, socket.socket, game::id_login_req, session, buffer);
+    send_to_service(dest_service, socket, game::id_login_req, session, buffer);
 }
 
 void proxy::client_room_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
@@ -198,16 +204,7 @@ void proxy::client_room_msg(const socket_data& socket, uint16_t id, uint64_t ses
                               ack);
     }
 
-    send_to_service(socket.room, socket.socket, id, session, buffer);
-}
-
-static void init_client_forward_brd(game::s_client_forward_brd& brd, uint16_t service, uint32_t socket, uint16_t id,
-                                    uint64_t session, const simple::memory_buffer& buffer) {
-    brd.set_gate(service);
-    brd.set_socket(socket);
-    brd.set_id(id);
-    brd.set_session(session);
-    brd.set_data(buffer.begin_read(), buffer.readable());
+    send_to_service(socket.room, socket, id, session, buffer);
 }
 
 void proxy::client_other_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
@@ -226,9 +223,10 @@ void proxy::client_other_msg(const socket_data& socket, uint16_t id, uint64_t se
 
     if (socket.wait_login) {
         // 还没登录完可以缓存下来等登录成功
-        game::s_client_forward_brd brd;
-        init_client_forward_brd(brd, this->id(), socket.socket, id, session, buffer);
-        socket.cache.emplace_back(std::move(brd));
+        auto& buf = socket.cache.emplace_back();
+        buf.id = id;
+        buf.session = session;
+        buf.buf = std::make_shared<simple::memory_buffer>(buffer);
         return;
     } else if (socket.userid <= 0) {
         // 没发过登录协议的直接抛弃掉
@@ -236,14 +234,22 @@ void proxy::client_other_msg(const socket_data& socket, uint16_t id, uint64_t se
     }
 
     // 其他的发给逻辑服
-    return send_to_service(socket.logic, socket.socket, id, session, buffer);
+    return send_to_service(socket.logic, socket, id, session, buffer);
 }
 
-void proxy::send_to_service(uint16_t dest_service, uint32_t socket, uint16_t id, uint64_t session,
+void proxy::send_to_service(uint16_t dest, const socket_data& socket, uint16_t id, uint64_t session,
                             const simple::memory_buffer& buffer) {
-    game::s_client_forward_brd brd;
-    init_client_forward_brd(brd, this->id(), socket, id, session, buffer);
-    return gate_connector_->write(dest_service, 0, game::id_s_client_forward_brd, brd);
+    const forward_part forward{static_cast<uint16_t>(this->id()), dest, static_cast<uint16_t>(game::id_s_client_forward_brd), 0,
+                               session};
+    const client_part client{id, 0, socket.socket, socket.userid};
+    simple::memory_buffer msg;
+    const auto len = buffer.readable();
+    msg.reserve(sizeof(forward) + sizeof(client) + len);
+    msg.append(&forward, sizeof(forward));
+    msg.append(&client, sizeof(client));
+    msg.append(buffer.begin_read(), len);
+
+    return gate_connector_->write(msg);
 }
 
 void proxy::send_to_client(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg) {
@@ -253,40 +259,40 @@ void proxy::send_to_client(uint32_t socket, uint16_t id, uint64_t session, const
         .write(simple::websocket_opcode::binary, temp_buffer_.begin_read(), temp_buffer_.readable());
 }
 
-void proxy::client_forward_brd(const simple::memory_buffer& buffer) {
-    game::s_client_forward_brd brd;
-    if (!brd.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
+void proxy::client_forward_brd(uint64_t session, const simple::memory_buffer& buffer) {
+    auto strv = std::string_view(buffer);
+    if (strv.size() < sizeof(client_part)) {
         return;
     }
-    std::string log_str;
-    google::protobuf::util::MessageToJsonString(brd, &log_str);
-    simple::info("[{}] client forward brd:{}", name(), log_str);
 
-    const auto socket = brd.socket();
+    auto& part = *reinterpret_cast<const client_part*>(strv.data());
+    strv = strv.substr(sizeof(client_part));
+
     // 找到对应的
-    const auto it = sockets_.find(socket);
+    const auto it = sockets_.find(part.socket);
     if (it == sockets_.end()) {
         // 可能是断网了
         return;
     }
 
-    if (it->userid != brd.userid()) {
+    if (it->userid != part.userid) {
         // 可能gate重启了
         return;
     }
 
-    const auto msg_id = brd.id();
+    simple::info("[{}] client forward userid:{} socket:{} msg:{} size:{}", name(), part.userid, part.socket, part.id,
+                 strv.size());
+
     // 对特定的协议进行解析
-    if (const auto it_fn = fn_on_client_forward_brd_.find(msg_id); it_fn != fn_on_client_forward_brd_.end()) {
-        it_fn->second(*it, brd);
+    if (const auto it_fn = on_forward_map_.find(part.id); it_fn != on_forward_map_.end()) {
+        it_fn->second(*it, part.logic, strv);
     }
 
-    ws_header header{flag_valid, {}, static_cast<uint16_t>(msg_id), brd.session()};
+    ws_header header{flag_valid, {}, part.id, session};
     temp_buffer_.clear();
     temp_buffer_.append(&header, sizeof(header));
-    const auto& data = brd.data();
-    temp_buffer_.append(data.data(), data.size());
-    return simple::websocket(simple::websocket_type::server, socket)
+    temp_buffer_.append(strv.data(), strv.size());
+    return simple::websocket(simple::websocket_type::server, part.socket)
         .write(simple::websocket_opcode::binary, temp_buffer_.begin_read(), temp_buffer_.readable());
 }
 
@@ -296,34 +302,6 @@ void proxy::report_client_offline(const socket_data& socket) {
     brd.set_gate(id());
     brd.set_userid(socket.userid);
     gate_connector_->write(socket.logic, 0, game::id_s_client_offline_brd, brd);
-}
-
-void proxy::client_login_ack(const socket_data& socket, const game::s_client_forward_brd& brd) {
-    const auto& data = brd.data();
-    game::login_ack ack;
-    if (!ack.ParseFromArray(data.data(), static_cast<int>(data.size()))) {
-        // 协议解析出错了，最好还是关闭连接，报个错
-        const auto utf8 = ERROR_CODE_MESSAGE("登录回应解析出错");
-        simple::error("[{}] socket:{} {}", name(), socket.socket, utf8);
-        return simple::network::instance().close(socket.socket);
-    }
-
-    if (ack.result().ec() != game::ec_success) {
-        // 登录失败了
-        return;
-    }
-
-    // 登录成功了，记录下玩家的状态
-    socket.logic = brd.logic();
-    socket.wait_login = false;
-    socket.room = ack.room();
-    socket.userid = ack.userid();
-
-    // 之前缓存的消息发给逻辑服
-    for (const auto& msg : socket.cache) {
-        gate_connector_->write(socket.logic, 0, game::id_s_client_forward_brd, msg);
-    }
-    socket.cache.clear();
 }
 
 void proxy::kick_client(uint16_t from, uint64_t session, const simple::memory_buffer& buffer) {
@@ -345,10 +323,36 @@ void proxy::kick_client(uint16_t from, uint64_t session, const simple::memory_bu
     gate_connector_->write(from, session, game::id_s_kick_client_ack, ack);
 }
 
-void proxy::client_match_ack(const socket_data& socket, const game::s_client_forward_brd& brd) {
-    const auto& data = brd.data();
+void proxy::client_login_ack(const socket_data& socket, uint16_t logic, const std::string_view& brd) {
+    game::login_ack ack;
+    if (!ack.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
+        // 协议解析出错了，最好还是关闭连接，报个错
+        const auto utf8 = ERROR_CODE_MESSAGE("登录回应解析出错");
+        simple::error("[{}] socket:{} {}", name(), socket.socket, utf8);
+        return simple::network::instance().close(socket.socket);
+    }
+
+    if (ack.result().ec() != game::ec_success) {
+        // 登录失败了
+        return;
+    }
+
+    // 登录成功了，记录下玩家的状态
+    socket.logic = logic;
+    socket.wait_login = false;
+    socket.room = ack.room();
+    socket.userid = ack.userid();
+
+    // 之前缓存的消息发给逻辑服
+    for (const auto& [id, session, buf] : socket.cache) {
+        send_to_service(socket.logic, socket, id, session, *buf);
+    }
+    socket.cache.clear();
+}
+
+void proxy::client_match_ack(const socket_data& socket, const std::string_view& brd) {
     game::match_ack ack;
-    if (!ack.ParseFromArray(data.data(), static_cast<int>(data.size()))) {
+    if (!ack.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
         // 协议解析出错了
         return;
     }
@@ -362,10 +366,9 @@ void proxy::client_match_ack(const socket_data& socket, const game::s_client_for
     socket.room = ack.room();
 }
 
-void proxy::client_move_brd(const socket_data& socket, const game::s_client_forward_brd& brd) {
-    const auto& data = brd.data();
+void proxy::client_move_brd(const socket_data& socket, const std::string_view& brd) {
     game::move_brd client_brd;
-    if (!client_brd.ParseFromArray(data.data(), static_cast<int>(data.size()))) {
+    if (!client_brd.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
         // 协议解析出错了
         return;
     }
@@ -375,10 +378,9 @@ void proxy::client_move_brd(const socket_data& socket, const game::s_client_forw
     }
 }
 
-void proxy::client_move_ack(const socket_data& socket, const game::s_client_forward_brd& brd) {
-    const auto& data = brd.data();
+void proxy::client_move_ack(const socket_data& socket, const std::string_view& brd) {
     game::move_ack ack;
-    if (!ack.ParseFromArray(data.data(), static_cast<int>(data.size()))) {
+    if (!ack.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
         // 协议解析出错了
         return;
     }

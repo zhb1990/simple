@@ -53,21 +53,23 @@ void login::forward_shm(uint16_t from, uint64_t session, uint16_t id, const simp
         return;
     }
 
-    game::s_client_forward_brd brd;
-    if (!brd.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
+    auto strv = std::string_view(buffer);
+    if (strv.size() < sizeof(client_part)) {
         return;
     }
 
-    if (brd.id() != game::id_login_req) {
+    auto& part = *reinterpret_cast<const client_part*>(strv.data());
+    if (part.id != game::id_login_req) {
         return;
     }
 
+    strv = strv.substr(sizeof(client_part));
     game::login_req req;
-    if (const auto& data = brd.data(); !req.ParseFromArray(data.data(), static_cast<int>(data.size()))) {
+    if (!req.ParseFromArray(strv.data(), static_cast<int>(strv.size()))) {
         return;
     }
 
-    simple::co_start([this, from, socket = brd.socket(), req = std::move(req), session = brd.session()] {
+    simple::co_start([this, from, socket = part.socket, req = std::move(req), session] {
         return client_login(from, socket, session, req);
     });
 }
@@ -104,19 +106,8 @@ simple::task<> login::client_login(uint16_t from, uint32_t socket, uint64_t sess
         ack.mutable_result()->set_ec(game::ec_system);
     }
 
-    game::s_client_forward_brd brd;
-    brd.set_gate(from);
-    brd.set_socket(socket);
-    brd.set_id(game::id_login_ack);
-    brd.set_session(session);
-    brd.set_logic(logic);
-    temp_buffer_.clear();
-    const auto len = ack.ByteSizeLong();
-    temp_buffer_.reserve(len);
-    ack.SerializePartialToArray(temp_buffer_.begin_write(), static_cast<int>(temp_buffer_.writable()));
-    temp_buffer_.written(len);
-    brd.set_data(temp_buffer_.begin_read(), temp_buffer_.readable());
-    gate_connector_->write(from, 0, game::id_s_client_forward_brd, brd);
+    client_part part{static_cast<uint16_t>(game::id_login_ack), logic, socket, 0};
+    gate_connector_->write(from, session, part, ack);
 }
 
 simple::task<int32_t> login::internal_login(const std::string& account, const std::string& password, game::ack_result& result) {

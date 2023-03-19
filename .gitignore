@@ -1,7 +1,7 @@
 /cmake-build-debug/
 /bin/
 /CMakeSettings.json
-/cmake-build-release/
+/cmake-*/
 /out/
 /.vs/
 /.idea/

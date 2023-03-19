@@ -88,13 +88,6 @@ message s_service_register_ack {
 }
 
 // id_s_gate_forward_brd
-message s_gate_forward_brd {
-  uint32 from = 1;                        // 消息来源
-  uint32 to = 2;                          // 消息目的地
-  uint32 id = 3;                          // 转发的消息id
-  uint64 session = 4;                     // 转发的消息session
-  bytes data = 5;                         // 转发的消息内容
-}
 
 // id_s_service_subscribe_req
 message s_service_subscribe_req {
@@ -119,15 +112,6 @@ message s_service_subscribe_brd {
 // msg_common_ack
 
 // id_s_client_forward_brd
-message s_client_forward_brd {
-  uint32 gate = 1;                        // 客户端连接的gate
-  uint32 socket = 2;                      // 对应gate上网络标识id（不是真正的套接字）
-  int32 userid = 3;                       // 如果已经登录过了，带上userid
-  uint32 id = 4;                          // 转发的消息id
-  uint64 session = 5;                     // 转发的消息session
-  bytes data = 6;                         // 转发的消息内容
-  uint32 logic = 7;                       // 登录协议回复时，附带上逻辑服的id
-}
 
 // id_s_kick_client_req
 message s_kick_client_req {

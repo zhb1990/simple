@@ -40,7 +40,7 @@ TEST(task, sync_wait_result) {
 TEST(task, sync_wait_exception) {
     try {
         sync_wait([]() -> simple::task<> { throw std::logic_error("sync_wait_exception"); }());
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
         EXPECT_EQ(e.what(), "sync_wait_exception"sv);
     }
 }
@@ -60,7 +60,7 @@ TEST(task, cancellation) {
                 a = 100;
             }(),
             source.token());
-    } catch (std::exception &e) {
+    } catch (std::exception& e) {
         const auto ec = make_error_code(simple::coro_errors::canceled);
         EXPECT_EQ(e.what(), ec.message());
     }
@@ -148,4 +148,43 @@ TEST(task, condition_variable) {
 
     sync_wait(task1() && task2());
     EXPECT_EQ(a, 1010);
+}
+
+#include <iostream>
+
+simple::task<> sleep() {
+    for (int i = 0; i < 10; ++i) {
+        co_await simple::sleep_for(std::chrono::seconds{1});
+    }
+}
+
+TEST(task, co_start) {
+    struct test_a {
+        test_a() { std::cout << static_cast<void*>(this) << " test_a()\n"; }
+
+        ~test_a() { std::cout << static_cast<void*>(this) << " ~test_a()\n"; }
+
+        test_a(const test_a&) { std::cout << static_cast<void*>(this) << " test_a(const test_a&)\n"; }
+
+        test_a(test_a&&) noexcept { std::cout << static_cast<void*>(this) << " test_a(test_a&&)\n"; }
+
+        test_a& operator=(const test_a&) {
+            std::cout << static_cast<void*>(this) << " operator=(const test_a&)\n";
+            return *this;
+        }
+
+        test_a& operator=(test_a&&) noexcept {
+            std::cout << static_cast<void*>(this) << " operator=(test_a&&)\n";
+            return *this;
+        }
+    };
+
+    sync_wait([]() -> simple::task<> {
+        test_a a;
+        simple::co_start([a]() -> simple::task<> {
+            std::cout << static_cast<const void*>(&a) << " task\n";
+            return sleep();
+        });
+        co_await simple::sleep_for(std::chrono::seconds {20});
+    }());
 }

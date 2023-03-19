@@ -19,10 +19,21 @@ simple::memory_buffer_ptr create_net_buffer(uint16_t id, uint64_t session, const
     return buf;
 }
 
-void init_shm_buffer(simple::memory_buffer& buf, const shm_header& header, const google::protobuf::Message& msg) {
+void init_forward_buffer(simple::memory_buffer& buf, const forward_part& part, const google::protobuf::Message& msg) {
     const auto len = static_cast<uint32_t>(msg.ByteSizeLong());
-    buf.reserve(sizeof(header) + len);
-    buf.append(&header, sizeof(header));
+    buf.reserve(sizeof(part) + len);
+    buf.append(&part, sizeof(part));
+    msg.SerializePartialToArray(buf.begin_write(), static_cast<int>(buf.writable()));
+    buf.written(len);
+}
+
+void init_forward_buffer(simple::memory_buffer& buf, uint16_t from, uint16_t to, uint64_t session, const client_part& client,
+                         const google::protobuf::Message& msg) {
+    const auto len = static_cast<uint32_t>(msg.ByteSizeLong());
+    forward_part forward{from, to, static_cast<uint16_t>(game::id_s_client_forward_brd), 0, session};
+    buf.reserve(sizeof(forward) + sizeof(client) + len);
+    buf.append(&forward, sizeof(forward));
+    buf.append(&client, sizeof(client));
     msg.SerializePartialToArray(buf.begin_write(), static_cast<int>(buf.writable()));
     buf.written(len);
 }

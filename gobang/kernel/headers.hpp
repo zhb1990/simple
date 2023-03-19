@@ -24,7 +24,7 @@ struct ws_header {
     [[nodiscard]] bool valid() const noexcept { return flag == flag_valid; }
 };
 
-struct shm_header {
+struct forward_part {
     // 来源server id
     uint16_t from;
     // 目标server id
@@ -37,5 +37,13 @@ struct shm_header {
     uint64_t session;
 };
 
-
-
+struct client_part {
+    // 客户端发来的协议id
+    uint16_t id;
+    // 登录协议回复时，附带上逻辑服的id
+    uint16_t logic;
+    // 对应代理上网络标识id（不是真正的套接字）
+    uint32_t socket;
+    // 如果已经登录过了，带上userid
+    int32_t userid;
+};

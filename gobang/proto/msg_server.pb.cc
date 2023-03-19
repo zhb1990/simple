@@ -161,23 +161,6 @@ struct s_service_register_ackDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 s_service_register_ackDefaultTypeInternal _s_service_register_ack_default_instance_;
-PROTOBUF_CONSTEXPR s_gate_forward_brd::s_gate_forward_brd(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.data_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.from_)*/0u
-  , /*decltype(_impl_.to_)*/0u
-  , /*decltype(_impl_.session_)*/uint64_t{0u}
-  , /*decltype(_impl_.id_)*/0u
-  , /*decltype(_impl_._cached_size_)*/{}} {}
-struct s_gate_forward_brdDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR s_gate_forward_brdDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
-  ~s_gate_forward_brdDefaultTypeInternal() {}
-  union {
-    s_gate_forward_brd _instance;
-  };
-};
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 s_gate_forward_brdDefaultTypeInternal _s_gate_forward_brd_default_instance_;
 PROTOBUF_CONSTEXPR s_service_subscribe_req::s_service_subscribe_req(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.tp_)*/0
@@ -218,25 +201,6 @@ struct s_service_subscribe_brdDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 s_service_subscribe_brdDefaultTypeInternal _s_service_subscribe_brd_default_instance_;
-PROTOBUF_CONSTEXPR s_client_forward_brd::s_client_forward_brd(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.data_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.gate_)*/0u
-  , /*decltype(_impl_.socket_)*/0u
-  , /*decltype(_impl_.userid_)*/0
-  , /*decltype(_impl_.id_)*/0u
-  , /*decltype(_impl_.session_)*/uint64_t{0u}
-  , /*decltype(_impl_.logic_)*/0u
-  , /*decltype(_impl_._cached_size_)*/{}} {}
-struct s_client_forward_brdDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR s_client_forward_brdDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
-  ~s_client_forward_brdDefaultTypeInternal() {}
-  union {
-    s_client_forward_brd _instance;
-  };
-};
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 s_client_forward_brdDefaultTypeInternal _s_client_forward_brd_default_instance_;
 PROTOBUF_CONSTEXPR s_kick_client_req::s_kick_client_req(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.socket_)*/0u
@@ -519,7 +483,7 @@ struct s_db_query_ai_ackDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 s_db_query_ai_ackDefaultTypeInternal _s_db_query_ai_ack_default_instance_;
 }  // namespace game
-static ::_pb::Metadata file_level_metadata_msg_5fserver_2eproto[34];
+static ::_pb::Metadata file_level_metadata_msg_5fserver_2eproto[32];
 static const ::_pb::EnumDescriptor* file_level_enum_descriptors_msg_5fserver_2eproto[1];
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_msg_5fserver_2eproto = nullptr;
 
@@ -605,17 +569,6 @@ const uint32_t TableStruct_msg_5fserver_2eproto::offsets[] PROTOBUF_SECTION_VARI
   PROTOBUF_FIELD_OFFSET(::game::s_service_register_ack, _impl_.result_),
   PROTOBUF_FIELD_OFFSET(::game::s_service_register_ack, _impl_.gate_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::game::s_gate_forward_brd, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::game::s_gate_forward_brd, _impl_.from_),
-  PROTOBUF_FIELD_OFFSET(::game::s_gate_forward_brd, _impl_.to_),
-  PROTOBUF_FIELD_OFFSET(::game::s_gate_forward_brd, _impl_.id_),
-  PROTOBUF_FIELD_OFFSET(::game::s_gate_forward_brd, _impl_.session_),
-  PROTOBUF_FIELD_OFFSET(::game::s_gate_forward_brd, _impl_.data_),
-  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::game::s_service_subscribe_req, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -637,19 +590,6 @@ const uint32_t TableStruct_msg_5fserver_2eproto::offsets[] PROTOBUF_SECTION_VARI
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::game::s_service_subscribe_brd, _impl_.services_),
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _impl_.gate_),
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _impl_.socket_),
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _impl_.userid_),
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _impl_.id_),
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _impl_.session_),
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _impl_.data_),
-  PROTOBUF_FIELD_OFFSET(::game::s_client_forward_brd, _impl_.logic_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::game::s_kick_client_req, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -828,30 +768,28 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 55, -1, -1, sizeof(::game::s_service_shm)},
   { 63, -1, -1, sizeof(::game::s_service_register_req)},
   { 72, -1, -1, sizeof(::game::s_service_register_ack)},
-  { 80, -1, -1, sizeof(::game::s_gate_forward_brd)},
-  { 91, -1, -1, sizeof(::game::s_service_subscribe_req)},
-  { 98, -1, -1, sizeof(::game::s_service_subscribe_ack)},
-  { 106, -1, -1, sizeof(::game::s_service_subscribe_brd)},
-  { 113, -1, -1, sizeof(::game::s_client_forward_brd)},
-  { 126, -1, -1, sizeof(::game::s_kick_client_req)},
-  { 134, -1, -1, sizeof(::game::s_client_offline_brd)},
-  { 143, -1, -1, sizeof(::game::s_login_req)},
-  { 151, -1, -1, sizeof(::game::s_login_ack)},
-  { 159, -1, -1, sizeof(::game::s_login_logic_req)},
-  { 169, -1, -1, sizeof(::game::s_login_logic_ack)},
-  { 179, -1, -1, sizeof(::game::s_get_logic_req)},
-  { 186, -1, -1, sizeof(::game::s_get_logic_ack)},
-  { 194, -1, -1, sizeof(::game::s_db_create_user_req)},
-  { 206, -1, -1, sizeof(::game::s_db_query_user_req)},
-  { 213, -1, -1, sizeof(::game::s_db_query_user_ack)},
-  { 224, -1, -1, sizeof(::game::s_db_user_info)},
-  { 234, -1, -1, sizeof(::game::s_db_update_user_brd)},
-  { 241, -1, -1, sizeof(::game::s_db_query_account_req)},
-  { 249, -1, -1, sizeof(::game::s_db_query_account_ack)},
-  { 259, -1, -1, sizeof(::game::s_db_account_info)},
-  { 269, -1, -1, sizeof(::game::s_db_update_account_brd)},
-  { 276, -1, -1, sizeof(::game::s_db_query_max_userid_ack)},
-  { 284, -1, -1, sizeof(::game::s_db_query_ai_ack)},
+  { 80, -1, -1, sizeof(::game::s_service_subscribe_req)},
+  { 87, -1, -1, sizeof(::game::s_service_subscribe_ack)},
+  { 95, -1, -1, sizeof(::game::s_service_subscribe_brd)},
+  { 102, -1, -1, sizeof(::game::s_kick_client_req)},
+  { 110, -1, -1, sizeof(::game::s_client_offline_brd)},
+  { 119, -1, -1, sizeof(::game::s_login_req)},
+  { 127, -1, -1, sizeof(::game::s_login_ack)},
+  { 135, -1, -1, sizeof(::game::s_login_logic_req)},
+  { 145, -1, -1, sizeof(::game::s_login_logic_ack)},
+  { 155, -1, -1, sizeof(::game::s_get_logic_req)},
+  { 162, -1, -1, sizeof(::game::s_get_logic_ack)},
+  { 170, -1, -1, sizeof(::game::s_db_create_user_req)},
+  { 182, -1, -1, sizeof(::game::s_db_query_user_req)},
+  { 189, -1, -1, sizeof(::game::s_db_query_user_ack)},
+  { 200, -1, -1, sizeof(::game::s_db_user_info)},
+  { 210, -1, -1, sizeof(::game::s_db_update_user_brd)},
+  { 217, -1, -1, sizeof(::game::s_db_query_account_req)},
+  { 225, -1, -1, sizeof(::game::s_db_query_account_ack)},
+  { 235, -1, -1, sizeof(::game::s_db_account_info)},
+  { 245, -1, -1, sizeof(::game::s_db_update_account_brd)},
+  { 252, -1, -1, sizeof(::game::s_db_query_max_userid_ack)},
+  { 260, -1, -1, sizeof(::game::s_db_query_ai_ack)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -865,11 +803,9 @@ static const ::_pb::Message* const file_default_instances[] = {
   &::game::_s_service_shm_default_instance_._instance,
   &::game::_s_service_register_req_default_instance_._instance,
   &::game::_s_service_register_ack_default_instance_._instance,
-  &::game::_s_gate_forward_brd_default_instance_._instance,
   &::game::_s_service_subscribe_req_default_instance_._instance,
   &::game::_s_service_subscribe_ack_default_instance_._instance,
   &::game::_s_service_subscribe_brd_default_instance_._instance,
-  &::game::_s_client_forward_brd_default_instance_._instance,
   &::game::_s_kick_client_req_default_instance_._instance,
   &::game::_s_client_offline_brd_default_instance_._instance,
   &::game::_s_login_req_default_instance_._instance,
@@ -911,68 +847,63 @@ const char descriptor_table_protodef_msg_5fserver_2eproto[] PROTOBUF_SECTION_VAR
   "ce_info\022\024\n\014channel_size\030\002 \001(\r\022 \n\003shm\030\003 \003"
   "(\0132\023.game.s_service_shm\"H\n\026s_service_reg"
   "ister_ack\022 \n\006result\030\001 \001(\0132\020.game.ack_res"
-  "ult\022\014\n\004gate\030\002 \001(\r\"Y\n\022s_gate_forward_brd\022"
-  "\014\n\004from\030\001 \001(\r\022\n\n\002to\030\002 \001(\r\022\n\n\002id\030\003 \001(\r\022\017\n"
-  "\007session\030\004 \001(\004\022\014\n\004data\030\005 \001(\014\"9\n\027s_servic"
-  "e_subscribe_req\022\036\n\002tp\030\001 \001(\0162\022.game.servi"
-  "ce_type\"c\n\027s_service_subscribe_ack\022 \n\006re"
-  "sult\030\001 \001(\0132\020.game.ack_result\022&\n\010services"
-  "\030\002 \003(\0132\024.game.s_service_info\"A\n\027s_servic"
-  "e_subscribe_brd\022&\n\010services\030\001 \003(\0132\024.game"
-  ".s_service_info\"~\n\024s_client_forward_brd\022"
-  "\014\n\004gate\030\001 \001(\r\022\016\n\006socket\030\002 \001(\r\022\016\n\006userid\030"
-  "\003 \001(\005\022\n\n\002id\030\004 \001(\r\022\017\n\007session\030\005 \001(\004\022\014\n\004da"
-  "ta\030\006 \001(\014\022\r\n\005logic\030\007 \001(\r\"3\n\021s_kick_client"
-  "_req\022\016\n\006socket\030\002 \001(\r\022\016\n\006userid\030\003 \001(\005\"D\n\024"
-  "s_client_offline_brd\022\014\n\004gate\030\001 \001(\r\022\016\n\006so"
-  "cket\030\002 \001(\r\022\016\n\006userid\030\003 \001(\005\"0\n\013s_login_re"
-  "q\022\017\n\007account\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"\?\n\013"
-  "s_login_ack\022 \n\006result\030\001 \001(\0132\020.game.ack_r"
-  "esult\022\016\n\006userid\030\002 \001(\005\"R\n\021s_login_logic_r"
-  "eq\022\014\n\004gate\030\001 \001(\r\022\016\n\006socket\030\002 \001(\r\022\016\n\006user"
-  "id\030\003 \001(\005\022\017\n\007account\030\004 \001(\t\"j\n\021s_login_log"
-  "ic_ack\022 \n\006result\030\001 \001(\0132\020.game.ack_result"
-  "\022\014\n\004room\030\002 \001(\005\022\021\n\twin_count\030\003 \001(\005\022\022\n\nlos"
-  "e_count\030\004 \001(\005\"!\n\017s_get_logic_req\022\016\n\006user"
-  "id\030\001 \001(\005\"B\n\017s_get_logic_ack\022 \n\006result\030\001 "
-  "\001(\0132\020.game.ack_result\022\r\n\005logic\030\002 \001(\r\"\177\n\024"
-  "s_db_create_user_req\022\016\n\006userid\030\001 \001(\005\022\017\n\007"
-  "account\030\002 \001(\t\022\020\n\010password\030\003 \001(\t\022\021\n\twin_c"
-  "ount\030\004 \001(\005\022\022\n\nlose_count\030\005 \001(\005\022\r\n\005is_ai\030"
-  "\006 \001(\010\"%\n\023s_db_query_user_req\022\016\n\006userid\030\001"
-  " \001(\005\"}\n\023s_db_query_user_ack\022 \n\006result\030\001 "
-  "\001(\0132\020.game.ack_result\022\016\n\006userid\030\002 \001(\005\022\021\n"
-  "\twin_count\030\003 \001(\005\022\022\n\nlose_count\030\004 \001(\005\022\r\n\005"
-  "is_ai\030\005 \001(\010\"X\n\016s_db_user_info\022\016\n\006userid\030"
-  "\001 \001(\005\022\017\n\007version\030\002 \001(\r\022\021\n\twin_count\030\003 \001("
-  "\005\022\022\n\nlose_count\030\004 \001(\005\";\n\024s_db_update_use"
-  "r_brd\022#\n\005infos\030\001 \003(\0132\024.game.s_db_user_in"
-  "fo\"9\n\026s_db_query_account_req\022\017\n\007account\030"
-  "\001 \001(\t\022\016\n\006userid\030\002 \001(\005\"m\n\026s_db_query_acco"
-  "unt_ack\022 \n\006result\030\001 \001(\0132\020.game.ack_resul"
-  "t\022\017\n\007account\030\002 \001(\t\022\016\n\006userid\030\003 \001(\005\022\020\n\010pa"
-  "ssword\030\004 \001(\t\"W\n\021s_db_account_info\022\016\n\006use"
-  "rid\030\001 \001(\005\022\017\n\007version\030\002 \001(\r\022\017\n\007account\030\003 "
-  "\001(\t\022\020\n\010password\030\004 \001(\t\"A\n\027s_db_update_acc"
-  "ount_brd\022&\n\005infos\030\001 \003(\0132\027.game.s_db_acco"
-  "unt_info\"Q\n\031s_db_query_max_userid_ack\022 \n"
-  "\006result\030\001 \001(\0132\020.game.ack_result\022\022\n\nmax_u"
-  "serid\030\002 \001(\005\"F\n\021s_db_query_ai_ack\022 \n\006resu"
-  "lt\030\001 \001(\0132\020.game.ack_result\022\017\n\007ai_list\030\002 "
-  "\003(\005*\264\001\n\014service_type\022\022\n\016st_gate_master\020\000"
-  "\022\013\n\007st_gate\020\001\022\014\n\010st_proxy\020\002\022\014\n\010st_login\020"
-  "\003\022\017\n\013st_db_proxy\020\004\022\014\n\010st_logic\020\005\022\023\n\017st_l"
-  "ogic_master\020\006\022\014\n\010st_match\020\007\022\013\n\007st_room\020\010"
-  "\022\r\n\tst_center\020\t\022\t\n\005st_ai\020\nb\006proto3"
+  "ult\022\014\n\004gate\030\002 \001(\r\"9\n\027s_service_subscribe"
+  "_req\022\036\n\002tp\030\001 \001(\0162\022.game.service_type\"c\n\027"
+  "s_service_subscribe_ack\022 \n\006result\030\001 \001(\0132"
+  "\020.game.ack_result\022&\n\010services\030\002 \003(\0132\024.ga"
+  "me.s_service_info\"A\n\027s_service_subscribe"
+  "_brd\022&\n\010services\030\001 \003(\0132\024.game.s_service_"
+  "info\"3\n\021s_kick_client_req\022\016\n\006socket\030\002 \001("
+  "\r\022\016\n\006userid\030\003 \001(\005\"D\n\024s_client_offline_br"
+  "d\022\014\n\004gate\030\001 \001(\r\022\016\n\006socket\030\002 \001(\r\022\016\n\006useri"
+  "d\030\003 \001(\005\"0\n\013s_login_req\022\017\n\007account\030\001 \001(\t\022"
+  "\020\n\010password\030\002 \001(\t\"\?\n\013s_login_ack\022 \n\006resu"
+  "lt\030\001 \001(\0132\020.game.ack_result\022\016\n\006userid\030\002 \001"
+  "(\005\"R\n\021s_login_logic_req\022\014\n\004gate\030\001 \001(\r\022\016\n"
+  "\006socket\030\002 \001(\r\022\016\n\006userid\030\003 \001(\005\022\017\n\007account"
+  "\030\004 \001(\t\"j\n\021s_login_logic_ack\022 \n\006result\030\001 "
+  "\001(\0132\020.game.ack_result\022\014\n\004room\030\002 \001(\005\022\021\n\tw"
+  "in_count\030\003 \001(\005\022\022\n\nlose_count\030\004 \001(\005\"!\n\017s_"
+  "get_logic_req\022\016\n\006userid\030\001 \001(\005\"B\n\017s_get_l"
+  "ogic_ack\022 \n\006result\030\001 \001(\0132\020.game.ack_resu"
+  "lt\022\r\n\005logic\030\002 \001(\r\"\177\n\024s_db_create_user_re"
+  "q\022\016\n\006userid\030\001 \001(\005\022\017\n\007account\030\002 \001(\t\022\020\n\010pa"
+  "ssword\030\003 \001(\t\022\021\n\twin_count\030\004 \001(\005\022\022\n\nlose_"
+  "count\030\005 \001(\005\022\r\n\005is_ai\030\006 \001(\010\"%\n\023s_db_query"
+  "_user_req\022\016\n\006userid\030\001 \001(\005\"}\n\023s_db_query_"
+  "user_ack\022 \n\006result\030\001 \001(\0132\020.game.ack_resu"
+  "lt\022\016\n\006userid\030\002 \001(\005\022\021\n\twin_count\030\003 \001(\005\022\022\n"
+  "\nlose_count\030\004 \001(\005\022\r\n\005is_ai\030\005 \001(\010\"X\n\016s_db"
+  "_user_info\022\016\n\006userid\030\001 \001(\005\022\017\n\007version\030\002 "
+  "\001(\r\022\021\n\twin_count\030\003 \001(\005\022\022\n\nlose_count\030\004 \001"
+  "(\005\";\n\024s_db_update_user_brd\022#\n\005infos\030\001 \003("
+  "\0132\024.game.s_db_user_info\"9\n\026s_db_query_ac"
+  "count_req\022\017\n\007account\030\001 \001(\t\022\016\n\006userid\030\002 \001"
+  "(\005\"m\n\026s_db_query_account_ack\022 \n\006result\030\001"
+  " \001(\0132\020.game.ack_result\022\017\n\007account\030\002 \001(\t\022"
+  "\016\n\006userid\030\003 \001(\005\022\020\n\010password\030\004 \001(\t\"W\n\021s_d"
+  "b_account_info\022\016\n\006userid\030\001 \001(\005\022\017\n\007versio"
+  "n\030\002 \001(\r\022\017\n\007account\030\003 \001(\t\022\020\n\010password\030\004 \001"
+  "(\t\"A\n\027s_db_update_account_brd\022&\n\005infos\030\001"
+  " \003(\0132\027.game.s_db_account_info\"Q\n\031s_db_qu"
+  "ery_max_userid_ack\022 \n\006result\030\001 \001(\0132\020.gam"
+  "e.ack_result\022\022\n\nmax_userid\030\002 \001(\005\"F\n\021s_db"
+  "_query_ai_ack\022 \n\006result\030\001 \001(\0132\020.game.ack"
+  "_result\022\017\n\007ai_list\030\002 \003(\005*\264\001\n\014service_typ"
+  "e\022\022\n\016st_gate_master\020\000\022\013\n\007st_gate\020\001\022\014\n\010st"
+  "_proxy\020\002\022\014\n\010st_login\020\003\022\017\n\013st_db_proxy\020\004\022"
+  "\014\n\010st_logic\020\005\022\023\n\017st_logic_master\020\006\022\014\n\010st"
+  "_match\020\007\022\013\n\007st_room\020\010\022\r\n\tst_center\020\t\022\t\n\005"
+  "st_ai\020\nb\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_msg_5fserver_2eproto_deps[1] = {
   &::descriptor_table_msg_5fbase_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_msg_5fserver_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_msg_5fserver_2eproto = {
-    false, false, 2874, descriptor_table_protodef_msg_5fserver_2eproto,
+    false, false, 2655, descriptor_table_protodef_msg_5fserver_2eproto,
     "msg_server.proto",
-    &descriptor_table_msg_5fserver_2eproto_once, descriptor_table_msg_5fserver_2eproto_deps, 1, 34,
+    &descriptor_table_msg_5fserver_2eproto_once, descriptor_table_msg_5fserver_2eproto_deps, 1, 32,
     schemas, file_default_instances, TableStruct_msg_5fserver_2eproto::offsets,
     file_level_metadata_msg_5fserver_2eproto, file_level_enum_descriptors_msg_5fserver_2eproto,
     file_level_service_descriptors_msg_5fserver_2eproto,
@@ -3261,312 +3192,6 @@ void s_service_register_ack::InternalSwap(s_service_register_ack* other) {
 
 // ===================================================================
 
-class s_gate_forward_brd::_Internal {
- public:
-};
-
-s_gate_forward_brd::s_gate_forward_brd(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
-  // @@protoc_insertion_point(arena_constructor:game.s_gate_forward_brd)
-}
-s_gate_forward_brd::s_gate_forward_brd(const s_gate_forward_brd& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  s_gate_forward_brd* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.data_){}
-    , decltype(_impl_.from_){}
-    , decltype(_impl_.to_){}
-    , decltype(_impl_.session_){}
-    , decltype(_impl_.id_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.data_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.data_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_data().empty()) {
-    _this->_impl_.data_.Set(from._internal_data(), 
-      _this->GetArenaForAllocation());
-  }
-  ::memcpy(&_impl_.from_, &from._impl_.from_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.id_) -
-    reinterpret_cast<char*>(&_impl_.from_)) + sizeof(_impl_.id_));
-  // @@protoc_insertion_point(copy_constructor:game.s_gate_forward_brd)
-}
-
-inline void s_gate_forward_brd::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.data_){}
-    , decltype(_impl_.from_){0u}
-    , decltype(_impl_.to_){0u}
-    , decltype(_impl_.session_){uint64_t{0u}}
-    , decltype(_impl_.id_){0u}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-  _impl_.data_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.data_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-}
-
-s_gate_forward_brd::~s_gate_forward_brd() {
-  // @@protoc_insertion_point(destructor:game.s_gate_forward_brd)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
-  SharedDtor();
-}
-
-inline void s_gate_forward_brd::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.data_.Destroy();
-}
-
-void s_gate_forward_brd::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
-}
-
-void s_gate_forward_brd::Clear() {
-// @@protoc_insertion_point(message_clear_start:game.s_gate_forward_brd)
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.data_.ClearToEmpty();
-  ::memset(&_impl_.from_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.id_) -
-      reinterpret_cast<char*>(&_impl_.from_)) + sizeof(_impl_.id_));
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* s_gate_forward_brd::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // uint32 from = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          _impl_.from_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // uint32 to = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          _impl_.to_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // uint32 id = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          _impl_.id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // uint64 session = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          _impl_.session_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // bytes data = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
-          auto str = _internal_mutable_data();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
-}
-
-uint8_t* s_gate_forward_brd::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:game.s_gate_forward_brd)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 from = 1;
-  if (this->_internal_from() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_from(), target);
-  }
-
-  // uint32 to = 2;
-  if (this->_internal_to() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(2, this->_internal_to(), target);
-  }
-
-  // uint32 id = 3;
-  if (this->_internal_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(3, this->_internal_id(), target);
-  }
-
-  // uint64 session = 4;
-  if (this->_internal_session() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(4, this->_internal_session(), target);
-  }
-
-  // bytes data = 5;
-  if (!this->_internal_data().empty()) {
-    target = stream->WriteBytesMaybeAliased(
-        5, this->_internal_data(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:game.s_gate_forward_brd)
-  return target;
-}
-
-size_t s_gate_forward_brd::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:game.s_gate_forward_brd)
-  size_t total_size = 0;
-
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // bytes data = 5;
-  if (!this->_internal_data().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_data());
-  }
-
-  // uint32 from = 1;
-  if (this->_internal_from() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_from());
-  }
-
-  // uint32 to = 2;
-  if (this->_internal_to() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_to());
-  }
-
-  // uint64 session = 4;
-  if (this->_internal_session() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_session());
-  }
-
-  // uint32 id = 3;
-  if (this->_internal_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_id());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData s_gate_forward_brd::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    s_gate_forward_brd::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*s_gate_forward_brd::GetClassData() const { return &_class_data_; }
-
-
-void s_gate_forward_brd::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<s_gate_forward_brd*>(&to_msg);
-  auto& from = static_cast<const s_gate_forward_brd&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:game.s_gate_forward_brd)
-  GOOGLE_DCHECK_NE(&from, _this);
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (!from._internal_data().empty()) {
-    _this->_internal_set_data(from._internal_data());
-  }
-  if (from._internal_from() != 0) {
-    _this->_internal_set_from(from._internal_from());
-  }
-  if (from._internal_to() != 0) {
-    _this->_internal_set_to(from._internal_to());
-  }
-  if (from._internal_session() != 0) {
-    _this->_internal_set_session(from._internal_session());
-  }
-  if (from._internal_id() != 0) {
-    _this->_internal_set_id(from._internal_id());
-  }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void s_gate_forward_brd::CopyFrom(const s_gate_forward_brd& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:game.s_gate_forward_brd)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool s_gate_forward_brd::IsInitialized() const {
-  return true;
-}
-
-void s_gate_forward_brd::InternalSwap(s_gate_forward_brd* other) {
-  using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.data_, lhs_arena,
-      &other->_impl_.data_, rhs_arena
-  );
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(s_gate_forward_brd, _impl_.id_)
-      + sizeof(s_gate_forward_brd::_impl_.id_)
-      - PROTOBUF_FIELD_OFFSET(s_gate_forward_brd, _impl_.from_)>(
-          reinterpret_cast<char*>(&_impl_.from_),
-          reinterpret_cast<char*>(&other->_impl_.from_));
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata s_gate_forward_brd::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[10]);
-}
-
-// ===================================================================
-
 class s_service_subscribe_req::_Internal {
  public:
 };
@@ -3743,7 +3368,7 @@ void s_service_subscribe_req::InternalSwap(s_service_subscribe_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_service_subscribe_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[11]);
+      file_level_metadata_msg_5fserver_2eproto[10]);
 }
 
 // ===================================================================
@@ -3976,7 +3601,7 @@ void s_service_subscribe_ack::InternalSwap(s_service_subscribe_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_service_subscribe_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[12]);
+      file_level_metadata_msg_5fserver_2eproto[11]);
 }
 
 // ===================================================================
@@ -4161,361 +3786,7 @@ void s_service_subscribe_brd::InternalSwap(s_service_subscribe_brd* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_service_subscribe_brd::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[13]);
-}
-
-// ===================================================================
-
-class s_client_forward_brd::_Internal {
- public:
-};
-
-s_client_forward_brd::s_client_forward_brd(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
-  // @@protoc_insertion_point(arena_constructor:game.s_client_forward_brd)
-}
-s_client_forward_brd::s_client_forward_brd(const s_client_forward_brd& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  s_client_forward_brd* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.data_){}
-    , decltype(_impl_.gate_){}
-    , decltype(_impl_.socket_){}
-    , decltype(_impl_.userid_){}
-    , decltype(_impl_.id_){}
-    , decltype(_impl_.session_){}
-    , decltype(_impl_.logic_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.data_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.data_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_data().empty()) {
-    _this->_impl_.data_.Set(from._internal_data(), 
-      _this->GetArenaForAllocation());
-  }
-  ::memcpy(&_impl_.gate_, &from._impl_.gate_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.logic_) -
-    reinterpret_cast<char*>(&_impl_.gate_)) + sizeof(_impl_.logic_));
-  // @@protoc_insertion_point(copy_constructor:game.s_client_forward_brd)
-}
-
-inline void s_client_forward_brd::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.data_){}
-    , decltype(_impl_.gate_){0u}
-    , decltype(_impl_.socket_){0u}
-    , decltype(_impl_.userid_){0}
-    , decltype(_impl_.id_){0u}
-    , decltype(_impl_.session_){uint64_t{0u}}
-    , decltype(_impl_.logic_){0u}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-  _impl_.data_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.data_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-}
-
-s_client_forward_brd::~s_client_forward_brd() {
-  // @@protoc_insertion_point(destructor:game.s_client_forward_brd)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
-  SharedDtor();
-}
-
-inline void s_client_forward_brd::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  _impl_.data_.Destroy();
-}
-
-void s_client_forward_brd::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
-}
-
-void s_client_forward_brd::Clear() {
-// @@protoc_insertion_point(message_clear_start:game.s_client_forward_brd)
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  _impl_.data_.ClearToEmpty();
-  ::memset(&_impl_.gate_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&_impl_.logic_) -
-      reinterpret_cast<char*>(&_impl_.gate_)) + sizeof(_impl_.logic_));
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* s_client_forward_brd::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // uint32 gate = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          _impl_.gate_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // uint32 socket = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          _impl_.socket_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // int32 userid = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          _impl_.userid_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // uint32 id = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
-          _impl_.id_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // uint64 session = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
-          _impl_.session_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // bytes data = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
-          auto str = _internal_mutable_data();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // uint32 logic = 7;
-      case 7:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 56)) {
-          _impl_.logic_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
-}
-
-uint8_t* s_client_forward_brd::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:game.s_client_forward_brd)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // uint32 gate = 1;
-  if (this->_internal_gate() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(1, this->_internal_gate(), target);
-  }
-
-  // uint32 socket = 2;
-  if (this->_internal_socket() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(2, this->_internal_socket(), target);
-  }
-
-  // int32 userid = 3;
-  if (this->_internal_userid() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_userid(), target);
-  }
-
-  // uint32 id = 4;
-  if (this->_internal_id() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(4, this->_internal_id(), target);
-  }
-
-  // uint64 session = 5;
-  if (this->_internal_session() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(5, this->_internal_session(), target);
-  }
-
-  // bytes data = 6;
-  if (!this->_internal_data().empty()) {
-    target = stream->WriteBytesMaybeAliased(
-        6, this->_internal_data(), target);
-  }
-
-  // uint32 logic = 7;
-  if (this->_internal_logic() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(7, this->_internal_logic(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:game.s_client_forward_brd)
-  return target;
-}
-
-size_t s_client_forward_brd::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:game.s_client_forward_brd)
-  size_t total_size = 0;
-
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // bytes data = 6;
-  if (!this->_internal_data().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::BytesSize(
-        this->_internal_data());
-  }
-
-  // uint32 gate = 1;
-  if (this->_internal_gate() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_gate());
-  }
-
-  // uint32 socket = 2;
-  if (this->_internal_socket() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_socket());
-  }
-
-  // int32 userid = 3;
-  if (this->_internal_userid() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_userid());
-  }
-
-  // uint32 id = 4;
-  if (this->_internal_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_id());
-  }
-
-  // uint64 session = 5;
-  if (this->_internal_session() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_session());
-  }
-
-  // uint32 logic = 7;
-  if (this->_internal_logic() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(this->_internal_logic());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
-}
-
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData s_client_forward_brd::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    s_client_forward_brd::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*s_client_forward_brd::GetClassData() const { return &_class_data_; }
-
-
-void s_client_forward_brd::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
-  auto* const _this = static_cast<s_client_forward_brd*>(&to_msg);
-  auto& from = static_cast<const s_client_forward_brd&>(from_msg);
-  // @@protoc_insertion_point(class_specific_merge_from_start:game.s_client_forward_brd)
-  GOOGLE_DCHECK_NE(&from, _this);
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (!from._internal_data().empty()) {
-    _this->_internal_set_data(from._internal_data());
-  }
-  if (from._internal_gate() != 0) {
-    _this->_internal_set_gate(from._internal_gate());
-  }
-  if (from._internal_socket() != 0) {
-    _this->_internal_set_socket(from._internal_socket());
-  }
-  if (from._internal_userid() != 0) {
-    _this->_internal_set_userid(from._internal_userid());
-  }
-  if (from._internal_id() != 0) {
-    _this->_internal_set_id(from._internal_id());
-  }
-  if (from._internal_session() != 0) {
-    _this->_internal_set_session(from._internal_session());
-  }
-  if (from._internal_logic() != 0) {
-    _this->_internal_set_logic(from._internal_logic());
-  }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void s_client_forward_brd::CopyFrom(const s_client_forward_brd& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:game.s_client_forward_brd)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool s_client_forward_brd::IsInitialized() const {
-  return true;
-}
-
-void s_client_forward_brd::InternalSwap(s_client_forward_brd* other) {
-  using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.data_, lhs_arena,
-      &other->_impl_.data_, rhs_arena
-  );
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(s_client_forward_brd, _impl_.logic_)
-      + sizeof(s_client_forward_brd::_impl_.logic_)
-      - PROTOBUF_FIELD_OFFSET(s_client_forward_brd, _impl_.gate_)>(
-          reinterpret_cast<char*>(&_impl_.gate_),
-          reinterpret_cast<char*>(&other->_impl_.gate_));
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata s_client_forward_brd::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[14]);
+      file_level_metadata_msg_5fserver_2eproto[12]);
 }
 
 // ===================================================================
@@ -4726,7 +3997,7 @@ void s_kick_client_req::InternalSwap(s_kick_client_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_kick_client_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[15]);
+      file_level_metadata_msg_5fserver_2eproto[13]);
 }
 
 // ===================================================================
@@ -4961,7 +4232,7 @@ void s_client_offline_brd::InternalSwap(s_client_offline_brd* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_client_offline_brd::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[16]);
+      file_level_metadata_msg_5fserver_2eproto[14]);
 }
 
 // ===================================================================
@@ -5214,7 +4485,7 @@ void s_login_req::InternalSwap(s_login_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_login_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[17]);
+      file_level_metadata_msg_5fserver_2eproto[15]);
 }
 
 // ===================================================================
@@ -5444,7 +4715,7 @@ void s_login_ack::InternalSwap(s_login_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_login_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[18]);
+      file_level_metadata_msg_5fserver_2eproto[16]);
 }
 
 // ===================================================================
@@ -5731,7 +5002,7 @@ void s_login_logic_req::InternalSwap(s_login_logic_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_login_logic_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[19]);
+      file_level_metadata_msg_5fserver_2eproto[17]);
 }
 
 // ===================================================================
@@ -6013,7 +5284,7 @@ void s_login_logic_ack::InternalSwap(s_login_logic_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_login_logic_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[20]);
+      file_level_metadata_msg_5fserver_2eproto[18]);
 }
 
 // ===================================================================
@@ -6191,7 +5462,7 @@ void s_get_logic_req::InternalSwap(s_get_logic_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_get_logic_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[21]);
+      file_level_metadata_msg_5fserver_2eproto[19]);
 }
 
 // ===================================================================
@@ -6421,7 +5692,7 @@ void s_get_logic_ack::InternalSwap(s_get_logic_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_get_logic_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[22]);
+      file_level_metadata_msg_5fserver_2eproto[20]);
 }
 
 // ===================================================================
@@ -6782,7 +6053,7 @@ void s_db_create_user_req::InternalSwap(s_db_create_user_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_create_user_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[23]);
+      file_level_metadata_msg_5fserver_2eproto[21]);
 }
 
 // ===================================================================
@@ -6960,7 +6231,7 @@ void s_db_query_user_req::InternalSwap(s_db_query_user_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_query_user_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[24]);
+      file_level_metadata_msg_5fserver_2eproto[22]);
 }
 
 // ===================================================================
@@ -7266,7 +6537,7 @@ void s_db_query_user_ack::InternalSwap(s_db_query_user_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_query_user_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[25]);
+      file_level_metadata_msg_5fserver_2eproto[23]);
 }
 
 // ===================================================================
@@ -7525,7 +6796,7 @@ void s_db_user_info::InternalSwap(s_db_user_info* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_user_info::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[26]);
+      file_level_metadata_msg_5fserver_2eproto[24]);
 }
 
 // ===================================================================
@@ -7710,7 +6981,7 @@ void s_db_update_user_brd::InternalSwap(s_db_update_user_brd* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_update_user_brd::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[27]);
+      file_level_metadata_msg_5fserver_2eproto[25]);
 }
 
 // ===================================================================
@@ -7940,7 +7211,7 @@ void s_db_query_account_req::InternalSwap(s_db_query_account_req* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_query_account_req::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[28]);
+      file_level_metadata_msg_5fserver_2eproto[26]);
 }
 
 // ===================================================================
@@ -8272,7 +7543,7 @@ void s_db_query_account_ack::InternalSwap(s_db_query_account_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_query_account_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[29]);
+      file_level_metadata_msg_5fserver_2eproto[27]);
 }
 
 // ===================================================================
@@ -8585,7 +7856,7 @@ void s_db_account_info::InternalSwap(s_db_account_info* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_account_info::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[30]);
+      file_level_metadata_msg_5fserver_2eproto[28]);
 }
 
 // ===================================================================
@@ -8770,7 +8041,7 @@ void s_db_update_account_brd::InternalSwap(s_db_update_account_brd* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_update_account_brd::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[31]);
+      file_level_metadata_msg_5fserver_2eproto[29]);
 }
 
 // ===================================================================
@@ -9000,7 +8271,7 @@ void s_db_query_max_userid_ack::InternalSwap(s_db_query_max_userid_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_query_max_userid_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[32]);
+      file_level_metadata_msg_5fserver_2eproto[30]);
 }
 
 // ===================================================================
@@ -9241,7 +8512,7 @@ void s_db_query_ai_ack::InternalSwap(s_db_query_ai_ack* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata s_db_query_ai_ack::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_msg_5fserver_2eproto_getter, &descriptor_table_msg_5fserver_2eproto_once,
-      file_level_metadata_msg_5fserver_2eproto[33]);
+      file_level_metadata_msg_5fserver_2eproto[31]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -9287,10 +8558,6 @@ template<> PROTOBUF_NOINLINE ::game::s_service_register_ack*
 Arena::CreateMaybeMessage< ::game::s_service_register_ack >(Arena* arena) {
   return Arena::CreateMessageInternal< ::game::s_service_register_ack >(arena);
 }
-template<> PROTOBUF_NOINLINE ::game::s_gate_forward_brd*
-Arena::CreateMaybeMessage< ::game::s_gate_forward_brd >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::game::s_gate_forward_brd >(arena);
-}
 template<> PROTOBUF_NOINLINE ::game::s_service_subscribe_req*
 Arena::CreateMaybeMessage< ::game::s_service_subscribe_req >(Arena* arena) {
   return Arena::CreateMessageInternal< ::game::s_service_subscribe_req >(arena);
@@ -9302,10 +8569,6 @@ Arena::CreateMaybeMessage< ::game::s_service_subscribe_ack >(Arena* arena) {
 template<> PROTOBUF_NOINLINE ::game::s_service_subscribe_brd*
 Arena::CreateMaybeMessage< ::game::s_service_subscribe_brd >(Arena* arena) {
   return Arena::CreateMessageInternal< ::game::s_service_subscribe_brd >(arena);
-}
-template<> PROTOBUF_NOINLINE ::game::s_client_forward_brd*
-Arena::CreateMaybeMessage< ::game::s_client_forward_brd >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::game::s_client_forward_brd >(arena);
 }
 template<> PROTOBUF_NOINLINE ::game::s_kick_client_req*
 Arena::CreateMaybeMessage< ::game::s_kick_client_req >(Arena* arena) {

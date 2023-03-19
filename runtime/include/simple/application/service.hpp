@@ -50,7 +50,7 @@ class service {
 
     auto& router() noexcept { return router_; }
 
-  private:
+  protected:
     friend class application;
     std::string name_;
     std::string type_;
