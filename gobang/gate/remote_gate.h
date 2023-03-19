@@ -18,7 +18,7 @@ struct remote_service final : service_info {
 
 class remote_gate {
   public:
-    remote_gate(simple::service& s, uint16_t id, std::vector<std::string> addresses);
+    remote_gate(simple::service& s, uint16_t id);
 
     SIMPLE_COPYABLE_DEFAULT(remote_gate)
 
@@ -27,6 +27,10 @@ class remote_gate {
     void start();
 
     void send(simple::memory_buffer_ptr ptr);
+
+    void set_addresses(std::vector<std::string> addresses);
+
+	void add_remote_service(const game::s_service_info& info);
 
   private:
     simple::task<> run();

@@ -186,7 +186,32 @@ simple::task<bool> master_connector::register_to_master(uint32_t socket) {
     co_return true;
 }
 
-void master_connector::add_remote_gate(const game::s_gate_info& gate_info) {}
+void master_connector::add_remote_gate(const game::s_gate_info& info) {
+    const auto gate_id = static_cast<uint16_t>(info.id());
+    bool need_start = false;
+    auto it = remote_gates_.find(gate_id);
+    if (it == remote_gates_.end()) {
+        std::tie(it, std::ignore) = remote_gates_.emplace(gate_id, remote_gate(service_, gate_id));
+        need_start = true;
+    }
+
+    std::vector<std::string> addresses;
+    for (auto& address : info.addresses()) {
+        auto& str = addresses.emplace_back();
+        str.append(address.host());
+        str.push_back(',');
+        str.append(address.port());
+    }
+    it->second.set_addresses(std::move(addresses));
+
+    if (need_start) {
+        it->second.start();
+    }
+
+    for (auto& s : info.services()) {
+        it->second.add_remote_service(s);
+    }
+}
 
 simple::task<> master_connector::ping_to_master(uint32_t socket) {
     const auto ping = co_await rpc_ping(system_, socket);
@@ -228,6 +253,10 @@ simple::task<int32_t> master_connector::upload(const game::s_service_info& info)
 }
 
 void master_connector::update_service(const service_update_event& data) {
+    if (data.info->gate != service_.id()) {
+        return;
+    }
+
     simple::co_start([this, service = data.info]() {
         game::s_service_info info;
         service->to_proto(info);

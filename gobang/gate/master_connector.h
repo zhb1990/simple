@@ -38,7 +38,7 @@ class master_connector {
 
     simple::task<bool> register_to_master(uint32_t socket);
 
-    void add_remote_gate(const game::s_gate_info& gate_info);
+    void add_remote_gate(const game::s_gate_info& info);
 
     simple::task<> ping_to_master(uint32_t socket);
 

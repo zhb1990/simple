@@ -1,6 +1,7 @@
 ﻿#include "remote_gate.h"
 
 #include <msg_id.pb.h>
+#include <msg_server.pb.h>
 #include <proto_utils.h>
 #include <simple/coro/network.h>
 #include <simple/coro/timed_awaiter.h>
@@ -21,8 +22,7 @@ void remote_service::write(const std::string_view& message) {
     remote->send(buf);
 }
 
-remote_gate::remote_gate(simple::service& s, uint16_t id, std::vector<std::string> addresses)
-    : service_(&s), id_(id), addresses_(std::move(addresses)) {}
+remote_gate::remote_gate(simple::service& s, uint16_t id) : service_(&s), id_(id) {}
 
 void remote_gate::start() {
     simple::co_start([this]() { return run(); });
@@ -35,6 +35,8 @@ void remote_gate::send(simple::memory_buffer_ptr ptr) {
         send_queue_.emplace_back(std::move(ptr));
     }
 }
+
+void remote_gate::set_addresses(std::vector<std::string> addresses) { addresses_ = std::move(addresses); }
 
 simple::task<> remote_gate::run() {
     using namespace std::chrono_literals;
@@ -137,4 +139,26 @@ void remote_gate::auto_send(uint32_t socket) {
 simple::task<> remote_gate::ping_to_remote(uint32_t socket) {
     const auto ping = co_await rpc_ping(system_, socket);
     simple::info("[{}] remote:{} ping delay:{}ms", service_->name(), id_, ping);
+}
+
+void remote_gate::add_remote_service(const game::s_service_info& info) {
+    try {
+        const auto id = static_cast<uint16_t>(info.id());
+        auto& router = service_->router();
+        auto* service_ptr = router.call<service_info*>("find_service", id);
+        if (!service_ptr) {
+            auto& new_service = services_.emplace_back();
+            new_service.remote = this;
+            new_service.gate = id_;
+            new_service.id = id;
+            new_service.tp = info.tp();
+            new_service.service = service_;
+            router.call("emplace_service", dynamic_cast<service_info*>(&new_service));
+            service_ptr = &new_service;
+        }
+        service_ptr->online = info.online();
+        service_ptr->update();
+    } catch (...) {
+        simple::warn("catch");
+    }
 }
