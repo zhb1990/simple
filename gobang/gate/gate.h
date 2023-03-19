@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include <deque>
+#include <optional>
 #include <simple/application/service.hpp>
 #include <simple/containers/buffer.hpp>
 #include <string>
@@ -47,4 +48,5 @@ class gate final : public simple::service {
     std::shared_ptr<remote_listener> remote_listener_;
     // 监听本机器其他的服务
     std::shared_ptr<local_listener> local_listener_;
+    std::optional<simple::event_registration> forward_message_;
 };

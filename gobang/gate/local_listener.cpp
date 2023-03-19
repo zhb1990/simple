@@ -26,7 +26,7 @@ local_listener::local_listener(simple::service& s, const simple::toml_table_t& t
         throw std::logic_error("gate need local listen port");
     }
 
-    service_.events().register_handler<service_update_event>(&local_listener::update_service, this);
+    update_service_ = service_.events().register_handler<service_update_event>(&local_listener::update_service, this);
     service_.router().register_call("local_services", &local_listener::local_services, this);
 }
 

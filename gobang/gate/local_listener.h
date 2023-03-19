@@ -4,6 +4,8 @@
 #include <google/protobuf/message.h>
 
 #include <list>
+#include <optional>
+#include <simple/application/event_system.hpp>
 #include <simple/containers/buffer.hpp>
 #include <simple/coro/task.hpp>
 #include <simple/utils/toml_types.hpp>
@@ -65,4 +67,5 @@ class local_listener {
     std::unordered_map<uint16_t, std::vector<socket_ptr>> subscribe_infos_;
     // 本地服务用到的共享内存
     std::unordered_map<std::string, simple::shm> service_shm_map_;
+    std::optional<simple::event_registration> update_service_;
 };

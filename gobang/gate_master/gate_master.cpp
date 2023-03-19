@@ -1,5 +1,6 @@
 ﻿#include "gate_master.h"
 
+#include <google/protobuf/util/json_util.h>
 #include <msg_ec.pb.h>
 #include <msg_id.pb.h>
 #include <proto_utils.h>
@@ -159,6 +160,10 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
         return;
     }
 
+    std::string log_str;
+    google::protobuf::util::MessageToJsonString(req, &log_str);
+    simple::info("[{}] register req:{}", name(), log_str);
+
     game::s_gate_register_ack ack;
     auto& result = *ack.mutable_result();
     const auto info = req.info();
@@ -215,6 +220,10 @@ void gate_master::gate_upload(const socket_data& socket, uint64_t session, const
     if (!req.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
         return;
     }
+
+    std::string log_str;
+    google::protobuf::util::MessageToJsonString(req, &log_str);
+    simple::info("[{}] upload req:{}", name(), log_str);
 
     game::msg_common_ack ack;
     auto& result = *ack.mutable_result();

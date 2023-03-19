@@ -142,23 +142,19 @@ simple::task<> remote_gate::ping_to_remote(uint32_t socket) {
 }
 
 void remote_gate::add_remote_service(const game::s_service_info& info) {
-    try {
-        const auto id = static_cast<uint16_t>(info.id());
-        auto& router = service_->router();
-        auto* service_ptr = router.call<service_info*>("find_service", id);
-        if (!service_ptr) {
-            auto& new_service = services_.emplace_back();
-            new_service.remote = this;
-            new_service.gate = id_;
-            new_service.id = id;
-            new_service.tp = info.tp();
-            new_service.service = service_;
-            router.call("emplace_service", dynamic_cast<service_info*>(&new_service));
-            service_ptr = &new_service;
-        }
-        service_ptr->online = info.online();
-        service_ptr->update();
-    } catch (...) {
-        simple::warn("catch");
+    const auto id = static_cast<uint16_t>(info.id());
+    auto& router = service_->router();
+    auto* service_ptr = router.call<service_info*>("find_service", id);
+    if (!service_ptr) {
+        auto& new_service = services_.emplace_back();
+        new_service.remote = this;
+        new_service.gate = id_;
+        new_service.id = id;
+        new_service.tp = info.tp();
+        new_service.service = service_;
+        router.call("emplace_service", dynamic_cast<service_info*>(&new_service));
+        service_ptr = &new_service;
     }
+    service_ptr->online = info.online();
+    service_ptr->update();
 }

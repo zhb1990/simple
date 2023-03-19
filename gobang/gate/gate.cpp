@@ -16,7 +16,7 @@ gate::gate(const simple::toml_value_t* value) {
     remote_listener_ = std::make_shared<remote_listener>(*this, table);
     local_listener_ = std::make_shared<local_listener>(*this, table);
 
-    events_.register_handler<forward_message_event>(&gate::forward, this);
+    forward_message_ = events_.register_handler<forward_message_event>(&gate::forward, this);
     router_.register_call("find_service", &gate::find_service, this);
     router_.register_call("emplace_service", &gate::emplace_service, this);
     router_.register_call("find_service_type", &gate::find_service_type, this);

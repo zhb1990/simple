@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <proto_rpc.h>
 
+#include <optional>
+#include <simple/application/event_system.hpp>
 #include <simple/containers/buffer.hpp>
 #include <simple/coro/task.hpp>
 #include <simple/utils/toml_types.hpp>
@@ -54,4 +56,5 @@ class master_connector {
     // 给其他gate连接的ip地址或域名
     std::vector<std::string> remote_hosts_;
     uint16_t remote_port_{0};
+    std::optional<simple::event_registration> update_service_;
 };

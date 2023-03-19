@@ -41,7 +41,7 @@ master_connector::master_connector(simple::service& s, const simple::toml_table_
         throw std::logic_error("gate need remote hosts");
     }
 
-    service_.events().register_handler<service_update_event>(&master_connector::update_service, this);
+    update_service_ = service_.events().register_handler<service_update_event>(&master_connector::update_service, this);
     service_.router().register_call("upload_to_master", &master_connector::upload_to_master, this);
 }
 
@@ -257,10 +257,10 @@ void master_connector::update_service(const service_update_event& data) {
         return;
     }
 
-    simple::co_start([this, service = data.info]() {
+    simple::co_start([this, service = data.info]() -> simple::task<> {
         game::s_service_info info;
         service->to_proto(info);
-        return upload(info);
+        co_await upload(info);
     });
 }
 
