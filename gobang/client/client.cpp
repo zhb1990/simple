@@ -114,7 +114,7 @@ simple::task<> client::run() {
             simple::error("[{}] exception {}", name(), ERROR_CODE_MESSAGE(e.what()));
         }
 
-        simple::write_console(ERROR_CODE_MESSAGE("网络断开，是否重连(y/n):"), stdout);
+        simple::write_console(ERROR_CODE_MESSAGE("网络断开，是否重连(y/n):\n"), stdout);
         auto line = co_await cin();
         if (line.empty() || line[0] != 'y') {
             simple::application::stop();
@@ -200,7 +200,7 @@ simple::task<> client::logic(const simple::websocket& ws) {
                 }
             }
 
-            simple::write_console(ERROR_CODE_MESSAGE("请输入落子的坐标(x,y):"), stdout);
+            simple::write_console(ERROR_CODE_MESSAGE("请输入落子的坐标(x,y):\n"), stdout);
             std::string line = co_await cin();
             std::string_view temp = line;
             const auto pos = temp.find(',');
@@ -243,6 +243,7 @@ simple::task<> client::login() {
     // 密码直接明文了，可以换成wss，或者单独对密码进行加密传输
     req.set_password(password_);
     const auto value = co_await (call<game::login_ack>(game::id_login_req, req) || show_wait("登录中"));
+    simple::write_console("\n", stdout);
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
@@ -263,6 +264,7 @@ simple::task<> client::login() {
 simple::task<> client::match() {
     using namespace std::chrono_literals;
     const auto value = co_await (call<game::match_ack>(game::id_match_req, game::msg_empty{}) || show_wait("匹配中"));
+    simple::write_console("\n", stdout);
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
@@ -281,6 +283,7 @@ simple::task<> client::enter_room() {
     using namespace std::chrono_literals;
     const auto value =
         co_await (call<game::enter_room_ack>(game::id_enter_room_req, game::msg_empty{}) || show_wait("加载棋局中"));
+    simple::write_console("\n", stdout);
     const auto& ack = std::get<0>(value);
     auto& result = ack.result();
     if (const auto ec = result.ec(); ec != game::ec_success) {
@@ -442,21 +445,25 @@ simple::task<> client::show_wait(std::string_view info) {
         simple::write_console("\r", stdout);
         simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
         simple::write_console("   ", stdout);
+        fflush(stdout);
         co_await simple::sleep_for(500ms);
 
         simple::write_console("\r", stdout);
         simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
         simple::write_console(".  ", stdout);
+        fflush(stdout);
         co_await simple::sleep_for(500ms);
 
         simple::write_console("\r", stdout);
         simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
         simple::write_console(".. ", stdout);
+        fflush(stdout);
         co_await simple::sleep_for(500ms);
 
         simple::write_console("\r", stdout);
         simple::write_console(ERROR_CODE_MESSAGE(info), stdout);
         simple::write_console("...", stdout);
+        fflush(stdout);
         co_await simple::sleep_for(500ms);
     }
 }
