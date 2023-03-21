@@ -19,27 +19,15 @@ struct socket_cache_data {
 struct socket_data {
     uint32_t socket{0};
     // 玩家id
-    mutable int32_t userid{0};
+    int32_t userid{0};
     // 分配给玩家的逻辑服务器id
-    mutable uint16_t logic{0};
+    uint16_t logic{0};
     // 玩家当前所在的牌局服务器
-    mutable uint16_t room{0};
+    uint16_t room{0};
     // 是否已经收到登录注册协议
-    mutable bool wait_login{false};
-    mutable int64_t last_recv{0};
-    mutable std::deque<socket_cache_data> cache;
-
-    bool operator==(const socket_data& other) const { return socket == other.socket; }
-
-    bool operator==(const uint32_t& other) const { return socket == other; }
-};
-
-template <>
-struct std::hash<socket_data> {
-    using is_transparent [[maybe_unused]] = int;
-
-    [[nodiscard]] size_t operator()(const uint32_t& id) const noexcept { return std::hash<uint32_t>()(id); }
-    [[nodiscard]] size_t operator()(const socket_data& data) const noexcept { return std::hash<uint32_t>()(data.socket); }
+    bool wait_login{false};
+    int64_t last_recv{0};
+    std::deque<socket_cache_data> cache;
 };
 
 class gate_connector;
@@ -65,13 +53,13 @@ class proxy final : public simple::service {
 
     void forward_shm(uint16_t from, uint64_t session, uint16_t id, const simple::memory_buffer& buffer);
 
-    void forward_client(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+    void forward_client(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
 
-    void client_register_msg(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
+    void client_register_msg(socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
 
-    void client_room_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+    void client_room_msg(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
 
-    void client_other_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+    void client_other_msg(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
 
     void send_to_service(uint16_t dest, const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
 
@@ -85,23 +73,23 @@ class proxy final : public simple::service {
 
     void kick_client(uint16_t from, uint64_t session, const simple::memory_buffer& buffer);
 
-    void client_login_ack(const socket_data& socket, uint16_t logic, const std::string_view& brd);
+    void client_login_ack(socket_data& socket, uint16_t logic, const std::string_view& brd);
 
-    static void client_match_ack(const socket_data& socket, const std::string_view& brd);
+    static void client_match_ack(socket_data& socket, const std::string_view& brd);
 
-    static void client_move_ack(const socket_data& socket, const std::string_view& brd);
+    static void client_move_ack(socket_data& socket, const std::string_view& brd);
 
-    static void client_move_brd(const socket_data& socket, const std::string_view& brd);
+    static void client_move_brd(socket_data& socket, const std::string_view& brd);
 
     // 监听端口
     uint16_t listen_port_;
     // 网络id -> socket_data
-    std::unordered_set<socket_data, std::hash<socket_data>, std::equal_to<>> sockets_;
+    std::unordered_map<uint32_t, socket_data> sockets_;
     // 连接gate
     std::shared_ptr<gate_connector> gate_connector_;
-    using fn_client_msg = std::function<void(const socket_data&, uint64_t, const simple::memory_buffer&)>;
+    using fn_client_msg = std::function<void(socket_data&, uint64_t, const simple::memory_buffer&)>;
     std::unordered_map<uint16_t, fn_client_msg> fn_client_msgs_;
     simple::memory_buffer temp_buffer_;
-    using fn_on_forward = std::function<void(const socket_data&, uint16_t logic, const std::string_view& strv)>;
+    using fn_on_forward = std::function<void(socket_data&, uint16_t logic, const std::string_view& strv)>;
     std::unordered_map<uint16_t, fn_on_forward> on_forward_map_;
 };

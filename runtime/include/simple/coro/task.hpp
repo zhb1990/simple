@@ -130,7 +130,6 @@ class task {
         template <typename Promise>
         std::coroutine_handle<> await_suspend(std::coroutine_handle<Promise> handle) noexcept {
             auto& promise = continuation.promise();
-            promise.set_continuation(handle);
             if (auto token = handle.promise().get_cancellation_token()) {
                 if (token.is_cancellation_requested()) [[unlikely]] {
                     return handle;
@@ -138,7 +137,7 @@ class task {
 
                 promise.set_cancellation_token(token);
             }
-
+            promise.set_continuation(handle);
             return continuation;
         }
 

@@ -40,7 +40,8 @@ simple::task<> gate_master::accept(uint32_t server) {
     for (;;) {
         const auto socket = co_await network.accept(server);
         simple::warn("[{}] accept socket {}", name(), socket);
-        sockets_.emplace(socket, nullptr, time(nullptr));
+        socket_data data{socket, nullptr, time(nullptr)};
+        sockets_.emplace(socket, data);
         simple::co_start([socket, this] { return socket_start(socket); });
         simple::co_start([socket, this] { return socket_check(socket); });
     }
@@ -59,16 +60,16 @@ simple::task<> gate_master::socket_start(uint32_t socket) {
             co_await recv_net_buffer(buffer, header, socket);
             const uint32_t len = header.len;
             simple::info("[{}] socket:{} recv id:{} session:{} len:{}", name(), socket, header.id, header.session, len);
-            it->last_recv = time(nullptr);
-            forward_message(*it, header.id, header.session, buffer);
+            it->second.last_recv = time(nullptr);
+            forward_message(it->second, header.id, header.session, buffer);
         }
     } catch (std::exception& e) {
         simple::error("[{}] socket:{} exception {}", name(), socket, ERROR_CODE_MESSAGE(e.what()));
     }
 
     // 断网处理
-    if (it->data && it->data->socket == socket) {
-        gate_disconnect(it->data);
+    if (it->second.data && it->second.data->socket == socket) {
+        gate_disconnect(it->second.data);
     }
     sockets_.erase(it);
 }
@@ -86,7 +87,7 @@ simple::task<> gate_master::socket_check(uint32_t socket) {
             break;
         }
 
-        if (time(nullptr) - it->last_recv > auto_close_session) {
+        if (time(nullptr) - it->second.last_recv > auto_close_session) {
             simple::warn("[{}] close socket:{} by check", name(), socket);
             network.close(socket);
             break;
@@ -94,10 +95,10 @@ simple::task<> gate_master::socket_check(uint32_t socket) {
     }
 }
 
-void gate_master::gate_disconnect(const gate_data* gate) const {
+void gate_master::gate_disconnect(gate_data* gate) const {
     gate->socket = 0;
 
-    for (const auto* s : gate->services) {
+    for (auto* s : gate->services) {
         s->online = false;
     }
 
@@ -117,14 +118,14 @@ static void add_gate_info(google::protobuf::RepeatedPtrField<game::s_gate_info>*
     }
 }
 
-void gate_master::publish(const gate_data* gate) const {
+void gate_master::publish(gate_data* gate) const {
     auto& network = simple::network::instance();
     game::s_gate_register_brd brd;
     auto* gates = brd.mutable_gates();
     add_gate_info(gates, gate);
     auto buf = create_net_buffer(game::id_s_gate_register_brd, 0, brd);
 
-    for (const auto& g : gates_) {
+    for (auto& [id, g] : gates_) {
         if (g.socket == 0 || &g == gate) {
             continue;
         }
@@ -139,8 +140,7 @@ void gate_master::send(uint32_t socket, uint16_t id, uint64_t session, const goo
     network.write(socket, buf);
 }
 
-void gate_master::forward_message(const socket_data& socket, uint16_t id, uint64_t session,
-                                  const simple::memory_buffer& buffer) {
+void gate_master::forward_message(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
     // 总共只会处理3个消息，直接switch
     switch (id) {
         case game::id_s_gate_register_req:
@@ -154,7 +154,7 @@ void gate_master::forward_message(const socket_data& socket, uint16_t id, uint64
     }
 }
 
-void gate_master::gate_register(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
+void gate_master::gate_register(socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
     game::s_gate_register_req req;
     if (!req.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
         return;
@@ -175,7 +175,7 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
         return send(socket.socket, game::id_s_gate_register_ack, session, ack);
     }
 
-    const gate_data* gate;
+    gate_data* gate;
     if (socket.data) {
         if (socket.data->id != id) {
             simple::error("[{}]  socket:{} registered gate:{} != {}", name(), socket.socket, socket.data->id, id);
@@ -186,7 +186,7 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
         if (gate->socket != socket.socket) {
             // 断开之前的连接
             if (const auto it = sockets_.find(gate->socket); it != sockets_.end()) {
-                it->data = nullptr;
+                it->second.data = nullptr;
                 auto& network = simple::network::instance();
                 network.close(gate->socket);
             }
@@ -194,8 +194,8 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
     } else {
         // 新增一个gate
         gate_data temp{.id = id};
-        const auto [fst, snd] = gates_.emplace(temp);
-        gate = &*fst;
+        const auto [fst, snd] = gates_.emplace(id, temp);
+        gate = &fst->second;
         socket.data = gate;
     }
 
@@ -206,7 +206,7 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
     simple::warn("[{}] socket:{} gate:{} register succ", name(), socket.socket, id);
     result.set_ec(game::ec_success);
     auto* gates = ack.mutable_gates();
-    for (auto& g : gates_) {
+    for (auto& [i, g] : gates_) {
         if (&g != gate) {
             add_gate_info(gates, &g);
         }
@@ -215,7 +215,7 @@ void gate_master::gate_register(const socket_data& socket, uint64_t session, con
     publish(gate);
 }
 
-void gate_master::gate_upload(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
+void gate_master::gate_upload(socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
     game::s_service_update_req req;
     if (!req.ParseFromArray(buffer.begin_read(), static_cast<int>(buffer.readable()))) {
         return;
@@ -248,7 +248,7 @@ void gate_master::gate_upload(const socket_data& socket, uint64_t session, const
 
 bool gate_master::check_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, uint16_t gate) {
     return std::ranges::all_of(services, [this, gate](const auto& service) {
-        if (const auto it = services_.find(service.id()); it != services_.end() && it->gate != gate) {
+        if (const auto it = services_.find(service.id()); it != services_.end() && it->second.gate != gate) {
             return false;
         }
 
@@ -256,23 +256,20 @@ bool gate_master::check_services(const google::protobuf::RepeatedPtrField<game::
     });
 }
 
-void gate_master::add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services,
-                               const gate_data* gate) {
+void gate_master::add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, gate_data* gate) {
     for (const auto& s : services) {
         const auto it = services_.find(s.id());
         if (it != services_.end()) {
-            it->online = s.online();
+            it->second.online = s.online();
             continue;
         }
 
-        const auto result =
-            services_.emplace(static_cast<uint16_t>(s.id()), static_cast<uint16_t>(s.tp()), gate->id, s.online());
-        gate->services.emplace_back(&*result.first);
+        service_data temp{static_cast<uint16_t>(s.id()), static_cast<uint16_t>(s.tp()), gate->id, s.online()};
+        const auto result = services_.emplace(temp.id, temp);
+        gate->services.emplace_back(&result.first->second);
     }
 }
 
-SIMPLE_SERVICE_API simple::service* gate_master_create(const simple::toml_value_t* value) {
-    return new gate_master(value);
-}
+SIMPLE_SERVICE_API simple::service* gate_master_create(const simple::toml_value_t* value) { return new gate_master(value); }
 
 SIMPLE_SERVICE_API void gate_master_release(const simple::service* t) { delete t; }

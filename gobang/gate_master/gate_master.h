@@ -11,57 +11,21 @@ struct service_data {
     uint16_t id{0};
     uint16_t tp{0};
     uint16_t gate{0};
-    mutable bool online{false};
-
-    bool operator==(const service_data& other) const { return id == other.id; }
-
-    bool operator==(const uint16_t& other) const { return id == other; }
-};
-
-template <>
-struct std::hash<service_data> {
-    using is_transparent [[maybe_unused]] = int;
-
-    [[nodiscard]] size_t operator()(const uint16_t& id) const noexcept { return std::hash<uint16_t>()(id); }
-    [[nodiscard]] size_t operator()(const service_data& data) const noexcept { return std::hash<uint16_t>()(data.id); }
+    bool online{false};
 };
 
 struct gate_data {
     uint16_t id{0};
-    mutable uint32_t socket{0};
-    mutable google::protobuf::RepeatedPtrField<game::s_gate_address> addresses;
+    uint32_t socket{0};
+    google::protobuf::RepeatedPtrField<game::s_gate_address> addresses;
     // 同机器上的所有服务
-    mutable std::vector<const service_data*> services;
-
-    bool operator==(const gate_data& other) const { return id == other.id; }
-
-    bool operator==(const uint16_t& other) const { return id == other; }
-};
-
-template <>
-struct std::hash<gate_data> {
-    using is_transparent [[maybe_unused]] = int;
-
-    [[nodiscard]] size_t operator()(const uint16_t& id) const noexcept { return std::hash<uint16_t>()(id); }
-    [[nodiscard]] size_t operator()(const gate_data& data) const noexcept { return std::hash<uint16_t>()(data.id); }
+    std::vector<service_data*> services;
 };
 
 struct socket_data {
     uint32_t socket{0};
-    mutable const gate_data* data{nullptr};
-    mutable int64_t last_recv{0};
-
-    bool operator==(const socket_data& other) const { return socket == other.socket; }
-
-    bool operator==(const uint32_t& other) const { return socket == other; }
-};
-
-template <>
-struct std::hash<socket_data> {
-    using is_transparent [[maybe_unused]] = int;
-
-    [[nodiscard]] size_t operator()(const uint32_t& id) const noexcept { return std::hash<uint32_t>()(id); }
-    [[nodiscard]] size_t operator()(const socket_data& data) const noexcept { return std::hash<uint32_t>()(data.socket); }
+    gate_data* data{nullptr};
+    int64_t last_recv{0};
 };
 
 class gate_master final : public simple::service {
@@ -81,30 +45,30 @@ class gate_master final : public simple::service {
 
     simple::task<> socket_check(uint32_t socket);
 
-    void gate_disconnect(const gate_data* gate) const;
+    void gate_disconnect(gate_data* gate) const;
 
-    void publish(const gate_data* gate) const;
+    void publish(gate_data* gate) const;
 
     static void send(uint32_t socket, uint16_t id, uint64_t session, const google::protobuf::Message& msg);
 
-    void forward_message(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
+    void forward_message(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer);
 
     // gate 注册 并返回所有的进程信息
-    void gate_register(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
+    void gate_register(socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
 
     // gate 上报当前机器上的其他进程变更
-    void gate_upload(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
+    void gate_upload(socket_data& socket, uint64_t session, const simple::memory_buffer& buffer);
 
     bool check_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, uint16_t gate);
 
-    void add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, const gate_data* gate);
+    void add_services(const google::protobuf::RepeatedPtrField<game::s_service_info>& services, gate_data* gate);
 
     // gate 的service id —> gate_data
-    std::unordered_set<gate_data, std::hash<gate_data>, std::equal_to<>> gates_;
+    std::unordered_map<uint16_t, gate_data> gates_;
     // 其他服务的 service id —> service_data*
-    std::unordered_set<service_data, std::hash<service_data>, std::equal_to<>> services_;
+    std::unordered_map<uint16_t, service_data> services_;
     // 网络id -> socket_data
-    std::unordered_set<socket_data, std::hash<socket_data>, std::equal_to<>> sockets_;
+    std::unordered_map<uint32_t, socket_data> sockets_;
     // 监听端口
     uint16_t listen_port_{0};
 };

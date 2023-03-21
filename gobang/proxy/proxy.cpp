@@ -37,30 +37,30 @@ proxy::proxy(const simple::toml_value_t* value) {
     }
 
     fn_client_msgs_.emplace(game::id_login_req,
-                            [this](const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
+                            [this](socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
                                 return client_register_msg(socket, session, buffer);
                             });
     fn_client_msgs_.emplace(game::id_enter_room_req,
-                            [this](const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
+                            [this](socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
                                 return client_room_msg(socket, game::id_enter_room_req, session, buffer);
                             });
     fn_client_msgs_.emplace(game::id_move_req,
-                            [this](const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
+                            [this](socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
                                 return client_room_msg(socket, game::id_move_req, session, buffer);
                             });
 
     on_forward_map_.emplace(game::id_login_ack,
-                            [this](const socket_data& socket, uint16_t logic, const std::string_view& strv) {
+                            [this](socket_data& socket, uint16_t logic, const std::string_view& strv) {
                                 return client_login_ack(socket, logic, strv);
                             });
 
-    on_forward_map_.emplace(game::id_match_ack, [](const socket_data& socket, uint16_t, const std::string_view& strv) {
+    on_forward_map_.emplace(game::id_match_ack, [](socket_data& socket, uint16_t, const std::string_view& strv) {
         proxy::client_match_ack(socket, strv);
     });
-    on_forward_map_.emplace(game::id_move_ack, [](const socket_data& socket, uint16_t, const std::string_view& strv) {
+    on_forward_map_.emplace(game::id_move_ack, [](socket_data& socket, uint16_t, const std::string_view& strv) {
         proxy::client_move_ack(socket, strv);
     });
-    on_forward_map_.emplace(game::id_move_brd, [](const socket_data& socket, uint16_t, const std::string_view& strv) {
+    on_forward_map_.emplace(game::id_move_brd, [](socket_data& socket, uint16_t, const std::string_view& strv) {
         proxy::client_move_brd(socket, strv);
     });
 }
@@ -80,7 +80,7 @@ simple::task<> proxy::accept(uint32_t server) {
         socket_data data;
         data.socket = socket;
         data.last_recv = time(nullptr);
-        sockets_.emplace(data);
+        sockets_.emplace(socket, data);
         simple::co_start([socket, this] { return socket_start(socket); });
         simple::co_start([socket, this] { return socket_check(socket); });
     }
@@ -99,7 +99,7 @@ simple::task<> proxy::socket_start(uint32_t socket) {
         simple::memory_buffer buffer;
         for (;;) {
             const auto op = co_await ws.read(buffer);
-            it->last_recv = time(nullptr);
+            it->second.last_recv = time(nullptr);
 
             if (op == simple::websocket_opcode::close) {
                 simple::network::instance().close(socket);
@@ -119,15 +119,15 @@ simple::task<> proxy::socket_start(uint32_t socket) {
             const ws_header& header = *reinterpret_cast<ws_header*>(buffer.begin_read());
             buffer.read(sizeof(header));
             simple::info("[{}] socket:{} recv id:{} session:{}", name(), socket, header.id, header.session);
-            forward_client(*it, header.id, header.session, buffer);
+            forward_client(it->second, header.id, header.session, buffer);
         }
     } catch (std::exception& e) {
         simple::error("[{}] socket:{} exception {}", name(), socket, ERROR_CODE_MESSAGE(e.what()));
     }
 
     // 断网处理, 通知逻辑服务器
-    if (it->logic > 0) {
-        report_client_offline(*it);
+    if (it->second.logic > 0) {
+        report_client_offline(it->second);
     }
 
     sockets_.erase(it);
@@ -145,7 +145,7 @@ simple::task<> proxy::socket_check(uint32_t socket) {
             break;
         }
 
-        if (time(nullptr) - it->last_recv > auto_close_session) {
+        if (time(nullptr) - it->second.last_recv > auto_close_session) {
             simple::warn("[{}] close socket:{} by check", name(), socket);
             simple::network::instance().close(socket);
             break;
@@ -167,7 +167,7 @@ void proxy::forward_shm(uint16_t from, uint64_t session, uint16_t id, const simp
     }
 }
 
-void proxy::forward_client(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
+void proxy::forward_client(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
     // 处理玩家的协议
     if (const auto it = fn_client_msgs_.find(id); it != fn_client_msgs_.end()) {
         return it->second(socket, session, buffer);
@@ -176,7 +176,7 @@ void proxy::forward_client(const socket_data& socket, uint16_t id, uint64_t sess
     return client_other_msg(socket, id, session, buffer);
 }
 
-void proxy::client_register_msg(const socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
+void proxy::client_register_msg(socket_data& socket, uint64_t session, const simple::memory_buffer& buffer) {
     // 判断下是否已经收到登录协议，已经收到，必须建立新连接才能再次发送登录请求
     // 可以直接将网络断开，让客户端重试
     if (socket.userid > 0 || socket.wait_login) {
@@ -191,7 +191,7 @@ void proxy::client_register_msg(const socket_data& socket, uint64_t session, con
     send_to_service(dest_service, socket, game::id_login_req, session, buffer);
 }
 
-void proxy::client_room_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
+void proxy::client_room_msg(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
     // 直接发给room房间
     // 判断下是否有房间id
     if (socket.room <= 0) {
@@ -207,7 +207,7 @@ void proxy::client_room_msg(const socket_data& socket, uint16_t id, uint64_t ses
     send_to_service(socket.room, socket, id, session, buffer);
 }
 
-void proxy::client_other_msg(const socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
+void proxy::client_other_msg(socket_data& socket, uint16_t id, uint64_t session, const simple::memory_buffer& buffer) {
     if (id == game::id_ping_req && (socket.wait_login || socket.userid <= 0)) {
         // 没有登录完成的ping包直接回复
         game::ping_req req;
@@ -275,7 +275,7 @@ void proxy::client_forward_brd(uint64_t session, const simple::memory_buffer& bu
         return;
     }
 
-    if (it->userid != part.userid) {
+    if (it->second.userid != part.userid) {
         // 可能gate重启了
         return;
     }
@@ -285,7 +285,7 @@ void proxy::client_forward_brd(uint64_t session, const simple::memory_buffer& bu
 
     // 对特定的协议进行解析
     if (const auto it_fn = on_forward_map_.find(part.id); it_fn != on_forward_map_.end()) {
-        it_fn->second(*it, part.logic, strv);
+        it_fn->second(it->second, part.logic, strv);
     }
 
     ws_header header{flag_valid, {}, part.id, session};
@@ -315,7 +315,7 @@ void proxy::kick_client(uint16_t from, uint64_t session, const simple::memory_bu
     }
 
     const auto socket = req.socket();
-    if (const auto it = sockets_.find(socket); it != sockets_.end() && it->userid == req.userid()) {
+    if (const auto it = sockets_.find(socket); it != sockets_.end() && it->second.userid == req.userid()) {
         simple::network::instance().close(socket);
     }
 
@@ -323,7 +323,7 @@ void proxy::kick_client(uint16_t from, uint64_t session, const simple::memory_bu
     gate_connector_->write(from, session, game::id_s_kick_client_ack, ack);
 }
 
-void proxy::client_login_ack(const socket_data& socket, uint16_t logic, const std::string_view& brd) {
+void proxy::client_login_ack(socket_data& socket, uint16_t logic, const std::string_view& brd) {
     game::login_ack ack;
     if (!ack.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
         // 协议解析出错了，最好还是关闭连接，报个错
@@ -350,7 +350,7 @@ void proxy::client_login_ack(const socket_data& socket, uint16_t logic, const st
     socket.cache.clear();
 }
 
-void proxy::client_match_ack(const socket_data& socket, const std::string_view& brd) {
+void proxy::client_match_ack(socket_data& socket, const std::string_view& brd) {
     game::match_ack ack;
     if (!ack.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
         // 协议解析出错了
@@ -366,7 +366,7 @@ void proxy::client_match_ack(const socket_data& socket, const std::string_view& 
     socket.room = ack.room();
 }
 
-void proxy::client_move_brd(const socket_data& socket, const std::string_view& brd) {
+void proxy::client_move_brd(socket_data& socket, const std::string_view& brd) {
     game::move_brd client_brd;
     if (!client_brd.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
         // 协议解析出错了
@@ -378,7 +378,7 @@ void proxy::client_move_brd(const socket_data& socket, const std::string_view& b
     }
 }
 
-void proxy::client_move_ack(const socket_data& socket, const std::string_view& brd) {
+void proxy::client_move_ack(socket_data& socket, const std::string_view& brd) {
     game::move_ack ack;
     if (!ack.ParseFromArray(brd.data(), static_cast<int>(brd.size()))) {
         // 协议解析出错了

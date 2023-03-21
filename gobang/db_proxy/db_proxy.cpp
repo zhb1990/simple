@@ -107,6 +107,10 @@ void db_proxy::create_index() {
     using namespace std::string_view_literals;
 
     auto en = pool_->acquire();
+    if (!en) {
+        throw std::logic_error("create_index fail");
+    }
+
     auto& client = *en;
     auto db = client[db_name];
 
@@ -277,18 +281,18 @@ simple::task<> db_proxy::update_user(uint16_t from, const simple::memory_buffer&
         auto it = user_infos_.find(userid);
         if (it != user_infos_.end()) {
             // 说明还没更新完成，加锁修改
-            std::scoped_lock lock{*it->mtx};
-            it->version = static_cast<uint16_t>(user.version());
-            it->win_count = user.win_count();
-            it->lose_count = user.lose_count();
+            std::scoped_lock lock{*it->second.mtx};
+            it->second.version = static_cast<uint16_t>(user.version());
+            it->second.win_count = user.win_count();
+            it->second.lose_count = user.lose_count();
             continue;
         }
 
-        std::tie(it, std::ignore) = user_infos_.emplace(user_info{.userid = userid});
-        it->mtx = std::make_unique<std::mutex>();
-        it->version = static_cast<uint16_t>(user.version());
-        it->win_count = user.win_count();
-        it->lose_count = user.lose_count();
+        std::tie(it, std::ignore) = user_infos_.emplace(userid, user_info{.userid = userid});
+        it->second.mtx = std::make_unique<std::mutex>();
+        it->second.version = static_cast<uint16_t>(user.version());
+        it->second.win_count = user.win_count();
+        it->second.lose_count = user.lose_count();
 
         infos.emplace_back(it);
     }
@@ -310,13 +314,13 @@ simple::task<> db_proxy::update_user(uint16_t from, const simple::memory_buffer&
                 auto bulk = coll.create_bulk_write();
                 for (auto& it : infos) {
                     auto* info = output.add_infos();
-                    info->set_userid(it->userid);
+                    info->set_userid(it->second.userid);
 
-                    std::unique_lock lock{*it->mtx};
-                    update_one upsert_op{make_document(kvp("userid", it->userid)),
-                                         make_document(kvp("$set", make_document(kvp("win_count", it->win_count),
-                                                                                 kvp("lose_count", it->lose_count))))};
-                    info->set_version(it->version);
+                    std::unique_lock lock{*it->second.mtx};
+                    update_one upsert_op{make_document(kvp("userid", it->second.userid)),
+                                         make_document(kvp("$set", make_document(kvp("win_count", it->second.win_count),
+                                                                                 kvp("lose_count", it->second.lose_count))))};
+                    info->set_version(it->second.version);
                     lock.unlock();
                     bulk.append(upsert_op);
                 }
@@ -414,18 +418,18 @@ simple::task<> db_proxy::update_account(uint16_t from, const simple::memory_buff
         auto it = account_infos_.find(userid);
         if (it != account_infos_.end()) {
             // 说明还没更新完成，加锁修改
-            std::scoped_lock lock{*it->mtx};
-            it->version = static_cast<uint16_t>(info.version());
-            it->account = info.account();
-            it->password = info.password();
+            std::scoped_lock lock{*it->second.mtx};
+            it->second.version = static_cast<uint16_t>(info.version());
+            it->second.account = info.account();
+            it->second.password = info.password();
             continue;
         }
 
-        std::tie(it, std::ignore) = account_infos_.emplace(account_info{.userid = userid});
-        it->mtx = std::make_unique<std::mutex>();
-        it->version = static_cast<uint16_t>(info.version());
-        it->account = info.account();
-        it->password = info.password();
+        std::tie(it, std::ignore) = account_infos_.emplace(userid, account_info{.userid = userid});
+        it->second.mtx = std::make_unique<std::mutex>();
+        it->second.version = static_cast<uint16_t>(info.version());
+        it->second.account = info.account();
+        it->second.password = info.password();
 
         infos.emplace_back(it);
     }
@@ -447,13 +451,13 @@ simple::task<> db_proxy::update_account(uint16_t from, const simple::memory_buff
                 auto bulk = coll.create_bulk_write();
                 for (auto& it : infos) {
                     auto* info = output.add_infos();
-                    info->set_userid(it->userid);
+                    info->set_userid(it->second.userid);
 
-                    std::unique_lock lock{*it->mtx};
-                    update_one upsert_op{
-                        make_document(kvp("userid", it->userid)),
-                        make_document(kvp("$set", make_document(kvp("account", it->account), kvp("password", it->password))))};
-                    info->set_version(it->version);
+                    std::unique_lock lock{*it->second.mtx};
+                    update_one upsert_op{make_document(kvp("userid", it->second.userid)),
+                                         make_document(kvp("$set", make_document(kvp("account", it->second.account),
+                                                                                 kvp("password", it->second.password))))};
+                    info->set_version(it->second.version);
                     lock.unlock();
                     bulk.append(upsert_op);
                 }

@@ -8,7 +8,6 @@
 #include <simple/application/service.hpp>
 #include <simple/containers/buffer.hpp>
 #include <unordered_map>
-#include <unordered_set>
 
 class gate_connector;
 
@@ -19,45 +18,21 @@ MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 
 struct cache_info {
-    mutable uint16_t version{0};
+    uint16_t version{0};
     // 读写数据时需要加锁
-    mutable std::unique_ptr<std::mutex> mtx;
+    std::unique_ptr<std::mutex> mtx;
 };
 
 struct account_info : cache_info {
     int32_t userid{0};
-    mutable std::string account;
-    mutable std::string password;
-
-    bool operator==(const account_info& other) const { return userid == other.userid; }
-
-    bool operator==(const int32_t& other) const { return userid == other; }
-};
-
-template <>
-struct std::hash<account_info> {
-    using is_transparent [[maybe_unused]] = int;
-
-    [[nodiscard]] size_t operator()(const uint16_t& id) const noexcept { return std::hash<int32_t>()(id); }
-    [[nodiscard]] size_t operator()(const account_info& data) const noexcept { return std::hash<int32_t>()(data.userid); }
+    std::string account;
+    std::string password;
 };
 
 struct user_info : cache_info {
     int32_t userid{0};
-    mutable int32_t win_count{0};
-    mutable int32_t lose_count{0};
-
-    bool operator==(const user_info& other) const { return userid == other.userid; }
-
-    bool operator==(const int32_t& other) const { return userid == other; }
-};
-
-template <>
-struct std::hash<user_info> {
-    using is_transparent [[maybe_unused]] = int;
-
-    [[nodiscard]] size_t operator()(const uint16_t& id) const noexcept { return std::hash<int32_t>()(id); }
-    [[nodiscard]] size_t operator()(const user_info& data) const noexcept { return std::hash<int32_t>()(data.userid); }
+    int32_t win_count{0};
+    int32_t lose_count{0};
 };
 
 class db_proxy final : public simple::service {
@@ -104,9 +79,9 @@ class db_proxy final : public simple::service {
     // 操作db是放在线程池中进行的，这里记录下，防止多个连接同时去更新数据，保障更新顺序
     // 由于插入和删除都在调度线程中进行，因此这里不需要加锁
     // 只是对于每个info的数据，在读写的时候进行加锁
-    using user_infos = std::unordered_set<user_info, std::hash<user_info>, std::equal_to<>>;
+    using user_infos = std::unordered_map<int32_t, user_info>;
     user_infos user_infos_;
-    using account_infos = std::unordered_set<account_info, std::hash<account_info>, std::equal_to<>>;
+    using account_infos = std::unordered_map<int32_t, account_info>;
     account_infos account_infos_;
     using fn_message = std::function<simple::task<>(uint16_t, uint64_t, const simple::memory_buffer&)>;
     std::unordered_map<uint16_t, fn_message> message_callbacks_;
