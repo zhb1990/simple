@@ -158,8 +158,7 @@ task<> application::forward_message(uint32_t id, const memory_buffer& message) {
         tasks.emplace_back(callback(message));
     }
 
-    for (const auto results = co_await when_ready(wait_type::all, tasks);
-         const auto& result : results) {
+    for (const auto results = co_await when_ready(wait_type::all, tasks); const auto& result : results) {
         if (const auto e = result.get_exception()) {
             std::rethrow_exception(e);
         }
@@ -239,6 +238,8 @@ void application::load_services() {
 
         service_map_.emplace(id, service);
         service_sort_.emplace_back(service);
+
+        warn("******* load service:{} name:{} type:{} succ*******", service->id_, service->name_, service->type_);
     }
 
     // 加载完后按优先级排下序
@@ -258,12 +259,13 @@ void application::awake_services() {
             }
 
             size_t index = 0;
-            for (const auto results = co_await when_ready(wait_type::one_fail, tasks);
-                 const auto& result : results) {
+            for (const auto results = co_await when_ready(wait_type::one_fail, tasks); const auto& result : results) {
+                auto* s = service_sort_[index];
                 if (const auto e = result.get_exception()) {
-                    fail_name = service_sort_[index]->name();
+                    fail_name = s->name();
                     std::rethrow_exception(e);
                 }
+                warn("******* awake service:{} name:{} type:{} succ*******", s->id_, s->name_, s->type_);
                 ++index;
             }
         }());
@@ -305,8 +307,7 @@ void application::update_frame() {
                 }
 
                 size_t index = 0;
-                for (const auto results = co_await when_ready(wait_type::all, tasks);
-                     const auto& result : results) {
+                for (const auto results = co_await when_ready(wait_type::all, tasks); const auto& result : results) {
                     if (const auto e = result.get_exception()) {
                         fail_name = update_services[index]->name();
                         std::rethrow_exception(e);
