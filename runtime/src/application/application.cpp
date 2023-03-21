@@ -239,7 +239,7 @@ void application::load_services() {
         service_map_.emplace(id, service);
         service_sort_.emplace_back(service);
 
-        warn("******* load service:{} name:{} type:{} succ*******", service->id_, service->name_, service->type_);
+        warn("load service:{} {} {} succ!!!", service->id_, service->name_, service->type_);
     }
 
     // 加载完后按优先级排下序
@@ -265,7 +265,7 @@ void application::awake_services() {
                     fail_name = s->name();
                     std::rethrow_exception(e);
                 }
-                warn("******* awake service:{} name:{} type:{} succ*******", s->id_, s->name_, s->type_);
+                warn("awake service:{} {} {} succ!!!", s->id_, s->name_, s->type_);
                 ++index;
             }
         }());
