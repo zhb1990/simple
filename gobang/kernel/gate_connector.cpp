@@ -282,8 +282,8 @@ simple::task<bool> gate_connector::register_to_gate(uint32_t socket) {
         channel_ =
             std::make_unique<simple::shm_channel>(std::to_string(service_.id()), std::to_string(ack.gate()), channel_size_);
 
-        simple::co_start([this]() { return channel_write(); });
-        simple::co_start([this]() { return channel_read(); });
+        simple::co_start<true>([this]() { return channel_write(); });
+        simple::co_start<true>([this]() { return channel_read(); });
     }
 
     co_return true;

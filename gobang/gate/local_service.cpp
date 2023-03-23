@@ -13,9 +13,9 @@ void local_service::write(const std::string_view& message) {
 }
 
 void local_service::start() {
-    simple::co_start([this]() { return auto_write(); });
+    simple::co_start<true>([this]() { return auto_write(); });
 
-    simple::co_start([this]() { return auto_read(); });
+    simple::co_start<true>([this]() { return auto_read(); });
 }
 
 simple::task<> local_service::auto_write() {

@@ -21,6 +21,8 @@
 
 namespace simple {
 
+std::atomic_bool application::stopped_ = {false};
+
 application::~application() noexcept = default;
 
 application& application::instance() {
@@ -120,7 +122,10 @@ void application::stop() {
     socket_system::instance().stop();
     scheduler::instance().stop();
     thread_pool::instance().stop();
+    stopped_.store(true, std::memory_order::relaxed);
 }
+
+bool application::stopped() { return stopped_.load(std::memory_order::relaxed); }
 
 bool application::contains_service(uint16_t id) const { return service_map_.contains(id); }
 

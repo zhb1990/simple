@@ -21,14 +21,14 @@
 #include <simple/coro/task_operators.hpp>
 
 simple::task<> client::awake() {
-    simple::write_console(ERROR_CODE_MESSAGE("请输入服务器的ip:"), stdout);
+    simple::write_console(ERROR_CODE_MESSAGE("请输入服务器的ip:\n"), stdout);
     host_ = co_await cin();
-    simple::write_console(ERROR_CODE_MESSAGE("请输入服务器的端口号:"), stdout);
+    simple::write_console(ERROR_CODE_MESSAGE("请输入服务器的端口号:\n"), stdout);
     port_ = co_await cin();
 
-    simple::write_console(ERROR_CODE_MESSAGE("请输入账号名字:"), stdout);
+    simple::write_console(ERROR_CODE_MESSAGE("请输入账号名字:\n"), stdout);
     account_ = co_await cin();
-    simple::write_console(ERROR_CODE_MESSAGE("请输入账号密码:"), stdout);
+    simple::write_console(ERROR_CODE_MESSAGE("请输入账号密码:\n"), stdout);
     password_ = co_await cin();
 
     simple::co_start([this] { return run(); });
@@ -114,10 +114,14 @@ simple::task<> client::run() {
             simple::error("[{}] exception {}", name(), ERROR_CODE_MESSAGE(e.what()));
         }
 
-        simple::write_console(ERROR_CODE_MESSAGE("网络断开，是否重连(y/n):\n"), stdout);
-        auto line = co_await cin();
-        if (line.empty() || line[0] != 'y') {
-            simple::application::stop();
+        if (!simple::application::stopped()) {
+            simple::write_console(ERROR_CODE_MESSAGE("网络断开，是否重连(y/n):\n"), stdout);
+            auto line = co_await cin();
+            if (line.empty() || line[0] != 'y') {
+                simple::application::stop();
+                co_return;
+            }
+        } else {
             co_return;
         }
     }

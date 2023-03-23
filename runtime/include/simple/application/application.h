@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
+#include <atomic>
 
 namespace simple {
 
@@ -36,6 +37,8 @@ class application {
      * \brief 关闭
      */
     SIMPLE_API static void stop();
+
+    SIMPLE_API static bool stopped();
 
     /**
      * \brief 查看是否有加载对应名字的服务
@@ -96,6 +99,7 @@ class application {
 
     void wake_up_frame();
 
+    static std::atomic_bool stopped_;
     std::unordered_map<uint16_t, service*> service_map_;
     std::vector<service*> service_sort_;
     std::chrono::milliseconds frame_interval_{0};
@@ -104,7 +108,6 @@ class application {
     // 每帧上的等待协程
     std::unordered_map<uint64_t, wait_coroutine_set> frame_coroutine_;
     toml_table_t config_;
-
     // 消息分发
     std::unordered_map<uint32_t, std::unordered_map<const service*, message_callback>> message_callbacks_;
 };
