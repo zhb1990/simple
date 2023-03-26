@@ -7,8 +7,7 @@ log库修改自 [spdlog](https://github.com/gabime/spdlog) ，主要是为了学
 协程部分参考自 [cppcoro](https://github.com/lewissbaker/cppcoro) 以及[asio](https://github.com/chriskohlhoff/asio)的部分内容  
 
 游戏服务器的逻辑部分一般是单线程，因此，框架中的协程只会运行在一个单线程的调度器中
-如果要用于一些其他通用的地方，可以实现一个抢占式的协程调度器，类似golang的gpm，或者rust的tokio的调度方式，当然直接使用
-golang或者rust也不错。c++的协程库还有 [async_simple](https://github.com/alibaba/async_simple)
+如果要用于一些其他通用的地方，可以实现一个任务窃取的协程调度器。c++的协程库还有 [async_simple](https://github.com/alibaba/async_simple)
 
 除了协程的调度器，还提供一个可配置线程数的线程池，用于读写数据库、读写文件、异步的ai计算、异步的寻路等  
 此外，还有一个线程专门用于写日志文件，一个线程对日志进行lz4压缩，一个asio网络线程，一个检查共享内存通道的线程  
